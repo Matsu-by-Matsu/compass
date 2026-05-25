@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Compass | 5分でわかる、あなたの取扱説明書</title>
+  <style>
+    :root{
+      --bg:#080A10; --card:#111725; --card2:#151E31; --text:#F6F7FB; --muted:#9CA7B8;
+      --line:rgba(255,255,255,.11); --a:#78F2CD; --b:#8EA7FF; --c:#FFCF70; --pink:#FF8FB3;
+    }
+    *{box-sizing:border-box} html{scroll-behavior:smooth} body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Hiragino Sans","Yu Gothic",sans-serif;background:radial-gradient(circle at 20% 0%,rgba(120,242,205,.2),transparent 32%),radial-gradient(circle at 90% 5%,rgba(142,167,255,.22),transparent 30%),var(--bg);color:var(--text);line-height:1.55} a{text-decoration:none;color:inherit}.wrap{width:min(1040px,calc(100% - 36px));margin:auto}
+    header{padding:18px 0;position:sticky;top:0;backdrop-filter:blur(16px);background:rgba(8,10,16,.78);z-index:20;border-bottom:1px solid rgba(255,255,255,.06)}.nav{display:flex;justify-content:space-between;align-items:center}.brand{font-weight:900;letter-spacing:.02em}.brand span{color:var(--a)}.nav a{font-size:14px;color:var(--muted);margin-left:20px}.btn{display:inline-flex;align-items:center;justify-content:center;border:0;border-radius:999px;padding:13px 19px;background:linear-gradient(135deg,var(--a),var(--b));color:#061018;font-weight:900;cursor:pointer}.btn.sub{background:rgba(255,255,255,.07);border:1px solid var(--line);color:var(--text)}
+    .hero{padding:42px 0 38px}.hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:34px;align-items:center}.tag{display:inline-block;border:1px solid var(--line);background:rgba(255,255,255,.06);color:var(--muted);padding:7px 11px;border-radius:999px;font-size:13px}h1{font-size:clamp(42px,7vw,76px);line-height:.98;letter-spacing:-.065em;margin:18px 0}.grad{background:linear-gradient(135deg,var(--a),var(--b));-webkit-background-clip:text;color:transparent}.lead{font-size:18px;color:var(--muted);max-width:660px}.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:24px}.mini{display:flex;gap:14px;flex-wrap:wrap;margin-top:18px;color:var(--muted);font-size:13px}
+    .phone{border:1px solid var(--line);background:linear-gradient(180deg,rgba(255,255,255,.12),rgba(255,255,255,.05));border-radius:32px;padding:20px;box-shadow:0 30px 90px rgba(0,0,0,.36)}.screen{background:#0A0E18;border-radius:24px;padding:22px;border:1px solid var(--line)}.type{font-size:28px;font-weight:900;letter-spacing:-.04em;margin:6px 0}.score{font-size:56px;font-weight:950;line-height:1}.chip{display:inline-block;margin:5px 4px 0 0;padding:7px 10px;border-radius:999px;background:rgba(120,242,205,.12);border:1px solid rgba(120,242,205,.24);color:#CFFFF3;font-size:12px}.bar{height:9px;background:rgba(255,255,255,.09);border-radius:999px;overflow:hidden;margin:12px 0}.bar div{height:100%;background:linear-gradient(135deg,var(--a),var(--b))}
+    section{padding:36px 0}h2{font-size:clamp(28px,4vw,44px);letter-spacing:-.045em;line-height:1.12;margin:0 0 10px}.sublead{color:var(--muted);margin:0 0 20px}.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.card{background:rgba(255,255,255,.065);border:1px solid var(--line);border-radius:22px;padding:18px;min-height:132px}.icon{font-size:26px}.card h3{margin:8px 0 6px;font-size:18px}.card p{margin:0;color:var(--muted);font-size:13px}.flow{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.box{background:var(--card);border:1px solid var(--line);border-radius:24px;padding:22px}.box strong{font-size:20px}.box p{color:var(--muted);font-size:14px;margin-bottom:0}.demo{display:grid;grid-template-columns:1fr 1fr;gap:16px}.form{display:grid;gap:10px}.field{background:rgba(255,255,255,.07);border:1px solid var(--line);border-radius:16px;padding:13px;color:var(--text);font-size:14px;width:100%} select.field,input.field,textarea.field{outline:none} textarea.field{min-height:82px;resize:vertical}.result{background:linear-gradient(180deg,rgba(120,242,205,.11),rgba(142,167,255,.08));border:1px solid rgba(120,242,205,.2);border-radius:24px;padding:22px}.result h3{font-size:24px;margin:6px 0}.smallprint{color:#707B8D;font-size:11px;margin-top:18px;text-align:center}footer{padding:30px 0 44px;color:var(--muted);font-size:13px;border-top:1px solid var(--line)}
+    .hidden{display:none}.metergrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}.meter{background:rgba(255,255,255,.055);border:1px solid var(--line);border-radius:16px;padding:12px}.meter small{color:var(--muted)}.meter b{font-size:20px}.resultBlock{margin-top:14px;padding-top:14px;border-top:1px solid var(--line)}
+    @media(max-width:880px){.hero-grid,.demo{grid-template-columns:1fr}.cards{grid-template-columns:repeat(2,1fr)}.flow{grid-template-columns:1fr}.nav a:not(.btn){display:none}.hero{padding-top:20px}}@media(max-width:520px){.cards{grid-template-columns:1fr}.metergrid{grid-template-columns:1fr}h1{font-size:46px}}
+  </style>
+</head>
+<body>
+  <header><div class="wrap nav"><div class="brand">Compass <span>by Synth X</span></div><nav><a href="#types">分類</a><a href="#demo">診断</a><a class="btn" href="#demo">無料で試す</a></nav></div></header>
+
+  <main>
+    <section class="hero">
+      <div class="wrap hero-grid">
+        <div>
+          <span class="tag">AI自己分析 / 恋愛 / 仕事 / 消費傾向</span>
+          <h1>あなたは、<br><span class="grad">何で勝てる人</span>か。</h1>
+          <p class="lead">たった5分。MBTI、価値観、怒りのポイント、恋愛傾向を統合して、あなたの「取扱説明書」を作ります。</p>
+          <div class="actions"><a class="btn" href="#demo">無料診断する</a><a class="btn sub" href="#types">分類を見る</a></div>
+          <div class="mini"><span>✓ 質問は最小限</span><span>✓ 結果は即時表示</span><span>✓ 仕事・恋愛・お金まで分析</span></div>
+        </div>
+        <div class="phone">
+          <div class="screen">
+            <span class="tag">Sample Result</span>
+            <div class="type">高速構造化<br>ドライバー</div>
+            <div class="score">87</div>
+            <div class="bar"><div style="width:87%"></div></div>
+            <p style="color:var(--muted);font-size:14px">複雑な情報から勝ち筋を見つけるのが得意。遅さ・曖昧さ・非合理に強く反応。</p>
+            <span class="chip">起業向き</span><span class="chip">時短志向</span><span class="chip">知的刺激重視</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="types">
+      <div class="wrap">
+        <h2>診断される8つのコンパス</h2>
+        <p class="sublead">性格タイプだけで終わらず、行動・恋愛・仕事・消費まで一気に見ます。</p>
+        <div class="cards">
+          <div class="card"><div class="icon">🧠</div><h3>思考OS</h3><p>直感型か、構造型か、感情型か。</p></div>
+          <div class="card"><div class="icon">🔥</div><h3>怒りの地雷</h3><p>何を踏まれると反応するか。</p></div>
+          <div class="card"><div class="icon">💼</div><h3>仕事の勝ち筋</h3><p>組織人、参謀、起業家、職人。</p></div>
+          <div class="card"><div class="icon">💰</div><h3>お金の使い方</h3><p>何に課金し、何をケチるか。</p></div>
+          <div class="card"><div class="icon">❤️</div><h3>恋愛傾向</h3><p>惹かれる相手、冷める瞬間。</p></div>
+          <div class="card"><div class="icon">🧲</div><h3>相性</h3><p>合う人、疲れる人、組むべき人。</p></div>
+          <div class="card"><div class="icon">🛒</div><h3>消費スイッチ</h3><p>刺さる言葉、買いやすい商品。</p></div>
+          <div class="card"><div class="icon">🗺️</div><h3>人生戦略</h3><p>今後3年で伸ばすべき武器。</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap flow">
+        <div class="box"><strong>1. 入力</strong><p>MBTI、職業、価値観、最近イラついたことを数問だけ。</p></div>
+        <div class="box"><strong>2. 分析</strong><p>性格・欲望・行動傾向・購買傾向を統合。</p></div>
+        <div class="box"><strong>3. 提案</strong><p>あなた向けの仕事、恋愛、商品、学習、体験を提示。</p></div>
+      </div>
+    </section>
+
+    <section id="demo">
+      <div class="wrap demo">
+        <div class="box">
+          <h2>5分診断</h2>
+          <div class="form">
+            <select id="mbti" class="field"><option value="">MBTI：不明</option><option>ENTJ</option><option>INTJ</option><option>ENTP</option><option>INTP</option><option>ENFJ</option><option>INFJ</option><option>ESTJ</option><option>ISTJ</option><option>ENFP</option><option>INFP</option><option>ESFJ</option><option>ISFJ</option><option>ESTP</option><option>ISTP</option><option>ESFP</option><option>ISFP</option></select>
+            <select id="job" class="field"><option value="business">職業：経営・金融・不動産</option><option value="company">会社員・管理職</option><option value="creative">企画・クリエイター</option><option value="tech">IT・エンジニア</option><option value="student">学生・未定</option></select>
+            <select id="anger" class="field"><option value="slow">一番イラつくこと：遅い</option><option value="vague">結論がない</option><option value="fake">知ったか・嘘っぽい</option><option value="rude">雑に扱われる</option><option value="emotional">感情的すぎる</option></select>
+            <select id="love" class="field"><option value="respect">恋愛で冷める瞬間：尊敬できない</option><option value="boring">退屈</option><option value="heavy">重い</option><option value="unfair">不誠実</option><option value="messy">だらしない</option></select>
+            <select id="desire" class="field"><option value="money">今欲しいもの：お金</option><option value="freedom">自由</option><option value="status">影響力</option><option value="peace">安心</option><option value="love">愛情</option></select>
+            <textarea id="free" class="field" placeholder="最近イラついたことを一言で（任意）"></textarea>
+            <button id="diagnose" class="btn">診断結果を見る</button>
+          </div>
+        </div>
+        <div class="result" id="result">
+          <span class="tag">Preview</span>
+          <h3>あなたのタイプがここに出ます</h3>
+          <p>入力後、思考OS・仕事の勝ち筋・恋愛傾向・消費スイッチを表示します。</p>
+        </div>
+      </div>
+      <div class="wrap"><p class="smallprint">入力情報は診断精度向上および関連サービス提案に利用される場合があります。詳細はプライバシーポリシーをご確認ください。</p></div>
+    </section>
+  </main>
+
+  <footer><div class="wrap">© Synth X / Compass — Human Insight Engine</div></footer>
+
+  <script>
+    const profiles = {
+      driver: {
+        title:'高速構造化ドライバー', score:88,
+        summary:'情報を一気に構造化し、勝ち筋を見つけるタイプ。遅さ・曖昧さ・非合理に強く反応します。',
+        work:'向いているのは、投資判断、事業開発、交渉、起業、参謀役。単純な定型作業だけの環境では消耗しやすいです。',
+        love:'恋愛では尊敬・知的刺激・テンポを重視。話が遅い、成長意欲がない、依存的すぎる相手には冷めやすいです。',
+        goods:['AI効率化ツール','高単価講座','投資サービス','エグゼクティブコーチング']
+      },
+      strategist: {
+        title:'静かな戦略家', score:82,
+        summary:'表に出るより、裏で構造を読み、長期戦略を組むタイプ。浅いノリや根拠の薄い話を嫌います。',
+        work:'調査、投資分析、戦略企画、プロダクト設計に向きます。短期の雑務が多い環境は不向きです。',
+        love:'恋愛では距離感と知性を重視。過干渉よりも、静かに理解し合える関係を好みます。',
+        goods:['読書サービス','分析ツール','資産形成','高品質ガジェット']
+      },
+      connector: {
+        title:'人間関係プロデューサー', score:79,
+        summary:'人の感情や空気を読み、場を動かすタイプ。共感と影響力が武器です。',
+        work:'営業、組織開発、採用、広報、コミュニティ運営に向きます。孤独な分析作業だけだと飽きやすいです。',
+        love:'恋愛では安心感と会話量を重視。放置される、雑に扱われることに強く反応します。',
+        goods:['美容・ファッション','旅行','コミュニティ','恋愛診断']
+      },
+      creator: {
+        title:'直感クリエイター', score:80,
+        summary:'面白さ、違和感、美意識に敏感。既存の枠から外れて新しい見せ方を作るタイプです。',
+        work:'企画、デザイン、SNS、コンテンツ、ブランド作りに向きます。細かすぎる管理環境は苦手です。',
+        love:'恋愛では刺激・センス・自由度を重視。退屈さや支配される感覚に冷めやすいです。',
+        goods:['生成AI','デザインツール','体験型イベント','ブランド品']
+      },
+      stabilizer: {
+        title:'安定設計マネージャー', score:76,
+        summary:'堅実に積み上げ、周囲を安定させるタイプ。無計画・不誠実・だらしなさにストレスを感じます。',
+        work:'管理、PM、経理、人事、オペレーション改善に向きます。カオスすぎる環境では疲れやすいです。',
+        love:'恋愛では誠実さ・生活感・約束を重視。浮ついた相手や不安定な相手とは合いにくいです。',
+        goods:['保険','家計管理','健康サービス','住宅・生活改善']
+      }
+    };
+    function diagnose(){
+      const mbti=document.getElementById('mbti').value;
+      const job=document.getElementById('job').value;
+      const anger=document.getElementById('anger').value;
+      const love=document.getElementById('love').value;
+      const desire=document.getElementById('desire').value;
+      const free=document.getElementById('free').value;
+      let scores={driver:0,strategist:0,connector:0,creator:0,stabilizer:0};
+      if(['ENTJ','ESTJ','ENTP','ESTP'].includes(mbti)) scores.driver+=3;
+      if(['INTJ','INTP','INFJ','ISTJ'].includes(mbti)) scores.strategist+=3;
+      if(['ENFJ','ESFJ','ENFP','INFP'].includes(mbti)) scores.connector+=2;
+      if(['ENTP','ENFP','INFP','ISFP','ESFP'].includes(mbti)) scores.creator+=2;
+      if(['ISTJ','ISFJ','ESTJ','ESFJ'].includes(mbti)) scores.stabilizer+=2;
+      if(job==='business') scores.driver+=3;
+      if(job==='tech') scores.strategist+=2;
+      if(job==='creative') scores.creator+=3;
+      if(job==='company') scores.stabilizer+=1;
+      if(anger==='slow'||anger==='vague') scores.driver+=3;
+      if(anger==='fake') scores.strategist+=2;
+      if(anger==='rude') scores.connector+=2;
+      if(anger==='emotional') scores.stabilizer+=2;
+      if(love==='respect') scores.driver+=2;
+      if(love==='boring') scores.creator+=2;
+      if(love==='heavy') scores.strategist+=2;
+      if(love==='unfair'||love==='messy') scores.stabilizer+=2;
+      if(desire==='money'||desire==='status') scores.driver+=2;
+      if(desire==='freedom') scores.creator+=2;
+      if(desire==='peace') scores.stabilizer+=2;
+      if(desire==='love') scores.connector+=2;
+      if(free.includes('遅')||free.includes('結論')||free.includes('無駄')) scores.driver+=2;
+      if(free.includes('嘘')||free.includes('浅')||free.includes('根拠')) scores.strategist+=2;
+      if(free.includes('雑')||free.includes('冷たい')) scores.connector+=2;
+      const key=Object.entries(scores).sort((a,b)=>b[1]-a[1])[0][0];
+      const p=profiles[key];
+      const result=document.getElementById('result');
+      result.innerHTML=`
+        <span class="tag">Your Result</span>
+        <h3>${p.title}</h3>
+        <div class="score">${p.score}</div>
+        <div class="bar"><div style="width:${p.score}%"></div></div>
+        <p>${p.summary}</p>
+        <div class="metergrid">
+          <div class="meter"><small>仕事</small><br><b>${key==='driver'?'起業・投資':key==='creator'?'企画・表現':key==='connector'?'営業・組織':key==='strategist'?'分析・戦略':'管理・改善'}</b></div>
+          <div class="meter"><small>恋愛</small><br><b>${love==='respect'?'尊敬重視':love==='boring'?'刺激重視':love==='heavy'?'距離感重視':'誠実重視'}</b></div>
+        </div>
+        <div class="resultBlock"><b>仕事の勝ち筋</b><p>${p.work}</p></div>
+        <div class="resultBlock"><b>恋愛傾向</b><p>${p.love}</p></div>
+        <div class="resultBlock"><b>刺さりやすい商品</b><br>${p.goods.map(g=>`<span class="chip">${g}</span>`).join('')}</div>
+      `;
+    }
+    document.getElementById('diagnose').addEventListener('click', diagnose);
+  </script>
+</body>
+</html>
