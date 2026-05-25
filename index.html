@@ -1,431 +1,264 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Compass | AI自己分析</title>
-  <style>
-    :root{
-      --bg:#070A12;--panel:#101827;--panel2:#151F32;--text:#F8FAFC;--muted:#9AA8BC;
-      --line:rgba(255,255,255,.12);--a:#70F0CB;--b:#8BA7FF;--c:#FFD36E;--bad:#FF8B8B;
-    }
-    *{box-sizing:border-box}
-    body{margin:0;background:radial-gradient(circle at 10% 0,rgba(112,240,203,.16),transparent 34%),radial-gradient(circle at 90% 0,rgba(139,167,255,.18),transparent 36%),var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Hiragino Sans","Yu Gothic",sans-serif;line-height:1.55}
-    a{text-decoration:none;color:inherit}
-    .wrap{width:min(1120px,calc(100% - 32px));margin:auto}
-    header{height:64px;display:flex;align-items:center;border-bottom:1px solid var(--line);background:rgba(7,10,18,.72);backdrop-filter:blur(18px);position:sticky;top:0;z-index:20}
-    .nav{display:flex;justify-content:space-between;align-items:center;width:100%}
-    .brand{font-weight:950;letter-spacing:-.03em}.brand span{color:var(--a)}
-    .navlinks{display:flex;gap:14px;align-items:center;color:var(--muted);font-size:13px}
-    .btn{border:0;border-radius:999px;padding:12px 18px;font-weight:900;background:linear-gradient(135deg,var(--a),var(--b));color:#071018;cursor:pointer;display:inline-flex;align-items:center;justify-content:center}
-    .btn.ghost{background:rgba(255,255,255,.07);border:1px solid var(--line);color:var(--text)}
-    .page{display:none}.page.active{display:block}
-    .hero{min-height:calc(100vh - 64px);display:grid;align-items:center;padding:26px 0}
-    .grid{display:grid;grid-template-columns:.95fr 1.05fr;gap:28px;align-items:center}
-    h1{font-size:clamp(42px,7vw,78px);line-height:.96;letter-spacing:-.07em;margin:14px 0}
-    .grad{background:linear-gradient(135deg,var(--a),var(--b));-webkit-background-clip:text;color:transparent}
-    .lead{font-size:17px;color:var(--muted);max-width:620px}
-    .tag{display:inline-flex;border:1px solid var(--line);background:rgba(255,255,255,.06);color:var(--muted);padding:7px 11px;border-radius:999px;font-size:12px}
-    .formcard,.card{background:rgba(255,255,255,.065);border:1px solid var(--line);border-radius:28px;padding:22px;box-shadow:0 24px 70px rgba(0,0,0,.25)}
-    .formgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-    .field{display:flex;flex-direction:column;gap:6px}
-    label{font-size:12px;color:var(--muted)}
-    input,select,textarea{width:100%;background:#0C1220;border:1px solid var(--line);border-radius:14px;color:var(--text);padding:12px 13px;outline:none;font-size:14px}
-    textarea{height:72px;resize:none}
-    select option{background:#101827;color:#111}
-    select{color:var(--text)}
-    .full{grid-column:1/-1}
-    .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
-    .mini{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px;color:var(--muted);font-size:12px}
-    .map{padding:36px 0 56px}
-    .mapgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
-    .mapbox{background:rgba(255,255,255,.055);border:1px solid var(--line);border-radius:22px;padding:18px}
-    .mapbox h3{margin:0 0 10px;font-size:18px}
-    .chips{display:flex;gap:7px;flex-wrap:wrap}
-    .chip{font-size:12px;border:1px solid rgba(112,240,203,.24);background:rgba(112,240,203,.1);color:#CFFFF3;border-radius:999px;padding:6px 9px}
-    .chip.blue{border-color:rgba(139,167,255,.25);background:rgba(139,167,255,.1);color:#DDE5FF}
-    .chip.yellow{border-color:rgba(255,211,110,.25);background:rgba(255,211,110,.1);color:#FFE8A6}
-    .resultHero{padding:28px 0 44px}
-    .resultGrid{display:grid;grid-template-columns:.8fr 1.2fr;gap:18px}
-    .scorecard{background:linear-gradient(180deg,rgba(112,240,203,.12),rgba(139,167,255,.08));border:1px solid rgba(112,240,203,.22);border-radius:30px;padding:26px}
-    .score{font-size:78px;font-weight:950;line-height:1;letter-spacing:-.06em}
-    .bar{height:10px;background:rgba(255,255,255,.12);border-radius:999px;overflow:hidden;margin:14px 0}.bar div{height:100%;background:linear-gradient(135deg,var(--a),var(--b))}
-    .typeTitle{font-size:34px;line-height:1.05;letter-spacing:-.04em;margin:8px 0 10px}
-    .tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:14px}
-    .tab{background:rgba(255,255,255,.06);border:1px solid var(--line);border-radius:18px;padding:14px}
-    .tab b{display:block;margin-bottom:4px}.tab span{color:var(--muted);font-size:13px}
-    .detail{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:14px}
-    .detail .card h3{margin:0 0 8px;font-size:20px}.detail .card p{margin:0;color:var(--muted);font-size:14px}
-    .list{margin:8px 0 0;padding-left:18px;color:var(--muted);font-size:14px}
-    .notice{color:#6f7b8d;font-size:11px;text-align:center;margin:18px 0 0}
-    @media(max-width:900px){.grid,.resultGrid{grid-template-columns:1fr}.hero{min-height:auto}.mapgrid,.detail{grid-template-columns:1fr}.tabs{grid-template-columns:1fr 1fr}.formgrid{grid-template-columns:1fr}.navlinks a:not(.btn){display:none}}
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Compass Human Map</title>
+<style>
+:root{
+  --bg:#070A12;--panel:#101827;--panel2:#141E31;--text:#F8FAFC;--muted:#9AA8BC;
+  --line:rgba(255,255,255,.14);--a:#70F0CB;--b:#8BA7FF;--c:#FFD36E;--p:#FF8FD2;--r:#FF8B8B;
+}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(circle at 12% 0,rgba(112,240,203,.17),transparent 34%),radial-gradient(circle at 90% 0,rgba(139,167,255,.19),transparent 36%),var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Hiragino Sans","Yu Gothic",sans-serif;line-height:1.5}
+.wrap{width:min(1220px,calc(100% - 28px));margin:auto}
+header{height:62px;display:flex;align-items:center;border-bottom:1px solid var(--line);background:rgba(7,10,18,.74);backdrop-filter:blur(18px);position:sticky;top:0;z-index:50}
+.nav{display:flex;justify-content:space-between;align-items:center;width:100%}.brand{font-weight:950;letter-spacing:-.03em}.brand span{color:var(--a)}
+.navlinks{display:flex;gap:10px;align-items:center;color:var(--muted);font-size:13px}
+button,.btn{border:0;border-radius:999px;padding:11px 17px;font-weight:900;background:linear-gradient(135deg,var(--a),var(--b));color:#071018;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;text-decoration:none}
+.btn.ghost{background:rgba(255,255,255,.07);border:1px solid var(--line);color:var(--text)}
+.page{display:none}.page.active{display:block}
+.hero{min-height:calc(100vh - 62px);display:grid;align-items:center;padding:22px 0}
+.grid{display:grid;grid-template-columns:.82fr 1.18fr;gap:22px;align-items:center}
+h1{font-size:clamp(42px,7vw,76px);line-height:.96;letter-spacing:-.075em;margin:14px 0}
+h2{font-size:clamp(30px,4.2vw,52px);line-height:1.05;letter-spacing:-.06em;margin:0 0 10px}
+.grad{background:linear-gradient(135deg,var(--a),var(--b));-webkit-background-clip:text;color:transparent}
+.lead{font-size:16px;color:var(--muted);max-width:640px}.tag{display:inline-flex;border:1px solid var(--line);background:rgba(255,255,255,.06);color:var(--muted);padding:7px 11px;border-radius:999px;font-size:12px}
+.card{background:rgba(255,255,255,.065);border:1px solid var(--line);border-radius:26px;padding:20px;box-shadow:0 22px 70px rgba(0,0,0,.22)}
+.formgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.field{display:flex;flex-direction:column;gap:5px}label{font-size:12px;color:var(--muted)}
+select,textarea,input{width:100%;background:#101827!important;border:1px solid rgba(255,255,255,.22);border-radius:14px;color:#F8FAFC!important;padding:11px 12px;outline:none;font-size:14px;appearance:auto}
+select option{background:#ffffff!important;color:#111827!important}
+textarea{height:60px;resize:none}.full{grid-column:1/-1}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:13px}.mini{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;color:var(--muted);font-size:12px}
+.notice{color:#667386;font-size:11px;text-align:center;margin:12px 0 0}
+
+/* mind map */
+.mapStage{position:relative;height:680px;border-radius:32px;background:radial-gradient(circle at 50% 45%,rgba(112,240,203,.13),transparent 28%),rgba(255,255,255,.045);border:1px solid var(--line);overflow:hidden;margin-top:20px}
+.centerNode{position:absolute;left:50%;top:48%;transform:translate(-50%,-50%);width:190px;height:190px;border-radius:50%;background:linear-gradient(135deg,var(--a),var(--b));color:#071018;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;font-weight:950;z-index:8;box-shadow:0 24px 70px rgba(112,240,203,.25)}
+.centerNode .big{font-size:25px;line-height:1.05}.centerNode .small{font-size:12px;margin-top:8px;opacity:.82}
+.typeNode{position:absolute;width:155px;min-height:108px;border-radius:22px;background:rgba(13,20,35,.92);border:1px solid rgba(255,255,255,.16);padding:12px;box-shadow:0 14px 38px rgba(0,0,0,.22);animation:float 5s ease-in-out infinite;cursor:pointer;transition:.18s;z-index:5}
+.typeNode:hover{transform:translateY(-6px) scale(1.03);border-color:var(--a);box-shadow:0 16px 45px rgba(112,240,203,.16)}
+.typeNode .emoji{font-size:25px}.typeNode b{display:block;font-size:18px;letter-spacing:-.03em}.typeNode small{display:block;color:var(--muted);font-size:11px;line-height:1.35;margin-top:3px}
+.typeNode.nt{border-color:rgba(139,167,255,.36)}.typeNode.nf{border-color:rgba(255,143,210,.32)}.typeNode.sj{border-color:rgba(112,240,203,.32)}.typeNode.sp{border-color:rgba(255,211,110,.32)}
+.arrow{position:absolute;height:2px;background:rgba(255,255,255,.16);transform-origin:left center;z-index:2}.arrow.good{background:linear-gradient(90deg,rgba(112,240,203,.8),rgba(112,240,203,.05))}.arrow.bad{background:linear-gradient(90deg,rgba(255,139,139,.8),rgba(255,139,139,.04));border-top:1px dashed rgba(255,139,139,.7)}
+.arrow::after{content:"";position:absolute;right:-2px;top:-4px;border-left:8px solid rgba(255,255,255,.22);border-top:5px solid transparent;border-bottom:5px solid transparent}
+.arrow.good::after{border-left-color:rgba(112,240,203,.8)}.arrow.bad::after{border-left-color:rgba(255,139,139,.8)}
+@keyframes float{0%,100%{margin-top:0}50%{margin-top:-9px}}
+.legend{position:absolute;left:18px;bottom:16px;display:flex;gap:8px;flex-wrap:wrap;z-index:10}
+.legend span{font-size:11px;color:var(--muted);background:rgba(255,255,255,.07);border:1px solid var(--line);border-radius:999px;padding:6px 9px}
+
+/* sections */
+.sections{padding:36px 0 54px}.chips{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}
+.chip{font-size:12px;border:1px solid rgba(112,240,203,.24);background:rgba(112,240,203,.1);color:#CFFFF3;border-radius:999px;padding:6px 9px}.chip.blue{border-color:rgba(139,167,255,.25);background:rgba(139,167,255,.1);color:#DDE5FF}.chip.yellow{border-color:rgba(255,211,110,.25);background:rgba(255,211,110,.1);color:#FFE8A6}.chip.pink{border-color:rgba(255,143,210,.25);background:rgba(255,143,210,.1);color:#FFD6F0}
+.sysgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.sys p{color:var(--muted);font-size:13px;margin:0}
+.mbtiDetail{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:14px}.mbtiCard{background:rgba(255,255,255,.055);border:1px solid var(--line);border-radius:20px;padding:14px}.mbtiCard b{font-size:20px}.mbtiCard p{color:var(--muted);font-size:12px;margin:5px 0 0}
+
+/* result */
+.resultHero{padding:26px 0 44px}.resultGrid{display:grid;grid-template-columns:.72fr 1.28fr;gap:16px;align-items:start}.scorecard{background:linear-gradient(180deg,rgba(112,240,203,.12),rgba(139,167,255,.08));border:1px solid rgba(112,240,203,.22);border-radius:30px;padding:23px;position:sticky;top:78px}.typeTitle{font-size:31px;line-height:1.05;letter-spacing:-.045em;margin:8px 0 10px}.score{font-size:66px;font-weight:950;line-height:1;letter-spacing:-.06em}.bar{height:10px;background:rgba(255,255,255,.12);border-radius:999px;overflow:hidden;margin:12px 0}.bar div{height:100%;background:linear-gradient(135deg,var(--a),var(--b))}
+.detail{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:12px}.detail .card p{margin:0;color:var(--muted);font-size:14px}.list{margin:8px 0 0;padding-left:18px;color:var(--muted);font-size:14px}.matrix{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:12px}.relation{border-radius:22px;padding:16px;border:1px solid var(--line);background:rgba(255,255,255,.055)}.relation.good{border-color:rgba(112,240,203,.28)}.relation.bad{border-color:rgba(255,139,139,.28)}.relation.warn{border-color:rgba(255,211,110,.28)}.relation b{display:block;margin-bottom:5px}.relation p{margin:0;color:var(--muted);font-size:13px}
+@media(max-width:1050px){.grid,.resultGrid{grid-template-columns:1fr}.hero{min-height:auto}.sysgrid,.mbtiDetail{grid-template-columns:1fr 1fr}.formgrid{grid-template-columns:1fr 1fr}.scorecard{position:static}.detail,.matrix{grid-template-columns:1fr}.mapStage{height:900px}.typeNode{width:145px}.navlinks a:not(.btn){display:none}}
+@media(max-width:620px){.formgrid,.sysgrid,.mbtiDetail{grid-template-columns:1fr}.mapStage{height:1250px}.centerNode{width:150px;height:150px}.centerNode .big{font-size:20px}.typeNode{width:138px}}
+</style>
 </head>
 <body>
 <header>
   <div class="wrap nav">
-    <div class="brand">Compass <span>by Synth X</span></div>
+    <div class="brand">Compass <span>Human Map</span></div>
     <div class="navlinks">
       <a href="#" onclick="showPage('home')">診断</a>
-      <a href="#" onclick="scrollMap()">全体MAP</a>
+      <a href="#" onclick="scrollMap()">相関図</a>
       <a class="btn ghost" href="#" onclick="resetAll()">やり直す</a>
     </div>
   </div>
 </header>
 
 <main>
-  <section id="home" class="page active">
-    <div class="wrap hero">
-      <div class="grid">
-        <div>
-          <span class="tag">AI自己分析 / MBTI / エニアグラム / 恋愛 / 消費傾向</span>
-          <h1>あなたは、<br><span class="grad">何で勝てる人</span>か。</h1>
-          <p class="lead">少ない入力で、思考OS・怒りの地雷・仕事の勝ち筋・恋愛傾向・刺さりやすい商品まで診断します。</p>
-          <div class="mini"><span>✓ 1画面入力</span><span>✓ 結果ページに遷移</span><span>✓ 全体MAPつき</span></div>
-        </div>
+<section id="home" class="page active">
+  <div class="wrap hero">
+    <div class="grid">
+      <div>
+        <span class="tag">MBTI × Enneagram × Big5 × Astrology</span>
+        <h1>あなたは、<br><span class="grad">人間相関図</span>の<br>どこにいるか。</h1>
+        <p class="lead">性格タイプを点で見るのではなく、ドラマの相関図みたいに「惹かれる・補完する・衝突する」をMAP化します。</p>
+        <div class="mini"><span>✓ ふよふよ動く相関図</span><span>✓ MBTI詳細つき</span><span>✓ 結果ページで個別MAP</span></div>
+      </div>
 
-        <div class="formcard">
-          <div class="formgrid">
-            <div class="field">
-              <label>MBTI</label>
-              <select id="mbti">
-                <option value="">不明</option><option>ENTJ</option><option>INTJ</option><option>ENTP</option><option>INTP</option>
-                <option>ENFJ</option><option>INFJ</option><option>ENFP</option><option>INFP</option>
-                <option>ESTJ</option><option>ISTJ</option><option>ESFJ</option><option>ISFJ</option>
-                <option>ESTP</option><option>ISTP</option><option>ESFP</option><option>ISFP</option>
-              </select>
-            </div>
-            <div class="field">
-              <label>エニアグラム</label>
-              <select id="ennea">
-                <option value="">不明</option><option value="1">1 改革する人</option><option value="2">2 助ける人</option><option value="3">3 達成する人</option>
-                <option value="4">4 個性的な人</option><option value="5">5 調べる人</option><option value="6">6 忠実な人</option>
-                <option value="7">7 熱中する人</option><option value="8">8 挑戦する人</option><option value="9">9 平和を好む人</option>
-              </select>
-            </div>
-            <div class="field">
-              <label>一番イラつくこと</label>
-              <select id="anger">
-                <option value="slow">遅い</option><option value="vague">結論がない</option><option value="rude">雑に扱われる</option>
-                <option value="fake">知ったか・不誠実</option><option value="heavy">重い・依存的</option><option value="boring">退屈</option>
-              </select>
-            </div>
-            <div class="field">
-              <label>今一番欲しいもの</label>
-              <select id="desire">
-                <option value="money">お金</option><option value="freedom">自由</option><option value="status">影響力</option>
-                <option value="love">恋愛</option><option value="peace">安心</option><option value="growth">成長</option>
-              </select>
-            </div>
-            <div class="field">
-              <label>恋愛で冷める瞬間</label>
-              <select id="love">
-                <option value="respect">尊敬できない</option><option value="slow">話が遅い</option><option value="clingy">重い</option>
-                <option value="cold">冷たい</option><option value="boring">刺激がない</option><option value="dishonest">不誠実</option>
-              </select>
-            </div>
-            <div class="field">
-              <label>仕事で一番気持ちいい瞬間</label>
-              <select id="work">
-                <option value="win">勝ち筋を見つけた</option><option value="help">人の役に立った</option><option value="craft">完成度を上げた</option>
-                <option value="lead">人を動かした</option><option value="learn">深く理解した</option><option value="stable">安定運用できた</option>
-              </select>
-            </div>
-            <div class="field full">
-              <label>自由記述：最近イラついたこと / うまくいったこと</label>
-              <textarea id="free" placeholder="例：説明が長いのに結論がなく、時間を無駄にされた。逆に、複雑な案件の勝ち筋を一気に整理できた時は気持ちよかった。"></textarea>
-            </div>
-          </div>
-          <div class="actions">
-            <button class="btn" onclick="diagnose()">診断結果を見る</button>
-            <button class="btn ghost" onclick="scrollMap()">全体MAPを見る</button>
-          </div>
-          <p class="notice">入力情報は診断精度向上および関連サービス提案に利用される場合があります。</p>
+      <div class="card">
+        <div class="formgrid">
+          <div class="field"><label>MBTI</label><select id="mbti"></select></div>
+          <div class="field"><label>エニアグラム</label><select id="ennea"></select></div>
+          <div class="field"><label>星座</label><select id="zodiac"></select></div>
+          <div class="field"><label>Big5：開放性</label><select id="open"><option value="high">高い</option><option value="mid">普通</option><option value="low">低い</option></select></div>
+          <div class="field"><label>Big5：誠実性</label><select id="con"><option value="high">高い</option><option value="mid">普通</option><option value="low">低い</option></select></div>
+          <div class="field"><label>Big5：外向性</label><select id="ext"><option value="high">高い</option><option value="mid">普通</option><option value="low">低い</option></select></div>
+          <div class="field"><label>一番イラつくこと</label><select id="anger"><option value="slow">遅い</option><option value="vague">結論がない</option><option value="rude">雑に扱われる</option><option value="fake">知ったか・不誠実</option><option value="heavy">重い・依存的</option><option value="boring">退屈</option></select></div>
+          <div class="field"><label>恋愛で冷める瞬間</label><select id="love"><option value="respect">尊敬できない</option><option value="slow">話が遅い</option><option value="clingy">重い</option><option value="cold">冷たい</option><option value="boring">刺激がない</option><option value="dishonest">不誠実</option></select></div>
+          <div class="field"><label>今欲しいもの</label><select id="desire"><option value="money">お金</option><option value="freedom">自由</option><option value="status">影響力</option><option value="love">恋愛</option><option value="peace">安心</option><option value="growth">成長</option></select></div>
+          <div class="field full"><label>自由記述</label><textarea id="free" placeholder="最近イラついたこと、うまくいったこと、好きな人のタイプなど"></textarea></div>
+        </div>
+        <div class="actions"><button onclick="diagnose()">人間MAPを生成</button><a class="btn ghost" href="#" onclick="scrollMap()">相関図を見る</a></div>
+        <p class="notice">入力情報は診断精度向上および関連サービス提案に利用される場合があります。</p>
+      </div>
+    </div>
+  </div>
+
+  <div id="mapBlock" class="wrap sections">
+    <h2>Human Relationship Map</h2>
+    <p class="lead">MBTIを中心に、エニアグラム・Big5・占星術を重ねて「人間の相関図」を作るイメージ。</p>
+    <div id="globalMap" class="mapStage"></div>
+  </div>
+
+  <div class="wrap sections">
+    <h2>MBTI 16タイプ詳細</h2>
+    <p class="lead">MBTIは「脳の処理OS」。I/E、N/S、T/F、J/Pの4軸で人間の処理癖を見る。</p>
+    <div class="chips">
+      <span class="chip blue">I 内向的</span><span class="chip blue">E 外交的</span>
+      <span class="chip blue">N 直感的</span><span class="chip blue">S 現実的・五感</span>
+      <span class="chip blue">T 合理的・思考</span><span class="chip blue">F 感情的</span>
+      <span class="chip blue">J 秩序を好む</span><span class="chip blue">P 自由を好む</span>
+    </div>
+    <div id="mbtiDetails" class="mbtiDetail"></div>
+  </div>
+
+  <div class="wrap sections">
+    <h2>統合レイヤー</h2>
+    <div class="sysgrid">
+      <div class="card sys"><h3>MBTI</h3><p>認知・判断・行動様式。人間のOS。</p><div class="chips"><span class="chip blue">I/E</span><span class="chip blue">N/S</span><span class="chip blue">T/F</span><span class="chip blue">J/P</span></div></div>
+      <div class="card sys"><h3>エニアグラム</h3><p>欲望と恐怖。なぜそれを求めるか。</p><div class="chips"><span class="chip yellow">1 正しさ</span><span class="chip yellow">3 達成</span><span class="chip yellow">5 理解</span><span class="chip yellow">8 支配</span></div></div>
+      <div class="card sys"><h3>Big5</h3><p>開放性・誠実性・外向性などの座標補正。</p><div class="chips"><span class="chip">開放性</span><span class="chip">誠実性</span><span class="chip">外向性</span></div></div>
+      <div class="card sys"><h3>占星術</h3><p>火・地・風・水の象徴レイヤーとして言語化に使う。</p><div class="chips"><span class="chip pink">火</span><span class="chip pink">地</span><span class="chip pink">風</span><span class="chip pink">水</span></div></div>
+    </div>
+  </div>
+</section>
+
+<section id="result" class="page">
+  <div class="wrap resultHero">
+    <div class="resultGrid">
+      <div class="scorecard">
+        <span class="tag">Your Position</span>
+        <div id="resultType" class="typeTitle"></div>
+        <div id="resultScore" class="score"></div>
+        <div class="bar"><div id="scoreBar"></div></div>
+        <p id="resultLead" class="lead"></p>
+        <div id="resultChips" class="chips"></div>
+        <div class="actions"><button class="btn ghost" onclick="showPage('home')">入力に戻る</button></div>
+      </div>
+      <div>
+        <h2>あなた中心の相関図</h2>
+        <div id="relationshipMap" class="mapStage" style="height:560px"></div>
+        <div class="matrix">
+          <div class="relation good"><b>惹かれやすい</b><p id="goodText"></p></div>
+          <div class="relation warn"><b>補完してくれる</b><p id="supportText"></p></div>
+          <div class="relation bad"><b>衝突しやすい</b><p id="badText"></p></div>
+        </div>
+        <div class="detail">
+          <div class="card"><h3>中核</h3><p id="coreText"></p></div>
+          <div class="card"><h3>仕事の勝ち筋</h3><p id="workText"></p></div>
+          <div class="card"><h3>恋愛の引力</h3><p id="loveText"></p></div>
+          <div class="card"><h3>刺さる商品・言葉</h3><ul id="productList" class="list"></ul></div>
         </div>
       </div>
     </div>
-
-    <div id="map" class="wrap map">
-      <h2>全体MAP</h2>
-      <p class="lead">Compassは既存分類を材料にしつつ、最終的には「勝ち筋」で分類します。</p>
-      <div class="mapgrid">
-        <div class="mapbox">
-          <h3>MBTI 16分類</h3>
-          <div class="chips">
-            <span class="chip blue">ENTJ 指揮官</span><span class="chip blue">INTJ 戦略家</span><span class="chip blue">ENTP 討論者</span><span class="chip blue">INTP 研究者</span>
-            <span class="chip blue">ENFJ 教導者</span><span class="chip blue">INFJ 提唱者</span><span class="chip blue">ENFP 運動家</span><span class="chip blue">INFP 仲介者</span>
-            <span class="chip blue">ESTJ 管理者</span><span class="chip blue">ISTJ 実務家</span><span class="chip blue">ESFJ 領事</span><span class="chip blue">ISFJ 擁護者</span>
-            <span class="chip blue">ESTP 起業家</span><span class="chip blue">ISTP 職人</span><span class="chip blue">ESFP 表現者</span><span class="chip blue">ISFP 芸術家</span>
-          </div>
-        </div>
-        <div class="mapbox">
-          <h3>エニアグラム 9分類</h3>
-          <div class="chips">
-            <span class="chip yellow">1 改革</span><span class="chip yellow">2 支援</span><span class="chip yellow">3 達成</span>
-            <span class="chip yellow">4 個性</span><span class="chip yellow">5 探究</span><span class="chip yellow">6 安全</span>
-            <span class="chip yellow">7 熱中</span><span class="chip yellow">8 挑戦</span><span class="chip yellow">9 調停</span>
-          </div>
-        </div>
-        <div class="mapbox">
-          <h3>Compass 独自8分類</h3>
-          <div class="chips">
-            <span class="chip">高速構造化ドライバー</span><span class="chip">静かな戦略家</span><span class="chip">熱狂アイデアメーカー</span><span class="chip">共感プロデューサー</span>
-            <span class="chip">精密クラフトマン</span><span class="chip">安定オペレーター</span><span class="chip">美意識クリエイター</span><span class="chip">調和ナビゲーター</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section id="result" class="page">
-    <div class="wrap resultHero">
-      <div class="resultGrid">
-        <div class="scorecard">
-          <span class="tag">Your Compass Result</span>
-          <div id="resultType" class="typeTitle">高速構造化ドライバー</div>
-          <div id="resultScore" class="score">88</div>
-          <div class="bar"><div id="scoreBar" style="width:88%"></div></div>
-          <p id="resultLead" class="lead">情報を一気に構造化し、勝ち筋を見つけるタイプ。</p>
-          <div id="resultChips" class="chips"></div>
-          <div class="actions"><button class="btn ghost" onclick="showPage('home')">入力に戻る</button></div>
-        </div>
-
-        <div>
-          <div class="tabs">
-            <div class="tab"><b>仕事</b><span id="jobShort">起業・投資</span></div>
-            <div class="tab"><b>恋愛</b><span id="loveShort">尊敬重視</span></div>
-            <div class="tab"><b>消費</b><span id="buyShort">時短・高品質</span></div>
-            <div class="tab"><b>地雷</b><span id="angerShort">遅さ・曖昧さ</span></div>
-          </div>
-
-          <div class="detail">
-            <div class="card"><h3>中核性格</h3><p id="coreText"></p></div>
-            <div class="card"><h3>仕事の勝ち筋</h3><p id="workText"></p></div>
-            <div class="card"><h3>恋愛傾向</h3><p id="loveText"></p></div>
-            <div class="card"><h3>刺さりやすい商品</h3><ul id="productList" class="list"></ul></div>
-            <div class="card"><h3>失敗パターン</h3><p id="riskText"></p></div>
-            <div class="card"><h3>3年戦略</h3><p id="strategyText"></p></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="map" style="padding-bottom:0">
-        <h2>あなたの位置づけ</h2>
-        <div class="mapgrid">
-          <div class="mapbox"><h3>MBTI入力</h3><div id="mbtiOut" class="chips"></div></div>
-          <div class="mapbox"><h3>エニアグラム入力</h3><div id="enneaOut" class="chips"></div></div>
-          <div class="mapbox"><h3>Compass分類</h3><div id="compassOut" class="chips"></div></div>
-        </div>
-      </div>
-    </div>
-  </section>
+  </div>
+</section>
 </main>
 
 <script>
-const types = {
-  driver: {
-    name:"高速構造化ドライバー", score:88,
-    lead:"情報を一気に構造化し、勝ち筋を見つけるタイプ。遅さ・曖昧さ・非合理に強く反応します。",
-    chips:["起業向き","投資判断","交渉","時短志向"],
-    job:"起業・投資", love:"尊敬重視", buy:"時短・高品質", anger:"遅さ・曖昧さ",
-    core:"複雑な情報を短時間で整理し、勝てる構造に変える力が強いです。人より早く本質に到達する一方、相手の理解速度が遅いと苛立ちやすいタイプです。",
-    work:"向いているのは、投資判断、事業開発、交渉、起業、参謀役。単純な定型作業だけの環境では消耗しやすいです。",
-    loveText:"恋愛では尊敬・知的刺激・テンポを重視します。話が遅い、成長意欲がない、依存的すぎる相手には冷めやすいです。",
-    products:["AI効率化ツール","高単価講座","投資サービス","エグゼクティブコーチング"],
-    risk:"勝ち筋が見えた瞬間に走れる反面、法務・税務・実務オペレーションが後追いになると事故りやすいです。",
-    strategy:"やるべきことは、走る速度を落とすことではなく、ブレーキ役・事務方・リーガル壁打ちを横に置くことです。"
-  },
-  strategist: {
-    name:"静かな戦略家", score:84,
-    lead:"深く考え、長期の配置と勝ち筋を設計するタイプ。表には出すぎず、裏で構造を握ります。",
-    chips:["長期戦略","分析","独立思考","少数精鋭"],
-    job:"戦略・分析", love:"深い理解", buy:"専門性・希少性", anger:"浅さ・騒がしさ",
-    core:"直感よりも仮説と検証で動くタイプです。ノイズを嫌い、深く考える時間があるほど精度が上がります。",
-    work:"向いているのは、戦略立案、研究、投資分析、プロダクト設計、専門職です。",
-    loveText:"恋愛では、表面的な盛り上がりよりも、深く理解し合える相手に惹かれます。",
-    products:["専門書・研究資料","分析ツール","高機能ガジェット","静かな作業環境"],
-    risk:"考えすぎて初動が遅れることがあります。完璧に見えてから動くと機会を逃します。",
-    strategy:"70%の確信で小さく出す。仮説検証を前提に早めに市場へ当てることが重要です。"
-  },
-  maker: {
-    name:"熱狂アイデアメーカー", score:82,
-    lead:"新しい可能性を見つけ、人を巻き込みながら形にするタイプ。退屈が最大の敵です。",
-    chips:["企画","発信","巻き込み","変化志向"],
-    job:"企画・発信", love:"刺激重視", buy:"新体験", anger:"退屈・停滞",
-    core:"可能性を見つける速度が速く、面白いと思った瞬間に動き出せます。変化と刺激がエネルギー源です。",
-    work:"向いているのは、新規事業、マーケティング、発信、コミュニティ運営、営業企画です。",
-    loveText:"恋愛では一緒にいて世界が広がる相手に惹かれます。単調・保守的・反応が薄い相手には飽きやすいです。",
-    products:["新サービス体験","旅行・イベント","発信ツール","コミュニティ"],
-    risk:"広げる力が強い反面、継続運用や細部の詰めが弱くなりやすいです。",
-    strategy:"アイデアを増やすより、3つまで絞って実装担当を置くと成果が出ます。"
-  },
-  producer: {
-    name:"共感プロデューサー", score:80,
-    lead:"人の感情や空気を読み、場を前に進めるタイプ。人を活かすことで成果を出します。",
-    chips:["人間理解","調整","育成","共感"],
-    job:"組織・育成", love:"安心と熱量", buy:"人・体験", anger:"冷たさ・不誠実",
-    core:"相手の感情やニーズを掴むのが得意です。自分単独で勝つより、人を活かして大きな成果を出すタイプです。",
-    work:"向いているのは、マネジメント、営業、採用、教育、コミュニティ設計、PMです。",
-    loveText:"恋愛では安心感と熱量の両方を求めます。不誠実、冷淡、感謝がない相手には傷つきやすいです。",
-    products:["コーチング","美容・ウェルネス","コミュニケーション講座","相性診断"],
-    risk:"人に合わせすぎると、自分の意思決定が遅れます。",
-    strategy:"誰を助けるかを選ぶこと。全員を救おうとしない方が強みが活きます。"
-  },
-  craftsman: {
-    name:"精密クラフトマン", score:79,
-    lead:"完成度・品質・一貫性を重視するタイプ。雑さに強く反応します。",
-    chips:["品質","専門性","改善","職人性"],
-    job:"専門・品質", love:"誠実重視", buy:"耐久性・本物", anger:"雑さ・嘘",
-    core:"細部の違和感を見逃さず、品質を上げる力があります。派手さよりも、確かな完成度で信頼を作ります。",
-    work:"向いているのは、専門職、品質管理、設計、編集、法務、財務、職人的な仕事です。",
-    loveText:"恋愛では誠実さと安定感を重視します。嘘・雑さ・口だけの相手には冷めやすいです。",
-    products:["高品質ガジェット","専門ツール","職人系サービス","長く使える商品"],
-    risk:"完璧主義でリリースが遅れることがあります。",
-    strategy:"80点で出して、改善で100点に近づける運用にすると成果が速くなります。"
-  },
-  operator: {
-    name:"安定オペレーター", score:76,
-    lead:"仕組みを守り、安定運用するタイプ。安心・継続・信頼を重視します。",
-    chips:["安定","継続","管理","信頼"],
-    job:"運用・管理", love:"安心重視", buy:"安全・保証", anger:"不安定・無責任",
-    core:"変化よりも安定を重視し、約束やルールを大切にします。信頼される基盤を作るのが得意です。",
-    work:"向いているのは、運用管理、経理、人事、PM、カスタマーサクセス、バックオフィスです。",
-    loveText:"恋愛では安心感、誠実さ、生活の安定を重視します。",
-    products:["保険・保証","家計管理","健康管理","安定型投資"],
-    risk:"変化を避けすぎると、大きな機会を逃しやすいです。",
-    strategy:"安全圏を残しながら、小さな挑戦枠を定期的に持つと成長できます。"
-  },
-  creator: {
-    name:"美意識クリエイター", score:81,
-    lead:"感性・世界観・表現を重視するタイプ。普通すぎるものに惹かれません。",
-    chips:["美意識","表現","世界観","独自性"],
-    job:"ブランド・制作", love:"感性重視", buy:"デザイン・物語", anger:"ダサさ・没個性",
-    core:"自分の感覚に強い軸があり、世界観を作る力があります。数字だけでは動かず、意味や美意識が必要です。",
-    work:"向いているのは、ブランド、デザイン、コンテンツ、企画、空間づくり、編集です。",
-    loveText:"恋愛では感性が合うか、世界観を共有できるかを重視します。",
-    products:["ファッション","アート・インテリア","ブランド品","体験型サービス"],
-    risk:"感覚に寄りすぎると、収益化や運用が後回しになります。",
-    strategy:"美意識を商品設計・価格設計・導線設計に接続すると強いです。"
-  },
-  navigator: {
-    name:"調和ナビゲーター", score:75,
-    lead:"衝突を減らし、人や場を落ち着かせるタイプ。全体最適を見ます。",
-    chips:["調和","聞く力","安心","橋渡し"],
-    job:"調整・支援", love:"穏やかさ", buy:"安心・癒し", anger:"圧・対立",
-    core:"人の間に入り、場を穏やかに整える力があります。強い主張よりも、自然に全体を良くするタイプです。",
-    work:"向いているのは、サポート、調整、カウンセリング、CS、教育、福祉、人事です。",
-    loveText:"恋愛では穏やかさと居心地を重視します。圧が強い相手や支配的な相手には疲れやすいです。",
-    products:["癒し体験","生活改善","カウンセリング","家族向けサービス"],
-    risk:"自分の希望を後回しにしすぎることがあります。",
-    strategy:"嫌なことを明確に言う練習をすると、調和力がさらに武器になります。"
-  }
+const mbtiData=[
+["ENTJ","指揮官","🦁","NT","勝ち筋を作り、人を動かす。遅さと無能に厳しい。"],
+["INTJ","戦略家","🧙","NT","長期戦略と構造理解。静かに勝ち筋を設計する。"],
+["ENTP","討論者","🃏","NT","発想と突破力。退屈を嫌い、可能性を広げる。"],
+["INTP","論理学者","🔬","NT","原理と分析。納得できるまで深掘りする。"],
+["ENFJ","主人公","🧑‍🏫","NF","人を導くプロデューサー。空気と物語を作る。"],
+["INFJ","提唱者","🕯️","NF","洞察と理想。深く人を読み、静かに導く。"],
+["ENFP","運動家","🌈","NF","熱量と好奇心。人と可能性を接続する。"],
+["INFP","仲介者","🌙","NF","価値観と感性。自分らしさと意味を重視する。"],
+["ESTJ","管理者","🛡️","SJ","秩序と実行。ルールと責任で組織を回す。"],
+["ISTJ","実務家","📘","SJ","正確さと継続。約束と品質を守る。"],
+["ESFJ","領事","🤝","SJ","面倒見と調和。人間関係の安定を作る。"],
+["ISFJ","擁護者","🧸","SJ","献身と安心。大切な人を静かに支える。"],
+["ESTP","起業家","🏎️","SP","現場突破と度胸。動きながら勝つ。"],
+["ISTP","巨匠","🛠️","SP","実践と観察。手を動かして理解する。"],
+["ESFP","表現者","🎤","SP","場を明るくする。体験と感情を楽しむ。"],
+["ISFP","冒険家","🎨","SP","感性と自由。静かな美意識を持つ。"]
+];
+const ennea=[
+["","不明"],["1","1 改革する人"],["2","2 人を助ける人"],["3","3 達成する人"],["4","4 個性的な人"],["5","5 調べる人"],["6","6 忠実な人"],["7","7 熱中する人"],["8","8 挑戦する人"],["9","9 平和をもたらす人"]
+];
+const zodiac=["不明","牡羊座","牡牛座","双子座","蟹座","獅子座","乙女座","天秤座","蠍座","射手座","山羊座","水瓶座","魚座"];
+const typeText={
+driver:{name:"高速構造化ドライバー",score:88,chips:["勝ち筋発見","実力主義","時短志向","尊敬重視"],lead:"複雑な情報を一気に構造化し、勝てる場所を見つけるタイプ。",core:"他人より早く違和感を拾い、論点を構造化し、勝ち筋に変換します。遅さ・曖昧さ・非合理に強く反応します。",work:"投資判断、事業開発、交渉、起業、参謀役。勝負所で一気に構造を作る役が向いています。",love:"尊敬・知的刺激・会話速度が重要。依存的、成長意欲がない、話が遅い相手には冷めやすいです。",products:["AI効率化ツール","高単価講座","投資サービス","エグゼクティブコーチング"],good:"ENTP/INTJ/ENFP。話が速く、知的刺激がある人。",support:"ISTJ/ISFJ/Type6。足元と運用を固める人。",bad:"依存的なF型、保守的すぎるS型、結論の遅い調整型。"},
+strategist:{name:"静かな戦略家",score:84,chips:["長期戦略","分析","独立思考","深掘り"],lead:"静かに深く考え、長期配置を設計するタイプ。",core:"静かに情報を集め、長期で勝てる配置を作ります。浅い議論や感情的な圧に疲れやすいです。",work:"戦略、研究、投資分析、設計、専門職。単独思考と仮説検証が武器です。",love:"深く理解し合える相手に惹かれます。表面的なノリや過剰な干渉は苦手です。",products:["専門書","分析ツール","高機能ガジェット","静かな作業環境"],good:"ENTJ/INFJ/INTP。深い話と戦略を共有できる人。",support:"ENFJ/ESFJ。人間関係や場づくりを補う人。",bad:"感情で押し切る人、浅いノリだけの人、距離感が近すぎる人。"},
+maker:{name:"熱狂アイデアメーカー",score:82,chips:["企画","発信","新体験","自由"],lead:"新しい可能性を見つけ、人を巻き込みながら形にするタイプ。",core:"面白さと可能性に強く反応します。退屈や停滞が最大の敵です。",work:"新規事業、マーケ、発信、企画、営業。ゼロイチや空気づくりが得意です。",love:"一緒にいて世界が広がる相手に惹かれます。単調な関係には飽きやすいです。",products:["新サービス","旅行・イベント","発信ツール","コミュニティ"],good:"INTJ/INFJ/ENTJ。発想を形にする相棒。",support:"ISTJ/ISFJ。継続と管理を補う人。",bad:"否定から入る人、細かすぎる人、自由を縛る人。"},
+producer:{name:"共感プロデューサー",score:80,chips:["人間理解","育成","調整","共感"],lead:"人の感情や空気を読み、場を前に進めるタイプ。",core:"相手の感情やニーズを掴み、人を活かして成果を出します。",work:"マネジメント、営業、採用、教育、コミュニティ設計。",love:"安心感と熱量の両方を求めます。不誠実や冷たさには傷つきやすいです。",products:["コーチング","美容・ウェルネス","相性診断","コミュニケーション講座"],good:"INTJ/ENTJ/INFP。ビジョンや深さがある人。",support:"ISTJ/Type6。安定と継続を支える人。",bad:"冷淡すぎるT型、感謝のない人、利用してくる人。"}
 };
-
-function pickType(mbti, ennea, anger, desire, love, work, free){
-  const t = (mbti || "").toUpperCase();
-  const f = (free || "").toLowerCase();
-  let score = {driver:0, strategist:0, maker:0, producer:0, craftsman:0, operator:0, creator:0, navigator:0};
-
-  if(["ENTJ","ESTP","ESTJ"].includes(t)) score.driver += 4;
-  if(["INTJ","INTP","ISTP"].includes(t)) score.strategist += 4;
-  if(["ENTP","ENFP","ESFP"].includes(t)) score.maker += 4;
-  if(["ENFJ","ESFJ"].includes(t)) score.producer += 4;
-  if(["ISTJ","ISFJ"].includes(t)) score.operator += 3;
-  if(["INFP","ISFP"].includes(t)) score.creator += 4;
-  if(["INFJ"].includes(t)) {score.strategist += 2; score.navigator += 2;}
-
-  if(ennea==="3" || ennea==="8") score.driver += 3;
-  if(ennea==="5") score.strategist += 3;
-  if(ennea==="7") score.maker += 3;
-  if(ennea==="2") score.producer += 3;
-  if(ennea==="1") score.craftsman += 3;
-  if(ennea==="6") score.operator += 3;
-  if(ennea==="4") score.creator += 3;
-  if(ennea==="9") score.navigator += 3;
-
-  if(anger==="slow" || anger==="vague") score.driver += 3;
-  if(anger==="fake") score.craftsman += 3;
-  if(anger==="boring") score.maker += 3;
-  if(anger==="heavy") score.driver += 1, score.strategist += 2;
-  if(anger==="rude") score.producer += 2, score.navigator += 1;
-
-  if(desire==="money" || desire==="status") score.driver += 2;
-  if(desire==="freedom") score.maker += 2;
-  if(desire==="growth") score.strategist += 1, score.maker += 1;
-  if(desire==="peace") score.operator += 2, score.navigator += 2;
-  if(desire==="love") score.producer += 2;
-
-  if(love==="respect" || love==="slow") score.driver += 2;
-  if(love==="boring") score.maker += 2;
-  if(love==="dishonest") score.craftsman += 2;
-  if(love==="cold") score.producer += 2;
-  if(love==="clingy") score.strategist += 1;
-
-  if(work==="win" || work==="lead") score.driver += 3;
-  if(work==="learn") score.strategist += 3;
-  if(work==="help") score.producer += 3;
-  if(work==="craft") score.craftsman += 3;
-  if(work==="stable") score.operator += 3;
-
-  ["勝ち筋","投資","起業","交渉","構造","金"].forEach(w=>{ if(f.includes(w)) score.driver+=1; });
-  ["分析","研究","理解","深く"].forEach(w=>{ if(f.includes(w)) score.strategist+=1; });
-  ["面白","新しい","発信","企画"].forEach(w=>{ if(f.includes(w)) score.maker+=1; });
-  ["人","感謝","助け"].forEach(w=>{ if(f.includes(w)) score.producer+=1; });
-  ["品質","雑","嘘","正確"].forEach(w=>{ if(f.includes(w)) score.craftsman+=1; });
-  ["安心","安定","継続"].forEach(w=>{ if(f.includes(w)) score.operator+=1; });
-  ["美","デザイン","世界観"].forEach(w=>{ if(f.includes(w)) score.creator+=1; });
-
-  return Object.entries(score).sort((a,b)=>b[1]-a[1])[0][0];
+function init(){
+ const mbtiSel=document.getElementById("mbti");
+ mbtiSel.innerHTML='<option value="">不明</option>'+mbtiData.map(x=>`<option value="${x[0]}">${x[0]} ${x[1]}</option>`).join("");
+ document.getElementById("ennea").innerHTML=ennea.map(x=>`<option value="${x[0]}">${x[1]}</option>`).join("");
+ document.getElementById("zodiac").innerHTML=zodiac.map((x,i)=>`<option value="${i?x:''}">${x}</option>`).join("");
+ document.getElementById("mbtiDetails").innerHTML=mbtiData.map(x=>`<div class="mbtiCard"><b>${x[2]} ${x[0]}</b><p><strong>${x[1]}</strong><br>${x[4]}</p></div>`).join("");
+ renderMap("globalMap", null, "global");
 }
-
+function nodePos(code){
+ const idx=mbtiData.findIndex(x=>x[0]===code), angle=(idx/16)*Math.PI*2-Math.PI/2;
+ const rx=38, ry=38;
+ return [50+Math.cos(angle)*rx, 50+Math.sin(angle)*ry];
+}
+function arrow(x1,y1,x2,y2,cls){
+ const dx=x2-x1,dy=y2-y1,len=Math.sqrt(dx*dx+dy*dy),ang=Math.atan2(dy,dx)*180/Math.PI;
+ return `<div class="arrow ${cls}" style="left:${x1}%;top:${y1}%;width:${len}%;transform:rotate(${ang}deg)"></div>`;
+}
+function renderMap(id, me, mode){
+ let html='<div class="centerNode"><div class="big">'+(me?me:"Human<br>Map")+'</div><div class="small">MBTI × Enneagram × Big5 × Astrology</div></div>';
+ const center=[50,48];
+ const goodSet=me?recommend(me).good:["ENTP","INTJ","ENFP","INFJ"];
+ const badSet=me?recommend(me).bad:["ISFJ","ESFJ","ISTJ"];
+ mbtiData.forEach((x,i)=>{
+   const [px,py]=nodePos(x[0]); const cls=x[3].toLowerCase()+" "+(me===x[0]?"meMini":"")+" "+(goodSet.includes(x[0])?"good":"")+" "+(badSet.includes(x[0])?"bad":"");
+   if(goodSet.includes(x[0])) html+=arrow(center[0],center[1],px,py,"good");
+   if(badSet.includes(x[0])) html+=arrow(center[0],center[1],px,py,"bad");
+ });
+ mbtiData.forEach((x,i)=>{
+   const [px,py]=nodePos(x[0]); const group=x[3].toLowerCase(); const extra=(me===x[0]?' style="background:linear-gradient(135deg,var(--a),var(--b));color:#071018;font-weight:950"':'');
+   html+=`<div class="typeNode ${group}" ${extra} style="left:${px}%;top:${py}%;animation-delay:${(i%5)*.35}s" onclick="quickSelect('${x[0]}')"><span class="emoji">${x[2]}</span><b>${x[0]}</b><small>${x[1]}｜${x[4]}</small></div>`;
+ });
+ html+='<div class="legend"><span>→ 緑：惹かれやすい/補完</span><span>→ 赤：衝突しやすい</span><span>NT/NF/SJ/SPで色分け</span><span>カードクリックでMBTI入力</span></div>';
+ document.getElementById(id).innerHTML=html;
+}
+function recommend(m){const map={
+ENTJ:{good:["INTJ","ENTP","ENFP"],bad:["ISFJ","ESFJ","INFP"]},INTJ:{good:["ENTJ","ENFP","INFJ"],bad:["ESFP","ESFJ","ISFJ"]},
+ENTP:{good:["INTJ","INFJ","ENTJ"],bad:["ISFJ","ISTJ","ESFJ"]},INTP:{good:["ENTJ","ENFJ","INTJ"],bad:["ESFJ","ESTJ","ESFP"]},
+ENFJ:{good:["INTP","INFP","INTJ"],bad:["ISTP","ESTP","ENTJ"]},INFJ:{good:["ENTP","ENFP","INTJ"],bad:["ESTP","ESTJ","ESFP"]},
+ENFP:{good:["INTJ","INFJ","ENTJ"],bad:["ISTJ","ESTJ","ISFJ"]},INFP:{good:["ENFJ","ENTJ","INFJ"],bad:["ESTJ","ENTJ","ESTP"]},
+ESTJ:{good:["ISTJ","ISFJ","ENTJ"],bad:["INFP","ENFP","INFJ"]},ISTJ:{good:["ESTJ","ISFJ","ENTJ"],bad:["ENFP","ENTP","ESFP"]},
+ESFJ:{good:["ISFJ","ENFJ","ISTJ"],bad:["INTP","INTJ","ENTP"]},ISFJ:{good:["ESFJ","ISTJ","ENFJ"],bad:["ENTP","ENTJ","ESTP"]},
+ESTP:{good:["ISTP","ESFP","ENTJ"],bad:["INFJ","INFP","ISFJ"]},ISTP:{good:["ESTP","INTP","ISTJ"],bad:["ENFJ","ESFJ","ENFP"]},
+ESFP:{good:["ESTP","ISFP","ENFP"],bad:["INTJ","INTP","ISTJ"]},ISFP:{good:["ESFP","INFP","ENFJ"],bad:["ENTJ","ESTJ","ENTP"]}
+};return map[m]||{good:["ENTP","INTJ","ENFP"],bad:["ISFJ","ESFJ","ISTJ"]}}
+function pickType(mbti,enneaVal,anger,desire,love,open,con,ext,free){
+ let s={driver:0,strategist:0,maker:0,producer:0}; const f=(free||"").toLowerCase();
+ if(["ENTJ","ESTP","ESTJ"].includes(mbti))s.driver+=4;if(["INTJ","INTP","ISTP"].includes(mbti))s.strategist+=4;if(["ENTP","ENFP","ESFP"].includes(mbti))s.maker+=4;if(["ENFJ","ESFJ","INFJ","INFP"].includes(mbti))s.producer+=3;
+ if(enneaVal==="3"||enneaVal==="8")s.driver+=3;if(enneaVal==="5"||enneaVal==="1")s.strategist+=3;if(enneaVal==="7"||enneaVal==="4")s.maker+=3;if(["2","6","9"].includes(enneaVal))s.producer+=3;
+ if(anger==="slow"||anger==="vague")s.driver+=3;if(anger==="fake")s.strategist+=2;if(anger==="boring")s.maker+=3;if(anger==="rude"||anger==="heavy")s.producer+=2;
+ if(desire==="money"||desire==="status")s.driver+=2;if(desire==="freedom"||desire==="growth")s.maker+=2;if(desire==="peace"||desire==="love")s.producer+=2;
+ if(open==="high")s.maker+=1,s.strategist+=1;if(con==="high")s.driver+=1,s.strategist+=1;if(ext==="high")s.driver+=1,s.maker+=1,s.producer+=1;
+ ["勝ち筋","投資","起業","交渉","構造"].forEach(w=>{if(f.includes(w))s.driver+=1});["分析","研究","理解"].forEach(w=>{if(f.includes(w))s.strategist+=1});["面白","新しい","発信"].forEach(w=>{if(f.includes(w))s.maker+=1});["人","感謝","助け"].forEach(w=>{if(f.includes(w))s.producer+=1});
+ return Object.entries(s).sort((a,b)=>b[1]-a[1])[0][0];
+}
 function diagnose(){
-  const mbti = document.getElementById("mbti").value;
-  const ennea = document.getElementById("ennea").value;
-  const anger = document.getElementById("anger").value;
-  const desire = document.getElementById("desire").value;
-  const love = document.getElementById("love").value;
-  const work = document.getElementById("work").value;
-  const free = document.getElementById("free").value;
-  const key = pickType(mbti, ennea, anger, desire, love, work, free);
-  const r = types[key];
-
-  document.getElementById("resultType").textContent = r.name;
-  document.getElementById("resultScore").textContent = r.score;
-  document.getElementById("scoreBar").style.width = r.score + "%";
-  document.getElementById("resultLead").textContent = r.lead;
-  document.getElementById("jobShort").textContent = r.job;
-  document.getElementById("loveShort").textContent = r.love;
-  document.getElementById("buyShort").textContent = r.buy;
-  document.getElementById("angerShort").textContent = r.anger;
-  document.getElementById("coreText").textContent = r.core;
-  document.getElementById("workText").textContent = r.work;
-  document.getElementById("loveText").textContent = r.loveText;
-  document.getElementById("riskText").textContent = r.risk;
-  document.getElementById("strategyText").textContent = r.strategy;
-
-  document.getElementById("resultChips").innerHTML = r.chips.map(x=>`<span class="chip">${x}</span>`).join("");
-  document.getElementById("productList").innerHTML = r.products.map(x=>`<li>${x}</li>`).join("");
-  document.getElementById("mbtiOut").innerHTML = `<span class="chip blue">${mbti || "未入力"}</span>`;
-  document.getElementById("enneaOut").innerHTML = `<span class="chip yellow">${ennea ? "Type " + ennea : "未入力"}</span>`;
-  document.getElementById("compassOut").innerHTML = `<span class="chip">${r.name}</span>`;
-
-  showPage("result");
-  window.scrollTo({top:0,behavior:"smooth"});
+ const mbti=document.getElementById("mbti").value||"ENTJ", ev=document.getElementById("ennea").value, zodiac=document.getElementById("zodiac").value;
+ const key=pickType(mbti,ev,anger.value,desire.value,love.value,open.value,con.value,ext.value,free.value), r=typeText[key];
+ resultType.textContent=r.name; resultScore.textContent=r.score; scoreBar.style.width=r.score+"%"; resultLead.textContent=r.lead+(zodiac?` 星座レイヤーは${zodiac}。`:"");
+ resultChips.innerHTML=[...r.chips,mbti,ev?`エニア${ev}`:"エニア未入力",zodiac||"星座未入力"].map((x,i)=>`<span class="chip ${i>3?'blue':''}">${x}</span>`).join("");
+ coreText.textContent=r.core; workText.textContent=r.work; loveText.textContent=r.love; productList.innerHTML=r.products.map(x=>`<li>${x}</li>`).join("");
+ goodText.textContent=r.good; supportText.textContent=r.support; badText.textContent=r.bad;
+ renderMap("relationshipMap",mbti,"result"); showPage("result"); window.scrollTo({top:0,behavior:"smooth"});
 }
-function showPage(id){
-  document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
-  document.getElementById(id).classList.add("active");
-}
-function scrollMap(){
-  showPage("home");
-  setTimeout(()=>document.getElementById("map").scrollIntoView({behavior:"smooth"}),50);
-}
-function resetAll(){
-  document.querySelectorAll("select").forEach(s=>s.selectedIndex=0);
-  document.getElementById("free").value="";
-  showPage("home");
-  window.scrollTo({top:0,behavior:"smooth"});
-}
+function quickSelect(code){document.getElementById("mbti").value=code;window.scrollTo({top:0,behavior:"smooth"})}
+function showPage(id){document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));document.getElementById(id).classList.add("active")}
+function scrollMap(){showPage("home");setTimeout(()=>document.getElementById("mapBlock").scrollIntoView({behavior:"smooth"}),50)}
+function resetAll(){document.querySelectorAll("select").forEach(s=>s.selectedIndex=0);free.value="";showPage("home");window.scrollTo({top:0,behavior:"smooth"})}
+init();
 </script>
 </body>
 </html>
