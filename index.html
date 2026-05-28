@@ -6,373 +6,180 @@
 <title>行動コンパス｜パーソナリティ診断</title>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body {
-  background: #0a0a0f;
-  color: #e8e6e3;
-  font-family: 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', sans-serif;
-  min-height: 100vh;
-}
+body { background: #0a0a0f; color: #e8e6e3; font-family: 'Hiragino Kaku Gothic ProN','Noto Sans JP',sans-serif; min-height: 100vh; }
+.app-wrapper { display: flex; min-height: 100vh; }
 
-/* ===== LAYOUT ===== */
-.app-wrapper {
-  display: flex;
-  min-height: 100vh;
-}
-
-/* ===== SIDEBAR ===== */
-.sidebar {
-  width: 340px;
-  min-width: 340px;
-  background: #10101a;
-  border-right: 1px solid rgba(255,255,255,0.08);
-  padding: 32px 24px;
-  position: sticky;
-  top: 0;
-  height: 100vh;
-  overflow-y: auto;
-}
-
-.logo {
-  font-size: 11px;
-  letter-spacing: 0.2em;
-  color: #7c6fff;
-  text-transform: uppercase;
-  font-weight: 700;
-  margin-bottom: 8px;
-}
-.title {
-  font-size: 22px;
-  font-weight: 800;
-  color: #f0f0f0;
-  line-height: 1.2;
-  margin-bottom: 28px;
-}
+/* SIDEBAR */
+.sidebar { width: 340px; min-width: 340px; background: #10101a; border-right: 1px solid rgba(255,255,255,0.08); padding: 28px 22px 40px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+.logo { font-size: 10px; letter-spacing: 0.22em; color: #7c6fff; text-transform: uppercase; font-weight: 700; margin-bottom: 6px; }
+.title { font-size: 20px; font-weight: 800; color: #f0f0f0; line-height: 1.2; margin-bottom: 24px; }
 .title span { color: #7c6fff; }
 
-.section-label {
-  font-size: 10px;
-  letter-spacing: 0.15em;
-  color: #7c6fff;
-  text-transform: uppercase;
-  font-weight: 700;
-  margin-bottom: 12px;
-  margin-top: 20px;
-}
+.section-label { font-size: 10px; letter-spacing: 0.16em; color: #7c6fff; text-transform: uppercase; font-weight: 700; margin-bottom: 8px; margin-top: 18px; }
+.section-desc { font-size: 11px; color: #60608a; line-height: 1.6; margin-bottom: 10px; margin-top: -4px; }
 
-.form-group {
-  margin-bottom: 14px;
-}
-.form-group label {
-  display: block;
-  font-size: 12px;
-  color: #a0a0b0;
-  margin-bottom: 6px;
-}
-.form-group select, .form-group input[type=range] {
-  width: 100%;
-}
-select {
-  background: #1a1a2e;
-  border: 1px solid rgba(124,111,255,0.3);
-  color: #e8e6e3;
-  padding: 8px 12px;
-  border-radius: 8px;
-  font-size: 13px;
-  appearance: none;
-  cursor: pointer;
-  width: 100%;
-  transition: border-color 0.2s;
-}
-select:focus {
-  outline: none;
-  border-color: #7c6fff;
-}
+.form-group { margin-bottom: 11px; }
+.form-group label { display: block; font-size: 11px; color: #8080a8; margin-bottom: 5px; }
+select { background: #1a1a2e; border: 1px solid rgba(124,111,255,0.3); color: #e8e6e3; padding: 9px 32px 9px 12px; border-radius: 8px; font-size: 13px; cursor: pointer; width: 100%; transition: border-color 0.2s; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%237c6fff' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; }
+select:focus { outline: none; border-color: #7c6fff; }
 
-.slider-row {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-input[type=range] {
-  flex: 1;
-  -webkit-appearance: none;
-  height: 4px;
-  background: rgba(124,111,255,0.25);
-  border-radius: 2px;
-  outline: none;
-}
-input[type=range]::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  width: 16px;
-  height: 16px;
-  background: #7c6fff;
-  border-radius: 50%;
-  cursor: pointer;
-}
-.slider-val {
-  font-size: 13px;
-  font-weight: 700;
-  color: #7c6fff;
-  min-width: 24px;
-  text-align: right;
-}
+/* DATE INPUT */
+.date-input { background: #1a1a2e; border: 1px solid rgba(124,111,255,0.3); color: #e8e6e3; padding: 9px 12px; border-radius: 8px; font-size: 13px; width: 100%; transition: border-color 0.2s; }
+.date-input:focus { outline: none; border-color: #7c6fff; }
+.date-input::-webkit-calendar-picker-indicator { filter: invert(0.7) sepia(1) saturate(3) hue-rotate(220deg); cursor: pointer; }
 
-.divider {
-  border: none;
-  border-top: 1px solid rgba(255,255,255,0.06);
-  margin: 20px 0;
-}
+/* KABBALAH PREVIEW */
+.kabbalah-preview { display: none; background: rgba(255,215,0,0.06); border: 1px solid rgba(255,215,0,0.2); border-radius: 10px; padding: 12px 14px; margin-top: 8px; }
+.kabbalah-preview.show { display: block; }
+.kab-num { font-size: 28px; font-weight: 900; color: #ffd700; line-height: 1; }
+.kab-name { font-size: 12px; color: #d4b800; font-weight: 700; margin-top: 2px; }
+.kab-desc { font-size: 11px; color: #a09040; margin-top: 5px; line-height: 1.6; }
 
-.btn-diagnose {
-  width: 100%;
-  padding: 14px;
-  background: linear-gradient(135deg, #7c6fff, #5b4de0);
-  color: white;
-  border: none;
-  border-radius: 10px;
-  font-size: 15px;
-  font-weight: 700;
-  cursor: pointer;
-  letter-spacing: 0.05em;
-  margin-top: 24px;
-  transition: opacity 0.2s, transform 0.1s;
-}
+.divider { border: none; border-top: 1px solid rgba(255,255,255,0.06); margin: 16px 0; }
+
+/* SLIDERS */
+.slider-block { margin-bottom: 14px; }
+.slider-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 5px; }
+.slider-label { font-size: 12px; color: #c0c0d8; font-weight: 600; }
+.slider-val-badge { font-size: 12px; font-weight: 700; color: #7c6fff; background: rgba(124,111,255,0.12); padding: 2px 8px; border-radius: 10px; }
+.slider-endpoints { display: flex; justify-content: space-between; font-size: 10px; color: #50507a; margin-bottom: 4px; }
+input[type=range] { width: 100%; -webkit-appearance: none; height: 5px; background: rgba(124,111,255,0.2); border-radius: 3px; outline: none; }
+input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 18px; height: 18px; background: #7c6fff; border-radius: 50%; cursor: pointer; box-shadow: 0 0 6px rgba(124,111,255,0.5); }
+
+.btn-diagnose { width: 100%; padding: 15px; background: linear-gradient(135deg, #7c6fff, #5b4de0); color: white; border: none; border-radius: 10px; font-size: 15px; font-weight: 700; cursor: pointer; letter-spacing: 0.05em; margin-top: 20px; transition: opacity 0.2s, transform 0.1s; }
 .btn-diagnose:hover { opacity: 0.9; }
 .btn-diagnose:active { transform: scale(0.98); }
 
-/* ===== MAIN AREA ===== */
-.main {
-  flex: 1;
-  padding: 40px 48px;
-  max-width: 900px;
-}
+/* MAIN */
+.main { flex: 1; padding: 40px 48px; max-width: 900px; }
 
-/* ===== WELCOME ===== */
-.welcome {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 60vh;
-  text-align: center;
-}
-.welcome-icon { font-size: 64px; margin-bottom: 24px; opacity: 0.4; }
-.welcome h2 { font-size: 24px; color: #6060a0; margin-bottom: 12px; }
-.welcome p { color: #505070; font-size: 14px; line-height: 1.8; }
+.welcome { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 60vh; text-align: center; }
+.welcome-icon { font-size: 60px; margin-bottom: 20px; opacity: 0.35; }
+.welcome h2 { font-size: 22px; color: #5050a0; margin-bottom: 10px; }
+.welcome p { color: #404060; font-size: 13px; line-height: 1.9; }
 
-/* ===== RESULT CARD ===== */
-.result-card {
-  background: #13131f;
-  border: 1px solid rgba(124,111,255,0.2);
-  border-radius: 20px;
-  padding: 40px;
-  margin-bottom: 28px;
-  display: none;
-}
-.result-header {
-  display: flex;
-  gap: 32px;
-  align-items: flex-start;
-  margin-bottom: 32px;
-}
-.result-img {
-  width: 140px;
-  height: 140px;
-  border-radius: 16px;
-  object-fit: cover;
-  border: 2px solid rgba(124,111,255,0.4);
-  flex-shrink: 0;
-}
+/* RESULT */
+.result-card { background: #13131f; border: 1px solid rgba(124,111,255,0.2); border-radius: 20px; padding: 36px; margin-bottom: 24px; display: none; }
+.result-header { display: flex; gap: 28px; align-items: flex-start; margin-bottom: 28px; }
+.result-img { width: 130px; height: 130px; border-radius: 14px; object-fit: cover; border: 2px solid rgba(124,111,255,0.35); flex-shrink: 0; }
 .result-meta { flex: 1; }
-.result-type-num {
-  font-size: 11px;
-  letter-spacing: 0.2em;
-  color: #7c6fff;
-  text-transform: uppercase;
-  font-weight: 700;
-  margin-bottom: 8px;
-}
-.result-type-name {
-  font-size: 32px;
-  font-weight: 900;
-  line-height: 1.1;
-  margin-bottom: 12px;
-  color: #f0f0f8;
-}
-.result-tagline {
-  font-size: 14px;
-  color: #8080a0;
-  line-height: 1.6;
-  margin-bottom: 16px;
-}
-.tag-row { display: flex; flex-wrap: wrap; gap: 8px; }
-.tag {
-  font-size: 11px;
-  padding: 4px 10px;
-  border-radius: 20px;
-  font-weight: 600;
-  letter-spacing: 0.05em;
-}
+.result-type-num { font-size: 10px; letter-spacing: 0.2em; color: #7c6fff; text-transform: uppercase; font-weight: 700; margin-bottom: 6px; }
+.result-type-name { font-size: 30px; font-weight: 900; line-height: 1.1; margin-bottom: 10px; color: #f0f0f8; }
+.result-tagline { font-size: 13px; color: #7070a0; line-height: 1.6; margin-bottom: 14px; }
+.tag-row { display: flex; flex-wrap: wrap; gap: 7px; }
+.tag { font-size: 11px; padding: 4px 10px; border-radius: 20px; font-weight: 600; letter-spacing: 0.04em; }
 .tag-mbti { background: rgba(124,111,255,0.15); color: #9c90ff; border: 1px solid rgba(124,111,255,0.3); }
 .tag-ennea { background: rgba(255,180,50,0.12); color: #f0b030; border: 1px solid rgba(255,180,50,0.25); }
+.tag-match { background: rgba(100,200,130,0.1); color: #70c890; border: 1px solid rgba(100,200,130,0.2); }
+.tag-kab { background: rgba(255,215,0,0.1); color: #ffd700; border: 1px solid rgba(255,215,0,0.25); }
 
-hr.section-divider {
-  border: none;
-  border-top: 1px solid rgba(255,255,255,0.07);
-  margin: 28px 0;
-}
+hr.section-divider { border: none; border-top: 1px solid rgba(255,255,255,0.06); margin: 24px 0; }
+.section-block { margin-bottom: 22px; }
+.section-title { font-size: 11px; letter-spacing: 0.16em; color: #7c6fff; text-transform: uppercase; font-weight: 700; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+.section-title::after { content: ''; flex: 1; height: 1px; background: rgba(124,111,255,0.18); }
+.prose { font-size: 14px; line-height: 1.9; color: #b8b8d0; }
 
-/* ===== SECTION BLOCKS ===== */
-.section-block { margin-bottom: 24px; }
-.section-title {
-  font-size: 12px;
-  letter-spacing: 0.15em;
-  color: #7c6fff;
-  text-transform: uppercase;
-  font-weight: 700;
-  margin-bottom: 14px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-.section-title::after {
-  content: '';
-  flex: 1;
-  height: 1px;
-  background: rgba(124,111,255,0.2);
-}
+/* KABBALAH RESULT BLOCK */
+.kab-result-block { background: rgba(255,215,0,0.04); border: 1px solid rgba(255,215,0,0.15); border-radius: 14px; padding: 20px 24px; }
+.kab-result-header { display: flex; align-items: center; gap: 16px; margin-bottom: 14px; }
+.kab-big-num { font-size: 52px; font-weight: 900; color: #ffd700; line-height: 1; }
+.kab-right { flex: 1; }
+.kab-result-name { font-size: 18px; font-weight: 800; color: #e8c800; margin-bottom: 4px; }
+.kab-result-keyword { font-size: 12px; color: #a09040; }
+.kab-traits { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+.kab-trait { font-size: 11px; padding: 3px 10px; background: rgba(255,215,0,0.08); color: #d4b800; border: 1px solid rgba(255,215,0,0.2); border-radius: 12px; }
+.kab-analysis { font-size: 13px; color: #a8a060; line-height: 1.8; }
+.kab-synergy { margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(255,215,0,0.12); font-size: 13px; color: #c0b060; line-height: 1.7; }
+.kab-synergy strong { color: #ffd700; }
 
-.prose {
-  font-size: 14px;
-  line-height: 1.9;
-  color: #c0c0d8;
-}
+/* SW */
+.sw-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.sw-col-label { font-size: 10px; letter-spacing: 0.12em; margin-bottom: 8px; font-weight: 700; }
+.sw-col-label.s { color: #50c878; }
+.sw-col-label.sh { color: #e07070; }
+.sw-list { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+.sw-list li { font-size: 13px; padding: 8px 12px; border-radius: 8px; line-height: 1.4; }
+.sw-list.s li { background: rgba(50,200,120,0.08); color: #80d8a0; border: 1px solid rgba(50,200,120,0.15); }
+.sw-list.sh li { background: rgba(255,80,80,0.07); color: #e08080; border: 1px solid rgba(255,80,80,0.12); }
 
-.strength-list, .shadow-list {
-  list-style: none;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
-}
-.strength-list li, .shadow-list li {
-  font-size: 13px;
-  padding: 8px 12px;
-  border-radius: 8px;
-  line-height: 1.4;
-}
-.strength-list li {
-  background: rgba(50,200,120,0.08);
-  color: #80d8a0;
-  border: 1px solid rgba(50,200,120,0.15);
-}
-.shadow-list li {
-  background: rgba(255,80,80,0.07);
-  color: #e08080;
-  border: 1px solid rgba(255,80,80,0.12);
-}
-
+/* AXES */
 .axis-bars { display: flex; flex-direction: column; gap: 10px; }
-.axis-row {
-  display: grid;
-  grid-template-columns: 80px 1fr 80px;
-  align-items: center;
-  gap: 10px;
-  font-size: 12px;
-}
-.axis-left { text-align: right; color: #8080a0; }
-.axis-right { color: #8080a0; }
-.bar-track {
-  height: 6px;
-  background: rgba(255,255,255,0.08);
-  border-radius: 3px;
-  position: relative;
-  overflow: hidden;
-}
-.bar-fill {
-  height: 100%;
-  border-radius: 3px;
-  background: linear-gradient(90deg, #7c6fff, #a070ff);
-  transition: width 0.8s ease;
-}
+.axis-row { display: grid; grid-template-columns: 90px 1fr 90px; align-items: center; gap: 10px; font-size: 12px; }
+.axis-left { text-align: right; color: #7070a0; }
+.axis-right { color: #7070a0; }
+.bar-track { height: 6px; background: rgba(255,255,255,0.07); border-radius: 3px; overflow: hidden; }
+.bar-fill { height: 100%; border-radius: 3px; background: linear-gradient(90deg,#7c6fff,#a070ff); transition: width 0.8s ease; }
 
-.compatible-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-}
-.compat-card {
-  background: rgba(255,255,255,0.03);
-  border: 1px solid rgba(255,255,255,0.07);
-  border-radius: 10px;
-  padding: 12px 16px;
-}
-.compat-label { font-size: 10px; color: #606080; margin-bottom: 4px; letter-spacing: 0.1em; }
+/* COMPAT */
+.compat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.compat-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07); border-radius: 10px; padding: 12px 16px; cursor: pointer; transition: border-color 0.2s, background 0.2s; position: relative; }
+.compat-card:hover { background: rgba(124,111,255,0.08); border-color: rgba(124,111,255,0.3); }
+.compat-label { font-size: 10px; color: #505080; margin-bottom: 4px; letter-spacing: 0.1em; }
 .compat-name { font-size: 14px; font-weight: 700; color: #d0d0f0; }
+.compat-hint { font-size: 10px; color: #5050a0; margin-top: 4px; }
 
-/* ===== GPT PROMPT ===== */
-.prompt-box {
-  background: #0d0d18;
-  border: 1px solid rgba(124,111,255,0.15);
-  border-radius: 12px;
-  padding: 20px;
-  position: relative;
-  display: none;
-  margin-top: 28px;
-}
-.prompt-label {
-  font-size: 11px;
-  letter-spacing: 0.15em;
-  color: #7c6fff;
-  text-transform: uppercase;
-  font-weight: 700;
-  margin-bottom: 12px;
-}
-.prompt-text {
-  font-family: 'Courier New', monospace;
-  font-size: 12px;
-  line-height: 1.7;
-  color: #9090b8;
-  white-space: pre-wrap;
-  word-break: break-word;
-}
-.copy-btn {
-  position: absolute;
-  top: 16px;
-  right: 16px;
-  background: rgba(124,111,255,0.2);
-  color: #9c90ff;
-  border: 1px solid rgba(124,111,255,0.3);
-  border-radius: 6px;
-  padding: 5px 12px;
-  font-size: 12px;
-  cursor: pointer;
-  transition: background 0.2s;
-}
+/* POPUP */
+.popup-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 100; display: none; align-items: center; justify-content: center; }
+.popup-overlay.show { display: flex; }
+.popup-box { background: #1a1a2e; border: 1px solid rgba(124,111,255,0.3); border-radius: 16px; padding: 28px; max-width: 420px; width: 90%; position: relative; }
+.popup-close { position: absolute; top: 14px; right: 16px; background: none; border: none; color: #7070a0; font-size: 20px; cursor: pointer; line-height: 1; }
+.popup-close:hover { color: #e0e0f0; }
+.popup-img { width: 72px; height: 72px; border-radius: 10px; object-fit: cover; margin-bottom: 14px; border: 1px solid rgba(124,111,255,0.3); }
+.popup-type-num { font-size: 10px; letter-spacing: 0.18em; color: #7c6fff; font-weight: 700; margin-bottom: 4px; }
+.popup-type-name { font-size: 20px; font-weight: 900; color: #f0f0f8; margin-bottom: 6px; }
+.popup-tagline { font-size: 12px; color: #8080a8; margin-bottom: 12px; line-height: 1.6; }
+.popup-core { font-size: 13px; color: #b0b0c8; line-height: 1.8; }
+.popup-strengths { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 12px; }
+.popup-strength-tag { font-size: 11px; padding: 3px 9px; background: rgba(50,200,120,0.1); color: #70c890; border: 1px solid rgba(50,200,120,0.2); border-radius: 10px; }
+.popup-compat-label { font-size: 11px; color: #7c6fff; margin-top: 12px; font-weight: 700; }
+
+/* PROMPT */
+.prompt-box { background: #0d0d18; border: 1px solid rgba(124,111,255,0.15); border-radius: 14px; padding: 22px; position: relative; display: none; margin-top: 24px; }
+.prompt-label { font-size: 10px; letter-spacing: 0.16em; color: #7c6fff; text-transform: uppercase; font-weight: 700; margin-bottom: 12px; }
+.prompt-text { font-family: 'Courier New',monospace; font-size: 12px; line-height: 1.75; color: #8888b0; white-space: pre-wrap; word-break: break-word; }
+.copy-btn { position: absolute; top: 18px; right: 18px; background: rgba(124,111,255,0.2); color: #9c90ff; border: 1px solid rgba(124,111,255,0.3); border-radius: 7px; padding: 5px 14px; font-size: 12px; cursor: pointer; transition: background 0.2s; }
 .copy-btn:hover { background: rgba(124,111,255,0.35); }
 
-/* ===== SCROLLBAR ===== */
-::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar { width: 5px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: rgba(124,111,255,0.3); border-radius: 3px; }
+::-webkit-scrollbar-thumb { background: rgba(124,111,255,0.25); border-radius: 3px; }
 
-@media (max-width: 768px) {
+@media (max-width: 800px) {
   .app-wrapper { flex-direction: column; }
   .sidebar { width: 100%; min-width: unset; height: auto; position: static; }
-  .main { padding: 24px 20px; }
+  .main { padding: 24px 18px; max-width: 100%; }
   .result-header { flex-direction: column; align-items: center; text-align: center; }
-  .strength-list, .shadow-list, .compatible-grid { grid-template-columns: 1fr; }
+  .sw-grid, .compat-grid { grid-template-columns: 1fr; }
+  .axis-row { grid-template-columns: 70px 1fr 70px; }
 }
 </style>
 </head>
 <body>
-
 <div class="app-wrapper">
+
 <!-- SIDEBAR -->
 <div class="sidebar">
   <div class="logo">Personality Compass</div>
   <div class="title">行動コンパス<br><span>診断システム</span></div>
 
-  <div class="section-label">MBTI</div>
+  <!-- KABBALAH -->
+  <div class="section-label">✨ カバラ数秘術</div>
+  <div class="section-desc">生年月日を入力すると「ライフパスナンバー」を算出します。あなたの人生の根本的な傾向を示す数字で、診断精度に加算されます。</div>
+  <div class="form-group">
+    <label>生年月日</label>
+    <input type="date" id="birthdate" class="date-input" oninput="calcKabbalah()" max="2010-12-31" min="1940-01-01">
+  </div>
+  <div class="kabbalah-preview" id="kabPreview">
+    <div class="kab-num" id="kabNum"></div>
+    <div class="kab-name" id="kabName"></div>
+    <div class="kab-desc" id="kabDesc"></div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- MBTI -->
+  <div class="section-label">🧠 MBTI</div>
+  <div class="section-desc">自分の思考・行動パターンの傾向を選んでください。わからない場合は「不明」を選択してもOK。</div>
   <div class="form-group">
     <label>MBTIタイプ</label>
     <select id="mbti"></select>
@@ -380,61 +187,70 @@ hr.section-divider {
 
   <hr class="divider">
 
-  <div class="section-label">エニアグラム</div>
+  <!-- ENNEAGRAM -->
+  <div class="section-label">🌀 エニアグラム</div>
+  <div class="section-desc">9つの性格タイプのうち、最も「自分の核にある動機」に近いものを選んでください。わからなければ「不明」でOK。</div>
   <div class="form-group">
-    <label>基本タイプ（1〜9）</label>
+    <label>基本タイプ</label>
     <select id="ennea"></select>
-  </div>
-  <div class="form-group">
-    <label>ウイング（隣接タイプ）</label>
-    <select id="wing"></select>
   </div>
 
   <hr class="divider">
 
-  <div class="section-label">行動傾向</div>
+  <!-- BEHAVIORAL -->
+  <div class="section-label">⚡ 行動傾向</div>
   <div class="form-group">
     <label>怒りの出方</label>
     <select id="anger">
-      <option value="外向">外向き（攻撃・主張）</option>
-      <option value="内向">内向き（抑圧・蓄積）</option>
-      <option value="変換">変換（回避・昇華）</option>
+      <option value="外向">外向き — すぐ言葉や行動に出る</option>
+      <option value="内向">内向き — 溜め込んで後で爆発</option>
+      <option value="変換">変換 — 別のエネルギーに昇華する</option>
     </select>
   </div>
   <div class="form-group">
-    <label>欲望の軸</label>
+    <label>何に怒りを感じやすい？</label>
+    <select id="angerTrigger">
+      <option value="不公平">不公平・理不尽なこと</option>
+      <option value="非効率">無駄・非効率・遅さ</option>
+      <option value="裏切り">約束破り・裏切り・不誠実</option>
+      <option value="束縛">自由を奪われること・束縛</option>
+      <option value="無視">無視・軽視・存在を認められない</option>
+      <option value="低品質">雑さ・低品質・妥協</option>
+      <option value="支配">コントロールされること</option>
+      <option value="混乱">予測不能・混乱・曖昧さ</option>
+    </select>
+  </div>
+  <div class="form-group">
+    <label>いちばん強く動かされるもの</label>
     <select id="desire">
-      <option value="達成">達成（成果・実績）</option>
-      <option value="承認">承認（評価・つながり）</option>
-      <option value="理解">理解（知識・意味）</option>
-      <option value="安定">安定（安全・継続）</option>
-      <option value="自由">自由（変化・体験）</option>
+      <option value="達成">達成感・結果・実績</option>
+      <option value="承認">つながり・評価・共感</option>
+      <option value="理解">知識・意味・本質の理解</option>
+      <option value="安定">安心・安全・変わらない日常</option>
+      <option value="自由">変化・体験・縛られない感覚</option>
     </select>
   </div>
 
   <hr class="divider">
 
-  <div class="section-label">状態スコア</div>
-  <div class="form-group">
-    <label>ストレス耐性</label>
-    <div class="slider-row">
-      <input type="range" id="stress" min="1" max="10" value="5" oninput="updateSlider('stress','stressVal')">
-      <div class="slider-val" id="stressVal">5</div>
-    </div>
+  <!-- STATE -->
+  <div class="section-label">📊 いまの状態</div>
+  <div class="section-desc">現在の自分の状態を直感で選んでください。</div>
+
+  <div class="slider-block">
+    <div class="slider-header"><span class="slider-label">心の余裕</span><span class="slider-val-badge" id="stressVal">5</span></div>
+    <div class="slider-endpoints"><span>ギリギリ・消耗中</span><span>余裕たっぷり</span></div>
+    <input type="range" id="stress" min="1" max="10" value="5" oninput="syncSlider('stress','stressVal')">
   </div>
-  <div class="form-group">
-    <label>対人エネルギー</label>
-    <div class="slider-row">
-      <input type="range" id="social" min="1" max="10" value="5" oninput="updateSlider('social','socialVal')">
-      <div class="slider-val" id="socialVal">5</div>
-    </div>
+  <div class="slider-block">
+    <div class="slider-header"><span class="slider-label">人と関わりたい度</span><span class="slider-val-badge" id="socialVal">5</span></div>
+    <div class="slider-endpoints"><span>一人でいたい</span><span>ガンガン関わりたい</span></div>
+    <input type="range" id="social" min="1" max="10" value="5" oninput="syncSlider('social','socialVal')">
   </div>
-  <div class="form-group">
-    <label>変化への開放性</label>
-    <div class="slider-row">
-      <input type="range" id="openness" min="1" max="10" value="5" oninput="updateSlider('openness','opennessVal')">
-      <div class="slider-val" id="opennessVal">5</div>
-    </div>
+  <div class="slider-block">
+    <div class="slider-header"><span class="slider-label">変化への前向き度</span><span class="slider-val-badge" id="opennessVal">5</span></div>
+    <div class="slider-endpoints"><span>現状維持したい</span><span>どんどん変えたい</span></div>
+    <input type="range" id="openness" min="1" max="10" value="5" oninput="syncSlider('openness','opennessVal')">
   </div>
 
   <button class="btn-diagnose" onclick="diagnose()">🔍 診断する</button>
@@ -445,7 +261,8 @@ hr.section-divider {
   <div class="welcome" id="welcomeArea">
     <div class="welcome-icon">🧭</div>
     <h2>左のフォームを入力して診断開始</h2>
-    <p>MBTI・エニアグラム・行動傾向を入力すると<br>あなたの行動アーキタイプが判明します</p>
+    <p>生年月日・MBTI・エニアグラム・行動傾向を入力すると<br>あなたの行動アーキタイプが判明します<br><br>
+    <span style="color:#4040a0;font-size:12px;">MBTIやエニアグラムは「不明」でも診断できます</span></p>
   </div>
 
   <div class="result-card" id="resultCard">
@@ -461,6 +278,23 @@ hr.section-divider {
 
     <hr class="section-divider">
 
+    <!-- KABBALAH RESULT -->
+    <div class="section-block" id="kabResultBlock" style="display:none">
+      <div class="section-title">✨ カバラ数秘術分析</div>
+      <div class="kab-result-block">
+        <div class="kab-result-header">
+          <div class="kab-big-num" id="kabResultNum"></div>
+          <div class="kab-right">
+            <div class="kab-result-name" id="kabResultName"></div>
+            <div class="kab-result-keyword" id="kabResultKeyword"></div>
+          </div>
+        </div>
+        <div class="kab-traits" id="kabResultTraits"></div>
+        <div class="kab-analysis" id="kabResultAnalysis"></div>
+        <div class="kab-synergy" id="kabResultSynergy"></div>
+      </div>
+    </div>
+
     <div class="section-block">
       <div class="section-title">コアパターン分析</div>
       <div class="prose" id="resultCore"></div>
@@ -468,15 +302,9 @@ hr.section-divider {
 
     <div class="section-block">
       <div class="section-title">強みとリスク</div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
-        <div>
-          <div style="font-size:11px;color:#50c878;letter-spacing:0.1em;margin-bottom:8px;">▲ STRENGTHS</div>
-          <ul class="strength-list" id="resultStrengths"></ul>
-        </div>
-        <div>
-          <div style="font-size:11px;color:#e07070;letter-spacing:0.1em;margin-bottom:8px;">▼ SHADOWS</div>
-          <ul class="shadow-list" id="resultShadows"></ul>
-        </div>
+      <div class="sw-grid">
+        <div><div class="sw-col-label s">▲ STRENGTHS</div><ul class="sw-list s" id="resultStrengths"></ul></div>
+        <div><div class="sw-col-label sh">▼ SHADOWS</div><ul class="sw-list sh" id="resultShadows"></ul></div>
       </div>
     </div>
 
@@ -486,8 +314,8 @@ hr.section-divider {
     </div>
 
     <div class="section-block">
-      <div class="section-title">相性・関係性</div>
-      <div class="compatible-grid" id="resultCompat"></div>
+      <div class="section-title">相性・関係性 <span style="font-size:10px;color:#50508a;font-weight:400;letter-spacing:0;text-transform:none;">— カードをクリックすると詳細表示</span></div>
+      <div class="compat-grid" id="resultCompat"></div>
     </div>
 
     <div class="section-block">
@@ -504,8 +332,22 @@ hr.section-divider {
 </div>
 </div>
 
+<!-- POPUP -->
+<div class="popup-overlay" id="popupOverlay" onclick="closePopup(event)">
+  <div class="popup-box">
+    <button class="popup-close" onclick="closePopupDirect()">×</button>
+    <img id="popupImg" class="popup-img" src="" alt="">
+    <div class="popup-type-num" id="popupNum"></div>
+    <div class="popup-type-name" id="popupName"></div>
+    <div class="popup-tagline" id="popupTagline"></div>
+    <div class="popup-core" id="popupCore"></div>
+    <div class="popup-strengths" id="popupStrengths"></div>
+    <div class="popup-compat-label" id="popupCompatLabel"></div>
+  </div>
+</div>
+
 <script>
-// ===== IMAGE DATA =====
+// ===== IMAGES =====
 const IMAGES = {
   "01_高速構造化ドライバー": "data:image/png;base64,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",
   "02_静かな戦略家": "data:image/png;base64,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",
@@ -525,516 +367,486 @@ const IMAGES = {
   "16_調停ナビゲーター": "data:image/png;base64,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"
 };
 
-// ===== DATA =====
-const mbtiList = [
-  "INTJ","INTP","ENTJ","ENTP",
-  "INFJ","INFP","ENFJ","ENFP",
-  "ISTJ","ISFJ","ESTJ","ESFJ",
-  "ISTP","ISFP","ESTP","ESFP"
+// ===== KABBALAH DATA =====
+const kabbalahData = {
+  1: {
+    name: "リーダー・開拓者", keyword: "独立・先駆・意志",
+    traits: ["強い意志力","独立心","パイオニア精神","自己主張"],
+    analysis: "あなたの人生の根底には「自分で道を切り開く」という強いエネルギーがあります。依存よりも主導、受動より能動を選ぶ傾向があり、何かを始める力は群を抜いています。",
+    synergyTemplate: "アーキタイプ「{name}」との組み合わせでは、{name}の持つ{trait}と数字1のパイオニア精神が共鳴し、新たな領域を切り開く力が際立ちます。「始める」ことへの躊躇が少ない反面、持続性を意識することが長期成功のカギです。"
+  },
+  2: {
+    name: "調和者・協力者", keyword: "協調・感受性・外交",
+    traits: ["協調性","繊細な感受性","外交的","忍耐力"],
+    analysis: "人と人の間に立ち、場を整える力が生まれつき備わっています。細部への気づきと共感力が高く、一人では気づけないことを見抜く観察眼があります。衝突を避けようとするあまり、自分の本音を後回しにしやすい面も。",
+    synergyTemplate: "「{name}」との組み合わせでは、{name}の{trait}に数字2の協調・外交エネルギーが加わり、人間関係の構築と維持に卓越した力を発揮します。ただし自己主張が薄れるリスクには意識的に対処を。"
+  },
+  3: {
+    name: "表現者・クリエイター", keyword: "創造・表現・コミュニケーション",
+    traits: ["創造性","表現力","社交性","楽観主義"],
+    analysis: "言葉・ビジュアル・アイデアで世界に働きかけるエネルギーが強い数字です。人を楽しませ、明るい空気を作ることが自然にできます。飽きやすさや散漫になる傾向を意識することで、創造性が持続します。",
+    synergyTemplate: "「{name}」と数字3の組み合わせは、{name}の{trait}に表現・コミュニケーション力が乗算され、アイデアや強みを世界へ発信する力が増幅されます。発信の場を意図的に作ることが成長の加速につながります。"
+  },
+  4: {
+    name: "建設者・実務家", keyword: "安定・秩序・勤勉",
+    traits: ["実直さ","組織力","忍耐","信頼性"],
+    analysis: "確かなものを地道に積み上げることに喜びを感じる数字。秩序と安定を重視し、約束を守り、コツコツと実績を作ります。変化への抵抗や頑固さが出ることがあるため、柔軟性の余白を残すことが大切です。",
+    synergyTemplate: "「{name}」と数字4の組み合わせは、{name}の{trait}に地道な継続力と実務能力が加わります。長期プロジェクトや信頼構築において特に力を発揮し、確かな結果を生み出します。"
+  },
+  5: {
+    name: "自由人・冒険者", keyword: "変化・自由・多様性",
+    traits: ["適応力","好奇心","自由への渇望","多才"],
+    analysis: "変化と多様性を糧に生きる数字。同じ場所・同じルーティンに縛られることを嫌い、常に新しい刺激を求めます。その適応力と好奇心は大きな強みですが、一点集中が苦手になりやすい点には注意が必要です。",
+    synergyTemplate: "「{name}」と数字5の組み合わせは、{name}の{trait}に強い適応力と変化への開放性が融合します。変化する環境でこそ本領を発揮し、新しいことへの挑戦を恐れません。"
+  },
+  6: {
+    name: "養育者・責任者", keyword: "愛・責任・奉仕",
+    traits: ["責任感","思いやり","調和志向","完璧主義"],
+    analysis: "家族・コミュニティ・周囲の人を守り育てることに使命感を持つ数字。美的センスと完璧主義が同居し、環境を整えることへのこだわりが強い。自分を犠牲にしすぎず、Give＆Takeのバランスを意識することが重要です。",
+    synergyTemplate: "「{name}」と数字6の組み合わせは、{name}の{trait}に強い責任感と思いやりが加わります。周囲のサポートと信頼構築に長け、チームや組織の安定に貢献します。"
+  },
+  7: {
+    name: "探求者・哲学者", keyword: "分析・深化・精神性",
+    traits: ["深い分析力","精神的探求","直感","孤独耐性"],
+    analysis: "表面より本質、広さより深さを好む数字。一人で深く考え、真理を探し続けることに充実感を覚えます。他者とのつながりを後回しにしがちなため、知識を「出力」する場を意図的に作ることが成長のカギです。",
+    synergyTemplate: "「{name}」と数字7の組み合わせは、{name}の{trait}に圧倒的な分析力と直感的洞察が融合します。表面に見えない構造を読み解く力が際立ち、戦略設計や問題の本質把握に強みを発揮します。"
+  },
+  8: {
+    name: "権力者・達成者", keyword: "成功・物質・権威",
+    traits: ["野心","実行力","ビジネス感覚","指導力"],
+    analysis: "物質的な成功・権威・影響力を追求するエネルギーが強い数字。目標に向かう推進力と実行力は卓越していますが、支配的になりすぎないバランス感覚が長期的な成功を左右します。",
+    synergyTemplate: "「{name}」と数字8の組み合わせは、{name}の{trait}に強力な実行力と成功へのドライブが加わります。大きな目標を現実に変える力が際立ち、リーダーシップと結果創出において群を抜きます。"
+  },
+  9: {
+    name: "人道主義者・完成者", keyword: "奉仕・智慧・完成",
+    traits: ["広い視野","包容力","理想主義","智慧"],
+    analysis: "すべてのものを包む広い愛と智慧を持つ数字。利己より利他、個より全体を重視します。理想と現実のギャップに苦しみやすく、完璧を求めすぎて疲弊することもあります。手放すことを学ぶと力が増します。",
+    synergyTemplate: "「{name}」と数字9の組み合わせは、{name}の{trait}に広い包容力と人道主義的視点が加わります。個の成功を超えた、周囲や社会への貢献に向かう力が自然に湧き出てきます。"
+  },
+  11: {
+    name: "ビジョナリー・啓示者", keyword: "直感・啓示・インスピレーション",
+    traits: ["強い直感","先見性","精神的感受性","インスピレーション"],
+    analysis: "11はマスターナンバーと呼ばれ、通常の1〜9を超えた特別な使命を持つとされます。強い直感と先見性を持ち、時代を先取りするアイデアやビジョンが降りてくることがあります。その感受性の強さゆえ、消耗しやすい面も。",
+    synergyTemplate: "「{name}」と11（マスターナンバー）の組み合わせは、{name}の{trait}に卓越した直感とビジョナリーな視点が加わります。まだ誰も見ていない可能性を察知し、それを現実に引き寄せる力があります。"
+  },
+  22: {
+    name: "マスタービルダー", keyword: "大きなビジョン・実現・構築",
+    traits: ["卓越した実行力","大局観","カリスマ","現実化能力"],
+    analysis: "22は最強のマスターナンバーとされ、壮大なビジョンを現実に変える力を持ちます。「夢想家」で終わらず、具体的な形にするまで追求できる稀有な資質です。責任の重さに押しつぶされないセルフケアが重要です。",
+    synergyTemplate: "「{name}」と22（最強マスターナンバー）の組み合わせは、{name}の{trait}に壮大なビジョンを現実化する力が融合します。個人の枠を超えた、大きなインパクトを生み出すポテンシャルがあります。"
+  }
+};
+
+// ===== MBTI DATA =====
+const mbtiData = [
+  {val:"unknown", label:"不明（わからない）"},
+  {val:"INTJ", label:"INTJ — 建築家（戦略的思考の完璧主義者）"},
+  {val:"INTP", label:"INTP — 論理学者（革新的な発明家）"},
+  {val:"ENTJ", label:"ENTJ — 指揮官（大胆で想像力豊かなリーダー）"},
+  {val:"ENTP", label:"ENTP — 討論者（賢くて好奇心旺盛な思想家）"},
+  {val:"INFJ", label:"INFJ — 提唱者（物静かで神秘的な理想主義者）"},
+  {val:"INFP", label:"INFP — 仲介者（詩人的で親切な利他主義者）"},
+  {val:"ENFJ", label:"ENFJ — 主人公（カリスマ的で感化力のあるリーダー）"},
+  {val:"ENFP", label:"ENFP — 広報活動家（熱狂的で創造的な社交家）"},
+  {val:"ISTJ", label:"ISTJ — 管理者（実際的で信頼できる事実主義者）"},
+  {val:"ISFJ", label:"ISFJ — 擁護者（非常に献身的な保護者）"},
+  {val:"ESTJ", label:"ESTJ — 幹部（優秀な管理者・規則の守護者）"},
+  {val:"ESFJ", label:"ESFJ — 領事館（思いやりがあり社交的な協力者）"},
+  {val:"ISTP", label:"ISTP — 巨匠（大胆で実際的な実験者）"},
+  {val:"ISFP", label:"ISFP — 冒険家（柔軟で魅力的な芸術家）"},
+  {val:"ESTP", label:"ESTP — 起業家（賢くてエネルギッシュな挑戦者）"},
+  {val:"ESFP", label:"ESFP — エンターテイナー（自発的でエネルギッシュな演者）"},
 ];
 
-const enneaList = [
-  {val:"1", label:"1 - 完全主義者"},
-  {val:"2", label:"2 - 援助者"},
-  {val:"3", label:"3 - 達成者"},
-  {val:"4", label:"4 - 個人主義者"},
-  {val:"5", label:"5 - 研究者"},
-  {val:"6", label:"6 - 忠実者"},
-  {val:"7", label:"7 - 熱中者"},
-  {val:"8", label:"8 - 挑戦者"},
-  {val:"9", label:"9 - 平和主義者"}
+const enneaData = [
+  {val:"unknown", label:"不明（わからない）"},
+  {val:"1", label:"タイプ1 — 裁判官（完璧主義・正義感）"},
+  {val:"2", label:"タイプ2 — 看護師（世話好き・承認欲求）"},
+  {val:"3", label:"タイプ3 — 実業家（達成志向・成功への執念）"},
+  {val:"4", label:"タイプ4 — 芸術家（個性重視・感受性の強さ）"},
+  {val:"5", label:"タイプ5 — 研究者（知識欲・観察者）"},
+  {val:"6", label:"タイプ6 — 営業マン（忠誠心・安全志向）"},
+  {val:"7", label:"タイプ7 — 芸人（楽観的・刺激追求）"},
+  {val:"8", label:"タイプ8 — 教祖（支配的・力への意志）"},
+  {val:"9", label:"タイプ9 — 庭師（平和主義・調和を求める）"},
 ];
 
 const archetypes = [
   {
-    id: "01", name: "高速構造化ドライバー",
-    tagline: "思考を即座に行動へ変換する。スピードと構造が武器。",
-    mbti: ["ENTJ","ESTJ","INTJ","ENTP"],
-    ennea: ["3","1","8"],
-    desire: ["達成"],
-    strengths: ["即断即決","構造化思考","目標達成力","リーダーシップ"],
-    shadows: ["独断的になりやすい","プロセスより結果優先","感情を軽視"],
-    core: "行動と思考が高速に連動するタイプ。曖昧さを嫌い、すぐにフレームワークに落とし込む。他者より先に動くことで安心感を得る。エネルギーが高い時は圧倒的な推進力だが、焦りが生じると周囲を置き去りにする。",
-    axes: [
-      {l:"内向", v:80, r:"外向"},
-      {l:"感情", v:25, r:"論理"},
-      {l:"柔軟", v:70, r:"構造"},
-      {l:"個人", v:55, r:"組織"}
-    ],
-    compat: [
-      {label:"相性◎", name:"共感プロデューサー"},
-      {label:"相性○", name:"精密クラフトマン"},
-      {label:"緊張△", name:"孤高リサーチャー"},
-      {label:"学べる", name:"安定オペレーター"}
-    ],
-    advice: "今のあなたに必要なのは「意図的なスロー」。速さが強みの反面、見落としているシグナルがある。週1回、プロセスだけを振り返る時間を設けると死角が消える。"
+    id:"01", name:"高速構造化ドライバー",
+    tagline:"思考を即座に行動へ変換する。スピードと構造が武器。",
+    traits:{E:1,I:0,N:0.5,S:0,T:1,F:0,J:1,P:0},
+    ennea:["3","8","1"], desire:["達成"], anger:["外向"],
+    angerTrigger:["非効率","不公平"],
+    kabAffinity:[1,3,8],
+    strengths:["即断即決","構造化思考","目標達成力","リーダーシップ"],
+    shadows:["独断的になりやすい","プロセスより結果優先","感情を軽視"],
+    core:"行動と思考が高速に連動するタイプ。曖昧さを嫌い、すぐにフレームワークに落とし込む。他者より先に動くことで安心感を得る。エネルギーが高い時は圧倒的な推進力だが、焦りが生じると周囲を置き去りにする。",
+    axes:[{l:"内向",v:80,r:"外向"},{l:"感情",v:25,r:"論理"},{l:"柔軟",v:70,r:"構造"},{l:"個人",v:55,r:"組織"}],
+    compat:[{label:"相性◎",name:"共感プロデューサー"},{label:"相性○",name:"精密クラフトマン"},{label:"緊張△",name:"孤高リサーチャー"},{label:"学べる",name:"安定オペレーター"}],
+    advice:"今のあなたに必要なのは「意図的なスロー」。速さが強みの反面、見落としているシグナルがある。週1回、プロセスだけを振り返る時間を設けると死角が消える。"
   },
   {
-    id: "02", name: "静かな戦略家",
-    tagline: "表には出ず、深く読む。言葉少なく、核心を突く。",
-    mbti: ["INTJ","INTP","INFJ","ENTJ"],
-    ennea: ["5","1","4"],
-    desire: ["理解","達成"],
-    strengths: ["深い洞察力","長期視点","冷静な判断","独自の視点"],
-    shadows: ["行動に移すのが遅い","孤立しやすい","過剰分析"],
-    core: "観察と思考に長け、表舞台よりも背後から全体を設計する。発言は少ないが、一言の重みがある。感情より論理を信頼し、直感より証拠を重視する。焦らされると本領を発揮できない。",
-    axes: [
-      {l:"内向", v:15, r:"外向"},
-      {l:"感情", v:20, r:"論理"},
-      {l:"柔軟", v:40, r:"構造"},
-      {l:"個人", v:25, r:"組織"}
-    ],
-    compat: [
-      {label:"相性◎", name:"高速構造化ドライバー"},
-      {label:"相性○", name:"熱狂アイデアメーカー"},
-      {label:"緊張△", name:"現場突破ファイター"},
-      {label:"学べる", name:"共感プロデューサー"}
-    ],
-    advice: "思考の質は高い。課題は「出力タイミング」。考えがまとまる前に一部を共有する習慣が、孤立リスクを下げる。完璧な形でなくてもいい。"
+    id:"02", name:"静かな戦略家",
+    tagline:"表には出ず、深く読む。言葉少なく、核心を突く。",
+    traits:{E:0,I:1,N:1,S:0,T:1,F:0,J:0.5,P:0.5},
+    ennea:["5","1","4"], desire:["理解"], anger:["内向","変換"],
+    angerTrigger:["非効率","低品質","混乱"],
+    kabAffinity:[7,2,4],
+    strengths:["深い洞察力","長期視点","冷静な判断","独自の視点"],
+    shadows:["行動に移すのが遅い","孤立しやすい","過剰分析"],
+    core:"観察と思考に長け、表舞台よりも背後から全体を設計する。発言は少ないが、一言の重みがある。感情より論理を信頼し、直感より証拠を重視する。焦らされると本領を発揮できない。",
+    axes:[{l:"内向",v:15,r:"外向"},{l:"感情",v:20,r:"論理"},{l:"柔軟",v:40,r:"構造"},{l:"個人",v:25,r:"組織"}],
+    compat:[{label:"相性◎",name:"高速構造化ドライバー"},{label:"相性○",name:"熱狂アイデアメーカー"},{label:"緊張△",name:"現場突破ファイター"},{label:"学べる",name:"共感プロデューサー"}],
+    advice:"思考の質は高い。課題は「出力タイミング」。考えがまとまる前に一部を共有する習慣が、孤立リスクを下げる。完璧な形でなくてもいい。"
   },
   {
-    id: "03", name: "熱狂アイデアメーカー",
-    tagline: "アイデアが止まらない。熱量で場を変える。",
-    mbti: ["ENTP","ENFP","INTP","ENTJ"],
-    ennea: ["7","3","4"],
-    desire: ["自由","達成"],
-    strengths: ["発想力","エネルギー","場の活性化","ゼロイチ力"],
-    shadows: ["飽きやすい","実行が雑","一貫性が薄い"],
-    core: "可能性を見るのが得意で、新しいアイデアに喜びを感じる。熱量が高く、周囲を巻き込む力がある。ただし持続性に課題があり、アイデアが実行フェーズに入ると急速に興味が薄れることも。",
-    axes: [
-      {l:"内向", v:75, r:"外向"},
-      {l:"感情", v:65, r:"論理"},
-      {l:"柔軟", v:90, r:"構造"},
-      {l:"個人", v:60, r:"組織"}
-    ],
-    compat: [
-      {label:"相性◎", name:"精密クラフトマン"},
-      {label:"相性○", name:"静かな戦略家"},
-      {label:"緊張△", name:"安定オペレーター"},
-      {label:"学べる", name:"高速構造化ドライバー"}
-    ],
-    advice: "アイデアの豊富さは最大の資産。今必要なのは「完成定義」。プロジェクト開始時に『これが完了した状態』を決めておくだけで実行率が劇的に上がる。"
+    id:"03", name:"熱狂アイデアメーカー",
+    tagline:"アイデアが止まらない。熱量で場を変える。",
+    traits:{E:1,I:0,N:1,S:0,T:0.5,F:0.5,J:0,P:1},
+    ennea:["7","3","4"], desire:["自由","達成"], anger:["外向","変換"],
+    angerTrigger:["束縛","非効率","混乱"],
+    kabAffinity:[3,5,1],
+    strengths:["発想力","エネルギー","場の活性化","ゼロイチ力"],
+    shadows:["飽きやすい","実行が雑","一貫性が薄い"],
+    core:"可能性を見るのが得意で、新しいアイデアに喜びを感じる。熱量が高く、周囲を巻き込む力がある。ただし持続性に課題があり、アイデアが実行フェーズに入ると急速に興味が薄れることも。",
+    axes:[{l:"内向",v:75,r:"外向"},{l:"感情",v:65,r:"論理"},{l:"柔軟",v:90,r:"構造"},{l:"個人",v:60,r:"組織"}],
+    compat:[{label:"相性◎",name:"精密クラフトマン"},{label:"相性○",name:"静かな戦略家"},{label:"緊張△",name:"安定オペレーター"},{label:"学べる",name:"高速構造化ドライバー"}],
+    advice:"アイデアの豊富さは最大の資産。今必要なのは「完成定義」。プロジェクト開始時に『これが完了した状態』を決めておくだけで実行率が劇的に上がる。"
   },
   {
-    id: "04", name: "共感プロデューサー",
-    tagline: "人を動かす共感力。関係から価値を生む。",
-    mbti: ["ENFJ","INFJ","ENFP","ESFJ"],
-    ennea: ["2","9","4"],
-    desire: ["承認","安定"],
-    strengths: ["共感力","チームビルド","場の調整","影響力"],
-    shadows: ["自己犠牲的","境界線が曖昧","承認欲求が強い"],
-    core: "人の感情を読む精度が高く、関係性の中で力を発揮する。承認を与えることが自然にできるが、自分自身の欲求は後回しにしがち。チームの潤滑油として機能するが、搾取されやすい一面も。",
-    axes: [
-      {l:"内向", v:65, r:"外向"},
-      {l:"感情", v:80, r:"論理"},
-      {l:"柔軟", v:70, r:"構造"},
-      {l:"個人", v:20, r:"組織"}
-    ],
-    compat: [
-      {label:"相性◎", name:"高速構造化ドライバー"},
-      {label:"相性○", name:"安定オペレーター"},
-      {label:"緊張△", name:"孤高リサーチャー"},
-      {label:"学べる", name:"静かな戦略家"}
-    ],
-    advice: "与える力が強い。でも今、自分への投資が不足している可能性がある。週に一度『自分のための時間』を意識的にスケジュールすることが長期パフォーマンスの鍵。"
+    id:"04", name:"共感プロデューサー",
+    tagline:"人を動かす共感力。関係から価値を生む。",
+    traits:{E:1,I:0,N:1,S:0,T:0,F:1,J:0.5,P:0.5},
+    ennea:["2","9","4"], desire:["承認","安定"], anger:["内向","変換"],
+    angerTrigger:["無視","裏切り","不公平"],
+    kabAffinity:[2,6,9],
+    strengths:["共感力","チームビルド","場の調整","影響力"],
+    shadows:["自己犠牲的","境界線が曖昧","承認欲求が強い"],
+    core:"人の感情を読む精度が高く、関係性の中で力を発揮する。承認を与えることが自然にできるが、自分自身の欲求は後回しにしがち。チームの潤滑油として機能するが、搾取されやすい一面も。",
+    axes:[{l:"内向",v:65,r:"外向"},{l:"感情",v:80,r:"論理"},{l:"柔軟",v:70,r:"構造"},{l:"個人",v:20,r:"組織"}],
+    compat:[{label:"相性◎",name:"高速構造化ドライバー"},{label:"相性○",name:"安定オペレーター"},{label:"緊張△",name:"孤高リサーチャー"},{label:"学べる",name:"静かな戦略家"}],
+    advice:"与える力が強い。でも今、自分への投資が不足している可能性がある。週に一度『自分のための時間』を意識的にスケジュールすることが長期パフォーマンスの鍵。"
   },
   {
-    id: "05", name: "精密クラフトマン",
-    tagline: "完成度に妥協しない。細部に宿る美学。",
-    mbti: ["ISTJ","INTP","INTJ","ISTP"],
-    ennea: ["1","5","6"],
-    desire: ["理解","達成"],
-    strengths: ["高品質アウトプット","細部への注意","一貫性","専門性"],
-    shadows: ["完璧主義による遅延","変化への抵抗","チームへの高基準強要"],
-    core: "クオリティへのこだわりが強く、中途半端な仕事を受け入れられない。自分にも他人にも高い基準を設ける。じっくり取り組むことで真価を発揮するが、時間的プレッシャー下では負荷が高い。",
-    axes: [
-      {l:"内向", v:20, r:"外向"},
-      {l:"感情", v:30, r:"論理"},
-      {l:"柔軟", v:25, r:"構造"},
-      {l:"個人", v:40, r:"組織"}
-    ],
-    compat: [
-      {label:"相性◎", name:"熱狂アイデアメーカー"},
-      {label:"相性○", name:"高速構造化ドライバー"},
-      {label:"緊張△", name:"自由探検家"},
-      {label:"学べる", name:"現場突破ファイター"}
-    ],
-    advice: "完成度へのこだわりは強み。ただ、80%完成で動き出す経験を積むと、市場フィードバックが手に入り最終品質が上がる逆説がある。リリース→改善のサイクルを試してみて。"
+    id:"05", name:"精密クラフトマン",
+    tagline:"完成度に妥協しない。細部に宿る美学。",
+    traits:{E:0,I:1,N:0,S:1,T:1,F:0,J:1,P:0},
+    ennea:["1","5","6"], desire:["理解","達成"], anger:["内向"],
+    angerTrigger:["低品質","非効率","不公平"],
+    kabAffinity:[4,1,6],
+    strengths:["高品質アウトプット","細部への注意","一貫性","専門性"],
+    shadows:["完璧主義による遅延","変化への抵抗","チームへの高基準強要"],
+    core:"クオリティへのこだわりが強く、中途半端な仕事を受け入れられない。自分にも他人にも高い基準を設ける。じっくり取り組むことで真価を発揮するが、時間的プレッシャー下では負荷が高い。",
+    axes:[{l:"内向",v:20,r:"外向"},{l:"感情",v:30,r:"論理"},{l:"柔軟",v:25,r:"構造"},{l:"個人",v:40,r:"組織"}],
+    compat:[{label:"相性◎",name:"熱狂アイデアメーカー"},{label:"相性○",name:"高速構造化ドライバー"},{label:"緊張△",name:"自由探検家"},{label:"学べる",name:"現場突破ファイター"}],
+    advice:"完成度へのこだわりは強み。ただ、80%完成で動き出す経験を積むと、市場フィードバックが手に入り最終品質が上がる逆説がある。リリース→改善のサイクルを試してみて。"
   },
   {
-    id: "06", name: "現場突破ファイター",
-    tagline: "やってみてわかる。現場と経験が全て。",
-    mbti: ["ESTP","ISTP","ESFP","ENTP"],
-    ennea: ["8","7","3"],
-    desire: ["自由","達成"],
-    strengths: ["即行動","現場適応力","問題解決","タフネス"],
-    shadows: ["計画性が低い","衝動的","引き際が難しい"],
-    core: "思考より行動を優先し、問題が起きてから対処する。現場でしか得られない情報を重視し、机上の空論を嫌う。タフで粘り強く、土壇場で本領を発揮することが多い。",
-    axes: [
-      {l:"内向", v:70, r:"外向"},
-      {l:"感情", v:40, r:"論理"},
-      {l:"柔軟", v:80, r:"構造"},
-      {l:"個人", v:65, r:"組織"}
-    ],
-    compat: [
-      {label:"相性◎", name:"静かな戦略家"},
-      {label:"相性○", name:"熱狂アイデアメーカー"},
-      {label:"緊張△", name:"精密クラフトマン"},
-      {label:"学べる", name:"安定オペレーター"}
-    ],
-    advice: "行動力は最大の武器。今フェーズで必要なのは、経験を「再現可能な型」に変える作業。やったことをパターン化すると、次の行動の精度と速度が両方上がる。"
+    id:"06", name:"現場突破ファイター",
+    tagline:"やってみてわかる。現場と経験が全て。",
+    traits:{E:1,I:0,N:0,S:1,T:0.5,F:0.5,J:0,P:1},
+    ennea:["8","7","3"], desire:["自由","達成"], anger:["外向"],
+    angerTrigger:["束縛","非効率","支配"],
+    kabAffinity:[8,1,5],
+    strengths:["即行動","現場適応力","問題解決","タフネス"],
+    shadows:["計画性が低い","衝動的","引き際が難しい"],
+    core:"思考より行動を優先し、問題が起きてから対処する。現場でしか得られない情報を重視し、机上の空論を嫌う。タフで粘り強く、土壇場で本領を発揮することが多い。",
+    axes:[{l:"内向",v:70,r:"外向"},{l:"感情",v:40,r:"論理"},{l:"柔軟",v:80,r:"構造"},{l:"個人",v:65,r:"組織"}],
+    compat:[{label:"相性◎",name:"静かな戦略家"},{label:"相性○",name:"熱狂アイデアメーカー"},{label:"緊張△",name:"精密クラフトマン"},{label:"学べる",name:"安定オペレーター"}],
+    advice:"行動力は最大の武器。今フェーズで必要なのは、経験を「再現可能な型」に変える作業。やったことをパターン化すると、次の行動の精度と速度が両方上がる。"
   },
   {
-    id: "07", name: "美意識クリエイター",
-    tagline: "感性が羅針盤。美しくなければ意味がない。",
-    mbti: ["INFP","ISFP","ENFP","INFJ"],
-    ennea: ["4","7","9"],
-    desire: ["自由","承認"],
-    strengths: ["独自の審美眼","表現力","感受性の深さ","ブランド感覚"],
-    shadows: ["気分に左右される","批判に脆い","商業化が苦手"],
-    core: "美意識と感性を核に動くタイプ。「なんとなく違う」という直感が正確で、それをデザインや表現に変換する。評価より自己表現を優先するが、承認されないと消耗する矛盾も抱える。",
-    axes: [
-      {l:"内向", v:30, r:"外向"},
-      {l:"感情", v:85, r:"論理"},
-      {l:"柔軟", v:75, r:"構造"},
-      {l:"個人", v:35, r:"組織"}
-    ],
-    compat: [
-      {label:"相性◎", name:"共感プロデューサー"},
-      {label:"相性○", name:"自由探検家"},
-      {label:"緊張△", name:"高速構造化ドライバー"},
-      {label:"学べる", name:"精密クラフトマン"}
-    ],
-    advice: "感性の精度は高い。課題は「感性を言語化・商品化」すること。感じたことをそのまま言葉にする練習が、表現の幅と収益化の橋渡しになる。"
+    id:"07", name:"美意識クリエイター",
+    tagline:"感性が羅針盤。美しくなければ意味がない。",
+    traits:{E:0,I:1,N:1,S:0,T:0,F:1,J:0,P:1},
+    ennea:["4","7","9"], desire:["自由","承認"], anger:["内向","変換"],
+    angerTrigger:["低品質","無視","束縛"],
+    kabAffinity:[3,7,4],
+    strengths:["独自の審美眼","表現力","感受性の深さ","ブランド感覚"],
+    shadows:["気分に左右される","批判に脆い","商業化が苦手"],
+    core:"美意識と感性を核に動くタイプ。「なんとなく違う」という直感が正確で、それをデザインや表現に変換する。評価より自己表現を優先するが、承認されないと消耗する矛盾も抱える。",
+    axes:[{l:"内向",v:30,r:"外向"},{l:"感情",v:85,r:"論理"},{l:"柔軟",v:75,r:"構造"},{l:"個人",v:35,r:"組織"}],
+    compat:[{label:"相性◎",name:"共感プロデューサー"},{label:"相性○",name:"自由探検家"},{label:"緊張△",name:"高速構造化ドライバー"},{label:"学べる",name:"精密クラフトマン"}],
+    advice:"感性の精度は高い。課題は「感性を言語化・商品化」すること。感じたことをそのまま言葉にする練習が、表現の幅と収益化の橋渡しになる。"
   },
   {
-    id: "08", name: "安定オペレーター",
-    tagline: "変わらない安定を守る。信頼は実績から積み上げる。",
-    mbti: ["ISTJ","ISFJ","ESTJ","ESFJ"],
-    ennea: ["6","1","9"],
-    desire: ["安定","承認"],
-    strengths: ["高い信頼性","継続実行力","リスク管理","組織適応"],
-    shadows: ["変化への抵抗","リスク回避過多","イノベーション苦手"],
-    core: "約束を守り、コツコツ積み上げることに価値を見出す。組織の中で安定した柱として機能する。変化よりも継続を好み、既存の仕組みを大切にする。急変期には高いストレスを感じやすい。",
-    axes: [
-      {l:"内向", v:35, r:"外向"},
-      {l:"感情", v:50, r:"論理"},
-      {l:"柔軟", v:15, r:"構造"},
-      {l:"個人", v:20, r:"組織"}
-    ],
-    compat: [
-      {label:"相性◎", name:"熱狂アイデアメーカー"},
-      {label:"相性○", name:"共感プロデューサー"},
-      {label:"緊張△", name:"現場突破ファイター"},
-      {label:"学べる", name:"自由探検家"}
-    ],
-    advice: "信頼の積み上げは本物の資産。今できる一歩は『小さな実験』を月1回の習慣にすること。失敗の小さいうちに変化耐性が育つ。"
+    id:"08", name:"安定オペレーター",
+    tagline:"変わらない安定を守る。信頼は実績から積み上げる。",
+    traits:{E:0,I:1,N:0,S:1,T:0.5,F:0.5,J:1,P:0},
+    ennea:["6","1","9"], desire:["安定","承認"], anger:["内向"],
+    angerTrigger:["混乱","裏切り","不公平"],
+    kabAffinity:[4,6,2],
+    strengths:["高い信頼性","継続実行力","リスク管理","組織適応"],
+    shadows:["変化への抵抗","リスク回避過多","イノベーション苦手"],
+    core:"約束を守り、コツコツ積み上げることに価値を見出す。組織の中で安定した柱として機能する。変化よりも継続を好み、既存の仕組みを大切にする。急変期には高いストレスを感じやすい。",
+    axes:[{l:"内向",v:35,r:"外向"},{l:"感情",v:50,r:"論理"},{l:"柔軟",v:15,r:"構造"},{l:"個人",v:20,r:"組織"}],
+    compat:[{label:"相性◎",name:"熱狂アイデアメーカー"},{label:"相性○",name:"共感プロデューサー"},{label:"緊張△",name:"現場突破ファイター"},{label:"学べる",name:"自由探検家"}],
+    advice:"信頼の積み上げは本物の資産。今できる一歩は『小さな実験』を月1回の習慣にすること。失敗の小さいうちに変化耐性が育つ。"
   },
   {
-    id: "09", name: "承認達成ランナー",
-    tagline: "結果が全て。勝ち続けることで自己を証明する。",
-    mbti: ["ESTJ","ENTJ","ESFJ","ENFJ"],
-    ennea: ["3","8","1"],
-    desire: ["達成","承認"],
-    strengths: ["目標達成力","競争力","自己ブランド構築","行動量"],
-    shadows: ["他者評価依存","燃え尽き症候群","感情を無視"],
-    core: "成果と承認に強く動機づけられる。目標に向かう集中力は高く、結果を出し続けることで自己価値を確認する。失敗や停滞を極度に嫌うため、ゴールポストを常に動かし続ける傾向がある。",
-    axes: [
-      {l:"内向", v:65, r:"外向"},
-      {l:"感情", v:35, r:"論理"},
-      {l:"柔軟", v:50, r:"構造"},
-      {l:"個人", v:55, r:"組織"}
-    ],
-    compat: [
-      {label:"相性◎", name:"静かな戦略家"},
-      {label:"相性○", name:"高速構造化ドライバー"},
-      {label:"緊張△", name:"美意識クリエイター"},
-      {label:"学べる", name:"守護サポーター"}
-    ],
-    advice: "達成への集中力は卓越している。今問うべきは『誰のための達成か』。自分の内側から来るゴールを一つ持つことで、外部評価への依存が薄れ持続性が増す。"
+    id:"09", name:"承認達成ランナー",
+    tagline:"結果が全て。勝ち続けることで自己を証明する。",
+    traits:{E:1,I:0,N:0.5,S:0.5,T:0.5,F:0.5,J:1,P:0},
+    ennea:["3","8","1"], desire:["達成","承認"], anger:["外向"],
+    angerTrigger:["無視","不公平","非効率"],
+    kabAffinity:[3,8,1],
+    strengths:["目標達成力","競争力","自己ブランド構築","行動量"],
+    shadows:["他者評価依存","燃え尽き症候群","感情を無視"],
+    core:"成果と承認に強く動機づけられる。目標に向かう集中力は高く、結果を出し続けることで自己価値を確認する。失敗や停滞を極度に嫌うため、ゴールポストを常に動かし続ける傾向がある。",
+    axes:[{l:"内向",v:65,r:"外向"},{l:"感情",v:35,r:"論理"},{l:"柔軟",v:50,r:"構造"},{l:"個人",v:55,r:"組織"}],
+    compat:[{label:"相性◎",name:"静かな戦略家"},{label:"相性○",name:"高速構造化ドライバー"},{label:"緊張△",name:"美意識クリエイター"},{label:"学べる",name:"守護サポーター"}],
+    advice:"達成への集中力は卓越している。今問うべきは『誰のための達成か』。自分の内側から来るゴールを一つ持つことで、外部評価への依存が薄れ持続性が増す。"
   },
   {
-    id: "10", name: "守護サポーター",
-    tagline: "大切な人を守るために動く。愛が行動原理。",
-    mbti: ["ISFJ","INFJ","ESFJ","ENFJ"],
-    ennea: ["2","6","9"],
-    desire: ["安定","承認"],
-    strengths: ["深い忠誠心","共感力","縁の下の支え","長期関係構築"],
-    shadows: ["自己主張が弱い","疲弊しやすい","依存関係に陥る"],
-    core: "大切な人や組織を守ることに喜びを感じる。忠誠心が高く、長期的な信頼関係を築くのが得意。しかし自分のニーズを後回しにすることで慢性的な疲弊に気づきにくい。",
-    axes: [
-      {l:"内向", v:25, r:"外向"},
-      {l:"感情", v:75, r:"論理"},
-      {l:"柔軟", v:55, r:"構造"},
-      {l:"個人", v:15, r:"組織"}
-    ],
-    compat: [
-      {label:"相性◎", name:"高速構造化ドライバー"},
-      {label:"相性○", name:"安定オペレーター"},
-      {label:"緊張△", name:"自由探検家"},
-      {label:"学べる", name:"正義改革者"}
-    ],
-    advice: "支える力は真の強みだが、自分の境界線を持つことが相手のためにもなる。『NO』を言える場面を一つ作ることが、健全な関係維持の第一歩。"
+    id:"10", name:"守護サポーター",
+    tagline:"大切な人を守るために動く。愛が行動原理。",
+    traits:{E:0,I:1,N:0,S:1,T:0,F:1,J:0.5,P:0.5},
+    ennea:["2","6","9"], desire:["安定","承認"], anger:["内向"],
+    angerTrigger:["裏切り","不公平","無視"],
+    kabAffinity:[2,6,9],
+    strengths:["深い忠誠心","共感力","縁の下の支え","長期関係構築"],
+    shadows:["自己主張が弱い","疲弊しやすい","依存関係に陥る"],
+    core:"大切な人や組織を守ることに喜びを感じる。忠誠心が高く、長期的な信頼関係を築くのが得意。しかし自分のニーズを後回しにすることで慢性的な疲弊に気づきにくい。",
+    axes:[{l:"内向",v:25,r:"外向"},{l:"感情",v:75,r:"論理"},{l:"柔軟",v:55,r:"構造"},{l:"個人",v:15,r:"組織"}],
+    compat:[{label:"相性◎",name:"高速構造化ドライバー"},{label:"相性○",name:"安定オペレーター"},{label:"緊張△",name:"自由探検家"},{label:"学べる",name:"正義改革者"}],
+    advice:"支える力は真の強みだが、自分の境界線を持つことが相手のためにもなる。『NO』を言える場面を一つ作ることが、健全な関係維持の第一歩。"
   },
   {
-    id: "11", name: "孤高リサーチャー",
-    tagline: "知ることが全て。深く、静かに、本質を掘る。",
-    mbti: ["INTP","INTJ","INFP","ISFP"],
-    ennea: ["5","4","1"],
-    desire: ["理解"],
-    strengths: ["深い専門性","独自の視点","客観的分析","集中力"],
-    shadows: ["引きこもり傾向","実装が遅い","孤立リスク"],
-    core: "知識の深みにこそ価値を見出す。広く浅くより、狭く深くを好む。一人の時間に思考が整理され、集団の中では消耗しやすい。その観察力と分析は、正しく使えば群を抜いた洞察を生む。",
-    axes: [
-      {l:"内向", v:10, r:"外向"},
-      {l:"感情", v:15, r:"論理"},
-      {l:"柔軟", v:35, r:"構造"},
-      {l:"個人", v:10, r:"組織"}
-    ],
-    compat: [
-      {label:"相性◎", name:"現場突破ファイター"},
-      {label:"相性○", name:"静かな戦略家"},
-      {label:"緊張△", name:"共感プロデューサー"},
-      {label:"学べる", name:"熱狂アイデアメーカー"}
-    ],
-    advice: "深い知識は希少価値。今必要なのは出力の場。月1回、自分の知見を誰かに話す場を作るだけで、知識が洗練され社会的影響力につながる。"
+    id:"11", name:"孤高リサーチャー",
+    tagline:"知ることが全て。深く、静かに、本質を掘る。",
+    traits:{E:0,I:1,N:1,S:0,T:1,F:0,J:0,P:1},
+    ennea:["5","4","1"], desire:["理解"], anger:["内向","変換"],
+    angerTrigger:["混乱","低品質","束縛"],
+    kabAffinity:[7,4,2],
+    strengths:["深い専門性","独自の視点","客観的分析","集中力"],
+    shadows:["引きこもり傾向","実装が遅い","孤立リスク"],
+    core:"知識の深みにこそ価値を見出す。広く浅くより、狭く深くを好む。一人の時間に思考が整理され、集団の中では消耗しやすい。その観察力と分析は、正しく使えば群を抜いた洞察を生む。",
+    axes:[{l:"内向",v:10,r:"外向"},{l:"感情",v:15,r:"論理"},{l:"柔軟",v:35,r:"構造"},{l:"個人",v:10,r:"組織"}],
+    compat:[{label:"相性◎",name:"現場突破ファイター"},{label:"相性○",name:"静かな戦略家"},{label:"緊張△",name:"共感プロデューサー"},{label:"学べる",name:"熱狂アイデアメーカー"}],
+    advice:"深い知識は希少価値。今必要なのは出力の場。月1回、自分の知見を誰かに話す場を作るだけで、知識が洗練され社会的影響力につながる。"
   },
   {
-    id: "12", name: "自由探検家",
-    tagline: "地図のない場所へ。好奇心が唯一の羅針盤。",
-    mbti: ["ENFP","ENTP","ESFP","ESTP"],
-    ennea: ["7","4","9"],
-    desire: ["自由"],
-    strengths: ["適応力","新体験への開放性","人脈の広さ","楽観性"],
-    shadows: ["深さが足りない","コミット回避","安定への抵抗"],
-    core: "制約を嫌い、新しい体験や可能性に引き寄せられる。好奇心が尽きず、多様な経験を持つが、一点集中が苦手。逃げではなく純粋な探求心が動力だが、外からは飽き性に見られることも。",
-    axes: [
-      {l:"内向", v:70, r:"外向"},
-      {l:"感情", v:60, r:"論理"},
-      {l:"柔軟", v:95, r:"構造"},
-      {l:"個人", v:70, r:"組織"}
-    ],
-    compat: [
-      {label:"相性◎", name:"安定オペレーター"},
-      {label:"相性○", name:"美意識クリエイター"},
-      {label:"緊張△", name:"精密クラフトマン"},
-      {label:"学べる", name:"孤高リサーチャー"}
-    ],
-    advice: "探求力は希少な才能。今フェーズでは、一つの旗を立てる時期かもしれない。『これだけは続ける』を一つ決めると、自由の中に軸が生まれる。"
+    id:"12", name:"自由探検家",
+    tagline:"地図のない場所へ。好奇心が唯一の羅針盤。",
+    traits:{E:1,I:0,N:1,S:0,T:0,F:1,J:0,P:1},
+    ennea:["7","4","9"], desire:["自由"], anger:["変換","外向"],
+    angerTrigger:["束縛","支配","混乱"],
+    kabAffinity:[5,3,7],
+    strengths:["適応力","新体験への開放性","人脈の広さ","楽観性"],
+    shadows:["深さが足りない","コミット回避","安定への抵抗"],
+    core:"制約を嫌い、新しい体験や可能性に引き寄せられる。好奇心が尽きず、多様な経験を持つが、一点集中が苦手。逃げではなく純粋な探求心が動力だが、外からは飽き性に見られることも。",
+    axes:[{l:"内向",v:70,r:"外向"},{l:"感情",v:60,r:"論理"},{l:"柔軟",v:95,r:"構造"},{l:"個人",v:70,r:"組織"}],
+    compat:[{label:"相性◎",name:"安定オペレーター"},{label:"相性○",name:"美意識クリエイター"},{label:"緊張△",name:"精密クラフトマン"},{label:"学べる",name:"孤高リサーチャー"}],
+    advice:"探求力は希少な才能。今フェーズでは、一つの旗を立てる時期かもしれない。『これだけは続ける』を一つ決めると、自由の中に軸が生まれる。"
   },
   {
-    id: "13", name: "正義改革者",
-    tagline: "間違いを正す。世界をもっと良くできるはず。",
-    mbti: ["INFJ","INTJ","ENFJ","ENTJ"],
-    ennea: ["1","8","6"],
-    desire: ["達成","理解"],
-    strengths: ["強い信念","変革推進力","倫理観","長期ビジョン"],
-    shadows: ["理想主義的すぎる","他者への批判","完璧主義"],
-    core: "『こうあるべき』という強い内的基準を持ち、現状との乖離に強い不満を感じる。不正や非効率を見過ごせない正義感がある。改革への熱量は高いが、現実のペースとのギャップに消耗しやすい。",
-    axes: [
-      {l:"内向", v:30, r:"外向"},
-      {l:"感情", v:45, r:"論理"},
-      {l:"柔軟", v:30, r:"構造"},
-      {l:"個人", v:40, r:"組織"}
-    ],
-    compat: [
-      {label:"相性◎", name:"守護サポーター"},
-      {label:"相性○", name:"静かな戦略家"},
-      {label:"緊張△", name:"自由探検家"},
-      {label:"学べる", name:"共感プロデューサー"}
-    ],
-    advice: "信念の強さは真の推進力。今必要なのは『段階的変革』の視点。完璧な変化より、70%の変化を継続させる戦略が長期的に世界をより変える。"
+    id:"13", name:"正義改革者",
+    tagline:"間違いを正す。世界をもっと良くできるはず。",
+    traits:{E:0.5,I:0.5,N:1,S:0,T:0.5,F:0.5,J:1,P:0},
+    ennea:["1","8","6"], desire:["達成","理解"], anger:["内向","外向"],
+    angerTrigger:["不公平","裏切り","低品質"],
+    kabAffinity:[1,9,6],
+    strengths:["強い信念","変革推進力","倫理観","長期ビジョン"],
+    shadows:["理想主義的すぎる","他者への批判","完璧主義"],
+    core:"『こうあるべき』という強い内的基準を持ち、現状との乖離に強い不満を感じる。不正や非効率を見過ごせない正義感がある。改革への熱量は高いが、現実のペースとのギャップに消耗しやすい。",
+    axes:[{l:"内向",v:30,r:"外向"},{l:"感情",v:45,r:"論理"},{l:"柔軟",v:30,r:"構造"},{l:"個人",v:40,r:"組織"}],
+    compat:[{label:"相性◎",name:"守護サポーター"},{label:"相性○",name:"静かな戦略家"},{label:"緊張△",name:"自由探検家"},{label:"学べる",name:"共感プロデューサー"}],
+    advice:"信念の強さは真の推進力。今必要なのは『段階的変革』の視点。完璧な変化より、70%の変化を継続させる戦略が長期的に世界をより変える。"
   },
   {
-    id: "14", name: "関係編集者",
-    tagline: "つながりをデザインする。人の間に橋を架ける。",
-    mbti: ["ENFJ","ESFJ","INFJ","ENFP"],
-    ennea: ["2","9","6"],
-    desire: ["承認","安定"],
-    strengths: ["ネットワーク構築","調整力","人を活かす視点","共感と論理のバランス"],
-    shadows: ["自分の意見が薄い","全方位対応で消耗","依存されやすい"],
-    core: "人と人、情報と情報をつなぎ、関係性に付加価値を生む。コネクター的役割が自然で、誰がどんなニーズを持つかを直感的に把握する。ただし調整役に徹しすぎると自分のアジェンダを持てなくなる。",
-    axes: [
-      {l:"内向", v:55, r:"外向"},
-      {l:"感情", v:70, r:"論理"},
-      {l:"柔軟", v:65, r:"構造"},
-      {l:"個人", v:25, r:"組織"}
-    ],
-    compat: [
-      {label:"相性◎", name:"孤高リサーチャー"},
-      {label:"相性○", name:"美意識クリエイター"},
-      {label:"緊張△", name:"承認達成ランナー"},
-      {label:"学べる", name:"高速構造化ドライバー"}
-    ],
-    advice: "つなぐ力は稀有な才能。今問うべきは『自分は何のためにつなぐのか』。明確なビジョンを持つことで、コネクターからプロデューサーへとレバレッジが上がる。"
+    id:"14", name:"関係編集者",
+    tagline:"つながりをデザインする。人の間に橋を架ける。",
+    traits:{E:1,I:0,N:0.5,S:0.5,T:0,F:1,J:0.5,P:0.5},
+    ennea:["2","9","6"], desire:["承認","安定"], anger:["変換"],
+    angerTrigger:["裏切り","無視","不公平"],
+    kabAffinity:[2,6,3],
+    strengths:["ネットワーク構築","調整力","人を活かす視点","共感と論理のバランス"],
+    shadows:["自分の意見が薄い","全方位対応で消耗","依存されやすい"],
+    core:"人と人、情報と情報をつなぎ、関係性に付加価値を生む。コネクター的役割が自然で、誰がどんなニーズを持つかを直感的に把握する。ただし調整役に徹しすぎると自分のアジェンダを持てなくなる。",
+    axes:[{l:"内向",v:55,r:"外向"},{l:"感情",v:70,r:"論理"},{l:"柔軟",v:65,r:"構造"},{l:"個人",v:25,r:"組織"}],
+    compat:[{label:"相性◎",name:"孤高リサーチャー"},{label:"相性○",name:"美意識クリエイター"},{label:"緊張△",name:"承認達成ランナー"},{label:"学べる",name:"高速構造化ドライバー"}],
+    advice:"つなぐ力は稀有な才能。今問うべきは『自分は何のためにつなぐのか』。明確なビジョンを持つことで、コネクターからプロデューサーへとレバレッジが上がる。"
   },
   {
-    id: "15", name: "快楽発見者",
-    tagline: "人生を楽しむのが最大の仕事。喜びを生産する。",
-    mbti: ["ESFP","ENFP","ESTP","ISFP"],
-    ennea: ["7","2","9"],
-    desire: ["自由","承認"],
-    strengths: ["場を明るくする","即興力","感情的知性","生きる喜び"],
-    shadows: ["困難から逃げやすい","衝動的消費","深さより広さ"],
-    core: "喜びと楽しさを生きる指針にするタイプ。場の雰囲気を一変させる力があり、人々を笑顔にすることに天賦の才がある。苦しい局面での回避傾向と、楽しいことへの過集中がバランスの課題。",
-    axes: [
-      {l:"内向", v:75, r:"外向"},
-      {l:"感情", v:80, r:"論理"},
-      {l:"柔軟", v:85, r:"構造"},
-      {l:"個人", v:55, r:"組織"}
-    ],
-    compat: [
-      {label:"相性◎", name:"安定オペレーター"},
-      {label:"相性○", name:"関係編集者"},
-      {label:"緊張△", name:"孤高リサーチャー"},
-      {label:"学べる", name:"精密クラフトマン"}
-    ],
-    advice: "喜びを生む力は本物の才能。今必要なのは『苦しい1割』を意図的に入れること。困難を少し経験すると、喜びの深度が増し、創造できる価値の幅が広がる。"
+    id:"15", name:"快楽発見者",
+    tagline:"人生を楽しむのが最大の仕事。喜びを生産する。",
+    traits:{E:1,I:0,N:0.5,S:0.5,T:0,F:1,J:0,P:1},
+    ennea:["7","2","9"], desire:["自由","承認"], anger:["変換","外向"],
+    angerTrigger:["束縛","無視","非効率"],
+    kabAffinity:[3,5,2],
+    strengths:["場を明るくする","即興力","感情的知性","生きる喜び"],
+    shadows:["困難から逃げやすい","衝動的消費","深さより広さ"],
+    core:"喜びと楽しさを生きる指針にするタイプ。場の雰囲気を一変させる力があり、人々を笑顔にすることに天賦の才がある。苦しい局面での回避傾向と、楽しいことへの過集中がバランスの課題。",
+    axes:[{l:"内向",v:75,r:"外向"},{l:"感情",v:80,r:"論理"},{l:"柔軟",v:85,r:"構造"},{l:"個人",v:55,r:"組織"}],
+    compat:[{label:"相性◎",name:"安定オペレーター"},{label:"相性○",name:"関係編集者"},{label:"緊張△",name:"孤高リサーチャー"},{label:"学べる",name:"精密クラフトマン"}],
+    advice:"喜びを生む力は本物の才能。今必要なのは『苦しい1割』を意図的に入れること。困難を少し経験すると、喜びの深度が増し、創造できる価値の幅が広がる。"
   },
   {
-    id: "16", name: "調停ナビゲーター",
-    tagline: "対立を統合する。全員が勝てる道を見つける。",
-    mbti: ["INFJ","ISFJ","ENFJ","INTJ"],
-    ennea: ["9","1","2"],
-    desire: ["安定","理解"],
-    strengths: ["中立的視点","対話促進","長期的安定設計","全体最適思考"],
-    shadows: ["決断回避","優柔不断に見られる","自分の怒りを抑圧"],
-    core: "対立や緊張をなだめ、全体が機能するよう調整するタイプ。どちらの側の論理も理解でき、公平な視点を維持する。しかし自分の立場を明示することへの抵抗があり、リーダーシップを取るべき場面で曖昧になりやすい。",
-    axes: [
-      {l:"内向", v:25, r:"外向"},
-      {l:"感情", v:60, r:"論理"},
-      {l:"柔軟", v:60, r:"構造"},
-      {l:"個人", v:20, r:"組織"}
-    ],
-    compat: [
-      {label:"相性◎", name:"正義改革者"},
-      {label:"相性○", name:"守護サポーター"},
-      {label:"緊張△", name:"高速構造化ドライバー"},
-      {label:"学べる", name:"承認達成ランナー"}
-    ],
-    advice: "統合の力は組織の宝。今必要なのは『自分の立場を持つ勇気』。調停者が自分の視点を持つことで、より信頼される存在になれる。月1回『私はこう思う』を言葉にする練習を。"
+    id:"16", name:"調停ナビゲーター",
+    tagline:"対立を統合する。全員が勝てる道を見つける。",
+    traits:{E:0,I:1,N:0.5,S:0.5,T:0.5,F:0.5,J:0.5,P:0.5},
+    ennea:["9","1","2"], desire:["安定","理解"], anger:["内向","変換"],
+    angerTrigger:["不公平","混乱","支配"],
+    kabAffinity:[9,2,6],
+    strengths:["中立的視点","対話促進","長期的安定設計","全体最適思考"],
+    shadows:["決断回避","優柔不断に見られる","自分の怒りを抑圧"],
+    core:"対立や緊張をなだめ、全体が機能するよう調整するタイプ。どちらの側の論理も理解でき、公平な視点を維持する。しかし自分の立場を明示することへの抵抗があり、リーダーシップを取るべき場面で曖昧になりやすい。",
+    axes:[{l:"内向",v:25,r:"外向"},{l:"感情",v:60,r:"論理"},{l:"柔軟",v:60,r:"構造"},{l:"個人",v:20,r:"組織"}],
+    compat:[{label:"相性◎",name:"正義改革者"},{label:"相性○",name:"守護サポーター"},{label:"緊張△",name:"高速構造化ドライバー"},{label:"学べる",name:"承認達成ランナー"}],
+    advice:"統合の力は組織の宝。今必要なのは『自分の立場を持つ勇気』。調停者が自分の視点を持つことで、より信頼される存在になれる。月1回『私はこう思う』を言葉にする練習を。"
   }
 ];
+
+// ===== KABBALAH CALC =====
+function calcLifePath(dateStr) {
+  if (!dateStr) return null;
+  const digits = dateStr.replace(/-/g,'').split('').map(Number);
+  let sum = digits.reduce((a,b) => a+b, 0);
+  while (sum > 9 && sum !== 11 && sum !== 22) {
+    sum = String(sum).split('').map(Number).reduce((a,b) => a+b, 0);
+  }
+  return sum;
+}
+
+function calcKabbalah() {
+  const dateStr = document.getElementById('birthdate').value;
+  const num = calcLifePath(dateStr);
+  const preview = document.getElementById('kabPreview');
+  if (!num || !kabbalahData[num]) { preview.classList.remove('show'); return; }
+  const k = kabbalahData[num];
+  document.getElementById('kabNum').textContent = num;
+  document.getElementById('kabName').textContent = k.name;
+  document.getElementById('kabDesc').textContent = k.keyword;
+  preview.classList.add('show');
+}
+
+function mbtiTraits(mbti) {
+  if (mbti === 'unknown') return null;
+  return { E:mbti.includes('E')?1:0, I:mbti.includes('I')?1:0, N:mbti.includes('N')?1:0, S:mbti.includes('S')?1:0, T:mbti.includes('T')?1:0, F:mbti.includes('F')?1:0, J:mbti.includes('J')?1:0, P:mbti.includes('P')?1:0 };
+}
 
 // ===== INIT =====
 function init() {
   const mbtiSel = document.getElementById('mbti');
-  mbtiList.forEach(m => {
-    const opt = document.createElement('option');
-    opt.value = m; opt.textContent = m;
-    mbtiSel.appendChild(opt);
-  });
-
+  mbtiData.forEach(m => { const o = document.createElement('option'); o.value=m.val; o.textContent=m.label; mbtiSel.appendChild(o); });
   const enneaSel = document.getElementById('ennea');
-  const wingEl = document.getElementById('wing');
-  enneaList.forEach(e => {
-    const opt = document.createElement('option');
-    opt.value = e.val; opt.textContent = e.label;
-    enneaSel.appendChild(opt);
-  });
-  enneaSel.addEventListener('change', updateWings);
-  updateWings();
+  enneaData.forEach(e => { const o = document.createElement('option'); o.value=e.val; o.textContent=e.label; enneaSel.appendChild(o); });
 }
 
-function updateWings() {
-  const base = parseInt(document.getElementById('ennea').value);
-  const wingEl = document.getElementById('wing');
-  wingEl.innerHTML = '';
-  const prev = base === 1 ? 9 : base - 1;
-  const next = base === 9 ? 1 : base + 1;
-  [
-    {val: '0', label: 'なし（純粋タイプ）'},
-    {val: String(prev), label: `${prev}ウイング`},
-    {val: String(next), label: `${next}ウイング`}
-  ].forEach(w => {
-    const opt = document.createElement('option');
-    opt.value = w.val; opt.textContent = w.label;
-    wingEl.appendChild(opt);
-  });
-}
-
-function updateSlider(id, valId) {
-  document.getElementById(valId).textContent = document.getElementById(id).value;
-}
+function syncSlider(id, valId) { document.getElementById(valId).textContent = document.getElementById(id).value; }
 
 // ===== DIAGNOSE =====
 function diagnose() {
   const mbti = document.getElementById('mbti').value;
   const ennea = document.getElementById('ennea').value;
   const desire = document.getElementById('desire').value;
+  const anger = document.getElementById('anger').value;
+  const angerTrigger = document.getElementById('angerTrigger').value;
+  const userTraits = mbtiTraits(mbti);
+  const dateStr = document.getElementById('birthdate').value;
+  const kabNum = calcLifePath(dateStr);
 
-  // Scoring
   const scores = archetypes.map(a => {
     let score = 0;
-    if (a.mbti.includes(mbti)) score += 5;
-    if (a.mbti[0] === mbti) score += 3;
-    if (a.ennea.includes(ennea)) score += 4;
-    if (a.ennea[0] === ennea) score += 2;
-    if (a.desire.includes(desire)) score += 3;
+
+    // MBTI軸マッチ（不明の場合スキップ）
+    if (userTraits) {
+      ['E','I','N','S','T','F','J','P'].forEach(ax => {
+        if (userTraits[ax] && a.traits[ax]) score += a.traits[ax] * 3;
+      });
+    }
+
+    // エニアグラム（不明の場合スキップ）
+    if (ennea !== 'unknown') {
+      if (a.ennea[0] === ennea) score += 8;
+      else if (a.ennea.includes(ennea)) score += 4;
+    }
+
+    // 欲望
+    if (a.desire[0] === desire) score += 5;
+    else if (a.desire.includes(desire)) score += 2;
+
+    // 怒りの出方
+    if (a.anger && a.anger[0] === anger) score += 3;
+    else if (a.anger && a.anger.includes(anger)) score += 1;
+
+    // 怒りのトリガー（新軸）
+    if (a.angerTrigger && a.angerTrigger[0] === angerTrigger) score += 4;
+    else if (a.angerTrigger && a.angerTrigger.includes(angerTrigger)) score += 2;
+
+    // カバラ数秘術（生年月日入力時のみ）
+    if (kabNum && a.kabAffinity) {
+      if (a.kabAffinity[0] === kabNum) score += 5;
+      else if (a.kabAffinity.includes(kabNum)) score += 2;
+    }
+
     return { a, score };
   });
 
-  scores.sort((a, b) => b.score - a.score);
+  scores.sort((x,y) => y.score - x.score);
   const best = scores[0].a;
-  renderResult(best, mbti, ennea);
+  const maxPossible = (userTraits?3*8:0) + (ennea!=='unknown'?8:0) + 5 + 3 + 4 + (kabNum?5:0);
+  const pct = maxPossible > 0 ? Math.round((scores[0].score / maxPossible) * 100) : 0;
+
+  renderResult(best, mbti, ennea, pct, kabNum, angerTrigger);
 }
 
-function renderResult(a, mbti, ennea) {
-  // Hide welcome
+function renderResult(a, mbti, ennea, pct, kabNum, angerTrigger) {
   document.getElementById('welcomeArea').style.display = 'none';
 
-  // Image
   const imgKey = a.id + '_' + a.name;
   const imgEl = document.getElementById('resultImg');
-  if (IMAGES[imgKey]) {
-    imgEl.src = IMAGES[imgKey];
-    imgEl.style.display = 'block';
-  } else {
-    imgEl.style.display = 'none';
-  }
+  if (IMAGES[imgKey]) { imgEl.src = IMAGES[imgKey]; imgEl.style.display='block'; }
+  else { imgEl.style.display='none'; }
+
+  const enneaLabel = ennea === 'unknown' ? '不明' : (enneaData.find(e=>e.val===ennea)?.label.split('—')[1]?.trim().split('（')[0]?.trim() || ennea);
+  const mbtiLabel = mbti === 'unknown' ? '不明' : (mbtiData.find(m=>m.val===mbti)?.label.split('—')[1]?.trim().split('（')[0]?.trim() || mbti);
 
   document.getElementById('resultNum').textContent = 'ARCHETYPE ' + a.id;
   document.getElementById('resultName').textContent = a.name;
   document.getElementById('resultTagline').textContent = a.tagline;
 
-  // Tags
-  const tagsEl = document.getElementById('resultTags');
-  tagsEl.innerHTML = `<span class="tag tag-mbti">MBTI: ${mbti}</span><span class="tag tag-ennea">エニアグラム: ${ennea}</span>`;
+  let tags = '';
+  if (mbti !== 'unknown') tags += `<span class="tag tag-mbti">MBTI: ${mbti} ${mbtiLabel}</span>`;
+  if (ennea !== 'unknown') tags += `<span class="tag tag-ennea">エニア: ${enneaLabel}</span>`;
+  if (kabNum) tags += `<span class="tag tag-kab">✨ ライフパス ${kabNum}</span>`;
+  tags += `<span class="tag tag-match">一致度 ${pct}%</span>`;
+  document.getElementById('resultTags').innerHTML = tags;
 
-  // Core
+  // Kabbalah result block
+  if (kabNum && kabbalahData[kabNum]) {
+    const k = kabbalahData[kabNum];
+    document.getElementById('kabResultNum').textContent = kabNum;
+    document.getElementById('kabResultName').textContent = k.name;
+    document.getElementById('kabResultKeyword').textContent = k.keyword;
+    document.getElementById('kabResultTraits').innerHTML = k.traits.map(t=>`<span class="kab-trait">${t}</span>`).join('');
+    document.getElementById('kabResultAnalysis').textContent = k.analysis;
+    const synergy = k.synergyTemplate.replace(/{name}/g, a.name).replace(/{trait}/g, a.strengths[0]);
+    document.getElementById('kabResultSynergy').innerHTML = `<strong>アーキタイプとの相乗効果：</strong> ${synergy}`;
+    document.getElementById('kabResultBlock').style.display = 'block';
+  } else {
+    document.getElementById('kabResultBlock').style.display = 'none';
+  }
+
   document.getElementById('resultCore').textContent = a.core;
-
-  // Strengths
-  const strEl = document.getElementById('resultStrengths');
-  strEl.innerHTML = a.strengths.map(s => `<li>${s}</li>`).join('');
-
-  // Shadows
-  const shaEl = document.getElementById('resultShadows');
-  shaEl.innerHTML = a.shadows.map(s => `<li>${s}</li>`).join('');
-
-  // Axes
-  const axEl = document.getElementById('resultAxes');
-  axEl.innerHTML = a.axes.map(ax => `
+  document.getElementById('resultStrengths').innerHTML = a.strengths.map(s=>`<li>${s}</li>`).join('');
+  document.getElementById('resultShadows').innerHTML = a.shadows.map(s=>`<li>${s}</li>`).join('');
+  document.getElementById('resultAxes').innerHTML = a.axes.map(ax=>`
     <div class="axis-row">
       <div class="axis-left">${ax.l}</div>
       <div class="bar-track"><div class="bar-fill" style="width:${ax.v}%"></div></div>
       <div class="axis-right">${ax.r}</div>
-    </div>
-  `).join('');
+    </div>`).join('');
 
-  // Compat
-  const compEl = document.getElementById('resultCompat');
-  compEl.innerHTML = a.compat.map(c => `
-    <div class="compat-card">
+  document.getElementById('resultCompat').innerHTML = a.compat.map(c=>`
+    <div class="compat-card" onclick="showPopup('${c.name}','${c.label}')">
       <div class="compat-label">${c.label}</div>
       <div class="compat-name">${c.name}</div>
-    </div>
-  `).join('');
+      <div class="compat-hint">タップして詳細を見る →</div>
+    </div>`).join('');
 
-  // Advice
   document.getElementById('resultAdvice').textContent = a.advice;
-
-  // Show card
   document.getElementById('resultCard').style.display = 'block';
 
   // GPT prompt
@@ -1042,47 +854,76 @@ function renderResult(a, mbti, ennea) {
   const social = document.getElementById('social').value;
   const openness = document.getElementById('openness').value;
   const anger = document.getElementById('anger').value;
+  const desire = document.getElementById('desire').value;
+  const birthdate = document.getElementById('birthdate').value;
+  const stressLabel = stress<=3?'かなり消耗中':stress<=6?'普通':'余裕あり';
+  const socialLabel = social<=3?'一人でいたい':social<=6?'普通':'たくさん関わりたい';
+  const opennessLabel = openness<=3?'現状維持したい':openness<=6?'普通':'どんどん変えたい';
 
-  const prompt = `あなたは行動心理と性格分析の専門家です。以下のプロフィールを持つ人物について、深い分析をしてください。
+  let kabLine = '';
+  if (kabNum && kabbalahData[kabNum]) kabLine = `- カバラ ライフパスナンバー: ${kabNum}（${kabbalahData[kabNum].name} / ${kabbalahData[kabNum].keyword}）\n`;
+
+  const prompt = `あなたは行動心理・性格分析・数秘術の専門家です。以下のプロフィールを持つ人物について、深い分析をしてください。
 
 【診断結果】
 アーキタイプ: ${a.name}（${a.id}番）
+一致度: ${pct}%
 
 【入力データ】
-- MBTI: ${mbti}
-- エニアグラム: ${ennea}番（${document.getElementById('wing').value !== '0' ? document.getElementById('wing').value + 'ウイング' : '純粋タイプ'}）
-- 怒りの出方: ${anger}
-- 欲望の軸: ${document.getElementById('desire').value}
-- ストレス耐性: ${stress}/10
-- 対人エネルギー: ${social}/10
-- 変化への開放性: ${openness}/10
+- MBTI: ${mbti === 'unknown' ? '不明' : mbti + '（' + mbtiLabel + '）'}
+- エニアグラム: ${ennea === 'unknown' ? '不明' : 'タイプ' + ennea + '（' + enneaLabel + '）'}
+${kabLine}- 怒りの出方: ${anger}
+- 怒りを感じやすい場面: ${angerTrigger}
+- 最も動かされるもの: ${desire}
+- 心の余裕: ${stress}/10（${stressLabel}）
+- 人と関わりたい度: ${social}/10（${socialLabel}）
+- 変化への前向き度: ${openness}/10（${opennessLabel}）
 
 【分析してほしいこと】
 1. このアーキタイプが最も力を発揮できる環境・状況
 2. 無意識のうちにやってしまう思考パターンのワナ
-3. 現在のスコア（ストレス${stress}、対人${social}、開放性${openness}）から読み取れる心理状態
-4. 次の1ヶ月でやるべき具体的な行動3つ
-5. このタイプが陥りやすい「見えない天井」とその突破法
+3. 「${angerTrigger}」への怒りが示す深層心理と、その怒りを建設的に使う方法
+4. 現在の状態スコアから読み取れる心理状態と注意点
+5. 次の1ヶ月でやるべき具体的な行動3つ
+6. このタイプが陥りやすい「見えない天井」とその突破法
+${kabNum ? '7. カバラ数秘術ライフパス' + kabNum + 'とアーキタイプの相乗効果・葛藤ポイント' : ''}
 
 可能な限り具体的に、かつ内省を促す形で分析してください。`;
 
   document.getElementById('promptText').textContent = prompt;
   document.getElementById('promptBox').style.display = 'block';
-
-  // Scroll to result
-  document.getElementById('resultCard').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  document.getElementById('resultCard').scrollIntoView({behavior:'smooth',block:'start'});
 }
 
+// ===== POPUP =====
+function showPopup(name, compatLabel) {
+  const a = archetypes.find(x => x.name === name);
+  if (!a) return;
+  const imgKey = a.id + '_' + a.name;
+  const popImg = document.getElementById('popupImg');
+  if (IMAGES[imgKey]) { popImg.src = IMAGES[imgKey]; popImg.style.display='block'; }
+  else { popImg.style.display='none'; }
+  document.getElementById('popupNum').textContent = 'ARCHETYPE ' + a.id + ' — ' + compatLabel;
+  document.getElementById('popupName').textContent = a.name;
+  document.getElementById('popupTagline').textContent = a.tagline;
+  document.getElementById('popupCore').textContent = a.core;
+  document.getElementById('popupStrengths').innerHTML = a.strengths.map(s=>`<span class="popup-strength-tag">${s}</span>`).join('');
+  document.getElementById('popupCompatLabel').textContent = '';
+  document.getElementById('popupOverlay').classList.add('show');
+}
+
+function closePopup(e) { if (e.target === document.getElementById('popupOverlay')) closePopupDirect(); }
+function closePopupDirect() { document.getElementById('popupOverlay').classList.remove('show'); }
+
 function copyPrompt() {
-  const text = document.getElementById('promptText').textContent;
-  navigator.clipboard.writeText(text).then(() => {
+  navigator.clipboard.writeText(document.getElementById('promptText').textContent).then(() => {
     const btn = document.querySelector('.copy-btn');
-    btn.textContent = 'コピー完了!';
-    setTimeout(() => btn.textContent = 'コピー', 2000);
+    btn.textContent = '完了!';
+    setTimeout(() => btn.textContent='コピー', 2000);
   });
 }
 
-// ===== START =====
+document.addEventListener('keydown', e => { if (e.key==='Escape') closePopupDirect(); });
 init();
 </script>
 </body>
