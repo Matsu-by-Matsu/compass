@@ -38,12 +38,19 @@ select:focus { outline: none; border-color: #7c6fff; }
 .divider { border: none; border-top: 1px solid rgba(255,255,255,0.06); margin: 16px 0; }
 
 /* SLIDERS */
-.slider-block { margin-bottom: 14px; overflow: hidden; }
+.slider-block { margin-bottom: 14px; }
+
+/* カスタムスライダー（Safari完全対応） */
+.custom-slider-wrap { position: relative; height: 28px; display: flex; align-items: center; cursor: pointer; user-select: none; -webkit-user-select: none; }
+.custom-slider-track { position: absolute; left: 0; right: 0; height: 5px; background: rgba(124,111,255,0.2); border-radius: 3px; }
+.custom-slider-fill { position: absolute; left: 0; height: 5px; background: rgba(124,111,255,0.4); border-radius: 3px; pointer-events: none; }
+.custom-slider-thumb { position: absolute; width: 22px; height: 22px; background: #7c6fff; border-radius: 50%; transform: translateX(-50%); box-shadow: 0 0 8px rgba(124,111,255,0.6); cursor: grab; top: 50%; margin-top: -11px; transition: box-shadow 0.15s; }
+.custom-slider-thumb:active { cursor: grabbing; box-shadow: 0 0 14px rgba(124,111,255,0.9); }
 .slider-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 5px; }
 .slider-label { font-size: 12px; color: #c0c0d8; font-weight: 600; }
 .slider-val-badge { font-size: 12px; font-weight: 700; color: #7c6fff; background: rgba(124,111,255,0.12); padding: 2px 8px; border-radius: 10px; }
 .slider-endpoints { display: flex; justify-content: space-between; font-size: 10px; color: #50507a; margin-bottom: 4px; }
-input[type=range] { width: 100%; -webkit-appearance: none; height: 5px; background: rgba(124,111,255,0.2); border-radius: 3px; outline: none; touch-action: pan-x; }
+input[type=range] { display: none; }
 input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 18px; height: 18px; background: #7c6fff; border-radius: 50%; cursor: pointer; box-shadow: 0 0 6px rgba(124,111,255,0.5); }
 
 .btn-diagnose { width: 100%; padding: 15px; background: linear-gradient(135deg, #7c6fff, #5b4de0); color: white; border: none; border-radius: 10px; font-size: 15px; font-weight: 700; cursor: pointer; letter-spacing: 0.05em; margin-top: 20px; transition: opacity 0.2s, transform 0.1s; }
@@ -266,17 +273,32 @@ hr.section-divider { border: none; border-top: 1px solid rgba(255,255,255,0.06);
   <div class="slider-block">
     <div class="slider-header"><span class="slider-label">心の余裕</span><span class="slider-val-badge" id="stressVal">5</span></div>
     <div class="slider-endpoints"><span>ギリギリ・消耗中</span><span>余裕たっぷり</span></div>
-    <input type="range" id="stress" min="1" max="10" value="5" oninput="syncSlider('stress','stressVal')">
+    <div class="custom-slider-wrap" id="stress_wrap" data-id="stress" data-vid="stressVal" data-min="1" data-max="10" data-val="5" onmousedown="sliderStart(event,this)" ontouchstart="sliderStart(event,this)">
+      <div class="custom-slider-track"></div>
+      <div class="custom-slider-fill" id="stress_fill" style="width:44.4%"></div>
+      <div class="custom-slider-thumb" id="stress_thumb" style="left:44.4%"></div>
+      <input type="hidden" id="stress" value="5">
+    </div>
   </div>
   <div class="slider-block">
     <div class="slider-header"><span class="slider-label">人と関わりたい度</span><span class="slider-val-badge" id="socialVal">5</span></div>
     <div class="slider-endpoints"><span>一人でいたい</span><span>ガンガン関わりたい</span></div>
-    <input type="range" id="social" min="1" max="10" value="5" oninput="syncSlider('social','socialVal')">
+    <div class="custom-slider-wrap" id="social_wrap" data-id="social" data-vid="socialVal" data-min="1" data-max="10" data-val="5" onmousedown="sliderStart(event,this)" ontouchstart="sliderStart(event,this)">
+      <div class="custom-slider-track"></div>
+      <div class="custom-slider-fill" id="social_fill" style="width:44.4%"></div>
+      <div class="custom-slider-thumb" id="social_thumb" style="left:44.4%"></div>
+      <input type="hidden" id="social" value="5">
+    </div>
   </div>
   <div class="slider-block">
     <div class="slider-header"><span class="slider-label">変化への前向き度</span><span class="slider-val-badge" id="opennessVal">5</span></div>
     <div class="slider-endpoints"><span>現状維持したい</span><span>どんどん変えたい</span></div>
-    <input type="range" id="openness" min="1" max="10" value="5" oninput="syncSlider('openness','opennessVal')">
+    <div class="custom-slider-wrap" id="openness_wrap" data-id="openness" data-vid="opennessVal" data-min="1" data-max="10" data-val="5" onmousedown="sliderStart(event,this)" ontouchstart="sliderStart(event,this)">
+      <div class="custom-slider-track"></div>
+      <div class="custom-slider-fill" id="openness_fill" style="width:44.4%"></div>
+      <div class="custom-slider-thumb" id="openness_thumb" style="left:44.4%"></div>
+      <input type="hidden" id="openness" value="5">
+    </div>
   </div>
 
   <hr class="divider">
@@ -1232,54 +1254,46 @@ function copyPrompt() {
 }
 
 
-// Safari対応スライダータッチ修正（完全版）
-function fixSliderTouch(slider) {
-  var startX, startY, dragging = false;
-  var min = parseFloat(slider.min) || 1;
-  var max = parseFloat(slider.max) || 10;
-  var valMap = {stress:'stressVal', social:'socialVal', openness:'opennessVal'};
+// カスタムスライダー（Safari完全対応）
+var _activeSlider = null;
 
-  // touchstartもpassive:falseにしてSafariのスクロール先行を防ぐ
-  slider.addEventListener('touchstart', function(e) {
-    startX = e.touches[0].clientX;
-    startY = e.touches[0].clientY;
-    dragging = false;
-    // SafariはここでpreventDefaultしないとtouchmoveでは手遅れになる場合がある
-    // ただし完全にpreventするとタップ判定が消えるのでstopPropagationのみ
-    e.stopPropagation();
-  }, {passive: false});
+function sliderStart(e, wrap) {
+  e.preventDefault();
+  _activeSlider = wrap;
+  sliderMove(e);
 
-  slider.addEventListener('touchmove', function(e) {
-    var dx = e.touches[0].clientX - startX;
-    var dy = e.touches[0].clientY - startY;
+  var moveEvt = e.type === 'touchstart' ? 'touchmove' : 'mousemove';
+  var endEvt  = e.type === 'touchstart' ? 'touchend'  : 'mouseup';
 
-    // 最初に横か縦か判定
-    if (!dragging) {
-      if (Math.abs(dx) < Math.abs(dy)) return; // 縦スクロールと判断→スライダー無視
-      dragging = true;
-    }
-
-    // 横操作確定 → スクロール阻止してスライダー更新
-    e.preventDefault();
-    e.stopPropagation();
-
-    var rect = slider.getBoundingClientRect();
-    var ratio = (e.touches[0].clientX - rect.left) / rect.width;
-    ratio = Math.max(0, Math.min(1, ratio));
-    var newVal = Math.round(min + ratio * (max - min));
-    if (slider.value != newVal) {
-      slider.value = newVal;
-      var valId = valMap[slider.id];
-      if (valId) document.getElementById(valId).textContent = newVal;
-    }
-  }, {passive: false});
-
-  slider.addEventListener('touchend', function(e) {
-    dragging = false;
-  }, {passive: true});
+  function onMove(ev) { ev.preventDefault(); sliderMove(ev); }
+  function onEnd()  {
+    _activeSlider = null;
+    document.removeEventListener(moveEvt, onMove);
+    document.removeEventListener(endEvt,  onEnd);
+  }
+  document.addEventListener(moveEvt, onMove, {passive: false});
+  document.addEventListener(endEvt,  onEnd,  {passive: true});
 }
 
-document.querySelectorAll('input[type=range]').forEach(fixSliderTouch);
+function sliderMove(e) {
+  if (!_activeSlider) return;
+  var wrap = _activeSlider;
+  var clientX = e.touches ? e.touches[0].clientX : e.clientX;
+  var rect = wrap.getBoundingClientRect();
+  var min  = parseInt(wrap.dataset.min);
+  var max  = parseInt(wrap.dataset.max);
+  var ratio = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
+  var val  = Math.round(min + ratio * (max - min));
+  var pct  = ((val - min) / (max - min) * 100).toFixed(1) + '%';
+
+  wrap.dataset.val = val;
+  var sid = wrap.dataset.id;
+  var vid = wrap.dataset.vid;
+  document.getElementById(sid).value = val;
+  document.getElementById(vid).textContent = val;
+  document.getElementById(sid + '_fill').style.width  = pct;
+  document.getElementById(sid + '_thumb').style.left  = pct;
+}
 
 document.addEventListener('keydown', e => { if (e.key==='Escape') closePopupDirect(); });
 init();
