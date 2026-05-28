@@ -1232,22 +1232,48 @@ function copyPrompt() {
 }
 
 
-// スマホスライダーのスクロール干渉修正
-document.querySelectorAll('input[type=range]').forEach(function(slider) {
+// Safari対応スライダータッチ修正
+function fixSliderTouch(slider) {
+  var startX, startY, startVal, isDragging = false;
+  var min = parseFloat(slider.min) || 1;
+  var max = parseFloat(slider.max) || 10;
+
   slider.addEventListener('touchstart', function(e) {
-    e.stopPropagation();
+    var t = e.touches[0];
+    startX = t.clientX;
+    startY = t.clientY;
+    startVal = parseFloat(slider.value);
+    isDragging = false;
   }, {passive: true});
+
   slider.addEventListener('touchmove', function(e) {
-    e.stopPropagation();
-  }, {passive: true});
-});
-// DOMContentLoaded後にも適用（動的生成要素対応）
-document.addEventListener('DOMContentLoaded', function() {
-  document.querySelectorAll('input[type=range]').forEach(function(slider) {
-    slider.addEventListener('touchstart', function(e) { e.stopPropagation(); }, {passive: true});
-    slider.addEventListener('touchmove', function(e) { e.stopPropagation(); }, {passive: true});
-  });
-});
+    var t = e.touches[0];
+    var dx = t.clientX - startX;
+    var dy = t.clientY - startY;
+
+    // 横方向の動きが大きければスライダー操作
+    if (!isDragging && Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 4) {
+      isDragging = true;
+    }
+
+    if (isDragging) {
+      e.preventDefault(); // スクロール阻止
+      var rect = slider.getBoundingClientRect();
+      var ratio = (t.clientX - rect.left) / rect.width;
+      ratio = Math.max(0, Math.min(1, ratio));
+      var newVal = Math.round(min + ratio * (max - min));
+      slider.value = newVal;
+      // oninput相当を発火
+      var inputId = slider.id;
+      var valId = inputId + 'Val' in window ? inputId + 'Val' : null;
+      if (inputId === 'stress') syncSlider('stress','stressVal');
+      else if (inputId === 'social') syncSlider('social','socialVal');
+      else if (inputId === 'openness') syncSlider('openness','opennessVal');
+    }
+  }, {passive: false}); // passive:false でpreventDefault有効化
+}
+
+document.querySelectorAll('input[type=range]').forEach(fixSliderTouch);
 
 document.addEventListener('keydown', e => { if (e.key==='Escape') closePopupDirect(); });
 init();
