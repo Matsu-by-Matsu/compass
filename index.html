@@ -38,12 +38,12 @@ select:focus { outline: none; border-color: #7c6fff; }
 .divider { border: none; border-top: 1px solid rgba(255,255,255,0.06); margin: 16px 0; }
 
 /* SLIDERS */
-.slider-block { margin-bottom: 14px; }
+.slider-block { margin-bottom: 14px; overflow: hidden; }
 .slider-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 5px; }
 .slider-label { font-size: 12px; color: #c0c0d8; font-weight: 600; }
 .slider-val-badge { font-size: 12px; font-weight: 700; color: #7c6fff; background: rgba(124,111,255,0.12); padding: 2px 8px; border-radius: 10px; }
 .slider-endpoints { display: flex; justify-content: space-between; font-size: 10px; color: #50507a; margin-bottom: 4px; }
-input[type=range] { width: 100%; -webkit-appearance: none; height: 5px; background: rgba(124,111,255,0.2); border-radius: 3px; outline: none; touch-action: none; }
+input[type=range] { width: 100%; -webkit-appearance: none; height: 5px; background: rgba(124,111,255,0.2); border-radius: 3px; outline: none; touch-action: pan-x; }
 input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 18px; height: 18px; background: #7c6fff; border-radius: 50%; cursor: pointer; box-shadow: 0 0 6px rgba(124,111,255,0.5); }
 
 .btn-diagnose { width: 100%; padding: 15px; background: linear-gradient(135deg, #7c6fff, #5b4de0); color: white; border: none; border-radius: 10px; font-size: 15px; font-weight: 700; cursor: pointer; letter-spacing: 0.05em; margin-top: 20px; transition: opacity 0.2s, transform 0.1s; }
@@ -1232,45 +1232,51 @@ function copyPrompt() {
 }
 
 
-// Safari対応スライダータッチ修正
+// Safari対応スライダータッチ修正（完全版）
 function fixSliderTouch(slider) {
-  var startX, startY, startVal, isDragging = false;
+  var startX, startY, dragging = false;
   var min = parseFloat(slider.min) || 1;
   var max = parseFloat(slider.max) || 10;
+  var valMap = {stress:'stressVal', social:'socialVal', openness:'opennessVal'};
 
+  // touchstartもpassive:falseにしてSafariのスクロール先行を防ぐ
   slider.addEventListener('touchstart', function(e) {
-    var t = e.touches[0];
-    startX = t.clientX;
-    startY = t.clientY;
-    startVal = parseFloat(slider.value);
-    isDragging = false;
-  }, {passive: true});
+    startX = e.touches[0].clientX;
+    startY = e.touches[0].clientY;
+    dragging = false;
+    // SafariはここでpreventDefaultしないとtouchmoveでは手遅れになる場合がある
+    // ただし完全にpreventするとタップ判定が消えるのでstopPropagationのみ
+    e.stopPropagation();
+  }, {passive: false});
 
   slider.addEventListener('touchmove', function(e) {
-    var t = e.touches[0];
-    var dx = t.clientX - startX;
-    var dy = t.clientY - startY;
+    var dx = e.touches[0].clientX - startX;
+    var dy = e.touches[0].clientY - startY;
 
-    // 横方向の動きが大きければスライダー操作
-    if (!isDragging && Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 4) {
-      isDragging = true;
+    // 最初に横か縦か判定
+    if (!dragging) {
+      if (Math.abs(dx) < Math.abs(dy)) return; // 縦スクロールと判断→スライダー無視
+      dragging = true;
     }
 
-    if (isDragging) {
-      e.preventDefault(); // スクロール阻止
-      var rect = slider.getBoundingClientRect();
-      var ratio = (t.clientX - rect.left) / rect.width;
-      ratio = Math.max(0, Math.min(1, ratio));
-      var newVal = Math.round(min + ratio * (max - min));
+    // 横操作確定 → スクロール阻止してスライダー更新
+    e.preventDefault();
+    e.stopPropagation();
+
+    var rect = slider.getBoundingClientRect();
+    var ratio = (e.touches[0].clientX - rect.left) / rect.width;
+    ratio = Math.max(0, Math.min(1, ratio));
+    var newVal = Math.round(min + ratio * (max - min));
+    if (slider.value != newVal) {
       slider.value = newVal;
-      // oninput相当を発火
-      var inputId = slider.id;
-      var valId = inputId + 'Val' in window ? inputId + 'Val' : null;
-      if (inputId === 'stress') syncSlider('stress','stressVal');
-      else if (inputId === 'social') syncSlider('social','socialVal');
-      else if (inputId === 'openness') syncSlider('openness','opennessVal');
+      var valId = valMap[slider.id];
+      if (valId) document.getElementById(valId).textContent = newVal;
     }
-  }, {passive: false}); // passive:false でpreventDefault有効化
+  }, {passive: false});
+
+  slider.addEventListener('touchend', function(e) {
+    dragging = false;
+  }, {passive: true});
 }
 
 document.querySelectorAll('input[type=range]').forEach(fixSliderTouch);
