@@ -1242,28 +1242,34 @@ function downloadShareImage() {
     ctx.restore();
 
     // ===== 名前 =====
-    if (_shareUserName) {
+    // DOMからも値を取り直して確実に最新値を使う
+    const curMbti = _shareMbti || (document.getElementById('mbti') ? document.getElementById('mbti').value : '');
+    const curEnnea = _shareEnnea || (document.getElementById('ennea') ? document.getElementById('ennea').value : '');
+    const curKab = _shareKabNum || null;
+    const curName = _shareUserName || (document.getElementById('userName') ? document.getElementById('userName').value.trim() : '');
+
+    if (curName) {
       ctx.fillStyle = '#a090ff';
       ctx.font = '700 38px Arial,sans-serif';
-      ctx.fillText(_shareUserName + ' の診断結果', 90, 590);
+      ctx.fillText(curName + ' の診断結果', 90, 590);
     }
 
     // ===== タグバッジ =====
     ctx.font = '400 26px Arial,sans-serif';
     const tags = [];
-    if (_shareMbti && _shareMbti !== 'unknown') {
-      const ml = mbtiData.find(m => m.val === _shareMbti);
+    if (curMbti && curMbti !== 'unknown') {
+      const ml = mbtiData.find(m => m.val === curMbti);
       const mlName = ml ? ml.label.split('—')[1]?.trim().split('（')[0]?.trim() : '';
-      tags.push({ text: _shareMbti + (mlName ? ' ' + mlName : ''), color: '#9c90ff', bg: 'rgba(124,111,255,0.15)', border: 'rgba(124,111,255,0.35)' });
+      tags.push({ text: curMbti + (mlName ? ' ' + mlName : ''), color: '#9c90ff', bg: 'rgba(124,111,255,0.15)', border: 'rgba(124,111,255,0.35)' });
     }
-    if (_shareEnnea && _shareEnnea !== 'unknown') {
-      const el = enneaData.find(e => e.val === _shareEnnea);
+    if (curEnnea && curEnnea !== 'unknown') {
+      const el = enneaData.find(e => e.val === curEnnea);
       const elName = el ? el.label.split('—')[1]?.trim().split('（')[0]?.trim() : '';
       if (elName) tags.push({ text: elName, color: '#e8c060', bg: 'rgba(255,180,50,0.12)', border: 'rgba(255,180,50,0.3)' });
     }
-    if (_shareKabNum) tags.push({ text: '✨ ライフパス ' + _shareKabNum, color: '#ffd700', bg: 'rgba(255,215,0,0.1)', border: 'rgba(255,215,0,0.3)' });
+    if (curKab) tags.push({ text: '✨ ライフパス ' + curKab, color: '#ffd700', bg: 'rgba(255,215,0,0.1)', border: 'rgba(255,215,0,0.3)' });
 
-    let tx = 90, ty = _shareUserName ? 648 : 590;
+    let tx = 90, ty = curName ? 648 : 590;
     tags.forEach(tag => {
       const tw = ctx.measureText(tag.text).width + 36;
       if (tx + tw > 970) { tx = 90; ty += 60; }
@@ -1277,7 +1283,7 @@ function downloadShareImage() {
     });
 
     // ===== 強み（タグより下） =====
-    const strengthY = ty + 70;
+    const strengthY = Math.max(ty + 70, 720);
     ctx.font = '400 24px Arial,sans-serif';
     const strengths = a.strengths || [];
     let sx = 90;
@@ -1293,24 +1299,22 @@ function downloadShareImage() {
       sx += sw + 10;
     });
 
-    // ===== コア一言（処方箋の冒頭1文） =====
+    // ===== コア一言 =====
     const coreY = strengthY + 68;
-    if (a.core) {
+    if (a.core && coreY < H - 140) {
       const firstSentence = a.core.split('。')[0] + '。';
       ctx.fillStyle = '#505070';
       ctx.font = '400 22px Arial,sans-serif';
-      // 折り返し描画
-      const maxW = 900;
+      const maxW = 860;
       let line = '', lineY = coreY;
       for (const ch of firstSentence) {
         const test = line + ch;
         if (ctx.measureText(test).width > maxW) {
-          ctx.fillText(line, 90, lineY);
+          if (lineY <= coreY + 64) { ctx.fillText(line, 90, lineY); }
           line = ch; lineY += 32;
-          if (lineY > coreY + 64) break; // 最大2行
         } else { line = test; }
       }
-      if (line) ctx.fillText(line, 90, lineY);
+      if (line && lineY <= coreY + 64) ctx.fillText(line, 90, lineY);
     }
 
     // ===== URL =====
