@@ -1416,16 +1416,17 @@ function downloadShareImage() {
 
       sections.forEach(sec=>{
         if(!prof[sec.key]||curY>H-200)return;
-        // セクションラベル
+        // セクションラベル（fillTextはbaselineが基準なので+16でちょうど上端に）
         ctx.fillStyle=sec.color;ctx.font='700 20px Arial,sans-serif';
-        ctx.fillText(sec.icon+' '+sec.label,76,curY);curY+=32;
-        // テキスト（最大2行、行間32px）
-        ctx.fillStyle='#7878a0';ctx.font='400 22px Arial,sans-serif';
-        const textH=wrapText(prof[sec.key],76,curY,W-152,32,2);
-        curY+=textH+20;
+        ctx.fillText(sec.icon+' '+sec.label,76,curY+20);
+        curY+=36; // ラベル高さ分だけ進める
+        // テキスト（最大2行、行間30px）
+        ctx.fillStyle='#7878a0';ctx.font='400 21px Arial,sans-serif';
+        const textH=wrapText(prof[sec.key],76,curY+20,W-152,30,2);
+        curY+=textH+36; // テキスト高さ+余白
         // 薄い区切り
         divLine(curY,0.1);
-        curY+=18;
+        curY+=16;
       });
     }
 
