@@ -1241,55 +1241,77 @@ function downloadShareImage() {
     ctx.beginPath(); ctx.moveTo(90, 560); ctx.lineTo(990, 560); ctx.stroke();
     ctx.restore();
 
-    // ===== タグバッジ =====
-    const tags = [];
-    if (_shareMbti && _shareMbti !== 'unknown') {
-      const ml = mbtiData.find(m=>m.val===_shareMbti);
-      tags.push(_shareMbti + (ml ? ' ' + ml.label.split('—')[1]?.trim().split('（')[0]?.trim() : ''));
-    }
-    if (_shareEnnea && _shareEnnea !== 'unknown') {
-      const el = enneaData.find(e=>e.val===_shareEnnea);
-      if (el) tags.push(el.label.split('—')[1]?.trim().split('（')[0]?.trim() || '');
-    }
-    if (_shareKabNum) tags.push('ライフパス ' + _shareKabNum);
-
-    ctx.font = '400 24px Arial,sans-serif';
-    let tx = 90, ty = 590;
-    tags.forEach(tag => {
-      if (!tag) return;
-      const tw = ctx.measureText(tag).width + 36;
-      if (tx + tw > 980) { tx = 90; ty += 64; }
-      ctx.fillStyle = 'rgba(124,111,255,0.12)';
-      roundRect(ctx, tx, ty, tw, 48, 24); ctx.fill();
-      ctx.strokeStyle = 'rgba(124,111,255,0.28)';
-      ctx.lineWidth = 1;
-      roundRect(ctx, tx, ty, tw, 48, 24); ctx.stroke();
-      ctx.fillStyle = '#9c90ff';
-      ctx.fillText(tag, tx + 18, ty + 32);
-      tx += tw + 12;
-    });
-
     // ===== 名前 =====
-    const nameY = 780;
     if (_shareUserName) {
       ctx.fillStyle = '#a090ff';
       ctx.font = '700 38px Arial,sans-serif';
-      ctx.fillText(_shareUserName + ' の診断結果', 90, nameY);
+      ctx.fillText(_shareUserName + ' の診断結果', 90, 590);
     }
 
-    // ===== 強みバッジ（下部） =====
-    ctx.fillStyle = '#404060';
-    ctx.font = '400 22px Arial,sans-serif';
+    // ===== タグバッジ =====
+    ctx.font = '400 26px Arial,sans-serif';
+    const tags = [];
+    if (_shareMbti && _shareMbti !== 'unknown') {
+      const ml = mbtiData.find(m => m.val === _shareMbti);
+      const mlName = ml ? ml.label.split('—')[1]?.trim().split('（')[0]?.trim() : '';
+      tags.push({ text: _shareMbti + (mlName ? ' ' + mlName : ''), color: '#9c90ff', bg: 'rgba(124,111,255,0.15)', border: 'rgba(124,111,255,0.35)' });
+    }
+    if (_shareEnnea && _shareEnnea !== 'unknown') {
+      const el = enneaData.find(e => e.val === _shareEnnea);
+      const elName = el ? el.label.split('—')[1]?.trim().split('（')[0]?.trim() : '';
+      if (elName) tags.push({ text: elName, color: '#e8c060', bg: 'rgba(255,180,50,0.12)', border: 'rgba(255,180,50,0.3)' });
+    }
+    if (_shareKabNum) tags.push({ text: '✨ ライフパス ' + _shareKabNum, color: '#ffd700', bg: 'rgba(255,215,0,0.1)', border: 'rgba(255,215,0,0.3)' });
+
+    let tx = 90, ty = _shareUserName ? 648 : 590;
+    tags.forEach(tag => {
+      const tw = ctx.measureText(tag.text).width + 36;
+      if (tx + tw > 970) { tx = 90; ty += 60; }
+      ctx.fillStyle = tag.bg;
+      roundRect(ctx, tx, ty, tw, 48, 24); ctx.fill();
+      ctx.strokeStyle = tag.border; ctx.lineWidth = 1;
+      roundRect(ctx, tx, ty, tw, 48, 24); ctx.stroke();
+      ctx.fillStyle = tag.color;
+      ctx.fillText(tag.text, tx + 18, ty + 33);
+      tx += tw + 14;
+    });
+
+    // ===== 強み（タグより下） =====
+    const strengthY = ty + 70;
+    ctx.font = '400 24px Arial,sans-serif';
     const strengths = a.strengths || [];
     let sx = 90;
-    strengths.slice(0,4).forEach(s => {
+    strengths.slice(0, 4).forEach(s => {
       const sw = ctx.measureText(s).width + 28;
-      ctx.fillStyle = 'rgba(255,255,255,0.04)';
-      roundRect(ctx, sx, 840, sw, 40, 20); ctx.fill();
-      ctx.fillStyle = '#606080';
-      ctx.fillText(s, sx + 14, 866);
+      if (sx + sw > 970) return;
+      ctx.fillStyle = 'rgba(50,200,120,0.08)';
+      roundRect(ctx, sx, strengthY, sw, 42, 21); ctx.fill();
+      ctx.strokeStyle = 'rgba(50,200,120,0.2)'; ctx.lineWidth = 1;
+      roundRect(ctx, sx, strengthY, sw, 42, 21); ctx.stroke();
+      ctx.fillStyle = '#70c890';
+      ctx.fillText(s, sx + 14, strengthY + 28);
       sx += sw + 10;
     });
+
+    // ===== コア一言（処方箋の冒頭1文） =====
+    const coreY = strengthY + 68;
+    if (a.core) {
+      const firstSentence = a.core.split('。')[0] + '。';
+      ctx.fillStyle = '#505070';
+      ctx.font = '400 22px Arial,sans-serif';
+      // 折り返し描画
+      const maxW = 900;
+      let line = '', lineY = coreY;
+      for (const ch of firstSentence) {
+        const test = line + ch;
+        if (ctx.measureText(test).width > maxW) {
+          ctx.fillText(line, 90, lineY);
+          line = ch; lineY += 32;
+          if (lineY > coreY + 64) break; // 最大2行
+        } else { line = test; }
+      }
+      if (line) ctx.fillText(line, 90, lineY);
+    }
 
     // ===== URL =====
     ctx.fillStyle = 'rgba(124,111,255,0.35)';
@@ -1405,6 +1427,15 @@ function sendToDiagnoseSheet(resultArchetype) {
   const birthdate = document.getElementById('birthdate').value;
   const kabNum = birthdate ? calcLifePath(birthdate) : '';
 
+  // GPTプロンプトを取得
+  const gptPromptEl = document.getElementById('promptText');
+  const gptPrompt = gptPromptEl ? gptPromptEl.textContent.trim() : '';
+
+  // シェアURLを生成（archetype情報から）
+  const archObj = archetypes.find(x => x.name + '（' + x.id + '番）' === resultArchetype) ||
+                  archetypes.find(x => resultArchetype.includes(x.id));
+  const shareUrl = archObj ? buildShareUrl(archObj, mbti, ennea, kabNum, userName) : '';
+
   const payload = {
     type: 'diagnose',
     sessionId: SESSION_ID,
@@ -1415,7 +1446,9 @@ function sendToDiagnoseSheet(resultArchetype) {
     desire: desire,
     angerTrigger: angerTrigger,
     kabNum: kabNum ? String(kabNum) : '',
-    result: resultArchetype
+    result: resultArchetype,
+    shareUrl: shareUrl,
+    gptPrompt: gptPrompt
   };
 
   fetch(APPS_URL, {
