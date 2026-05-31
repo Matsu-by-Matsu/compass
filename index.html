@@ -1130,7 +1130,7 @@ function mbtiTraits(mbti) {
 
 
 // ===== SHARE =====
-const BASE_URL = 'https://matsu-by-matsu.github.io/compass/';
+const BASE_URL = 'https://compass.synthx.jp/';
 let _shareUrl = '';
 let _shareArchetype = null;
 let _shareMatchLabel = '';
@@ -1440,7 +1440,7 @@ function downloadShareImage() {
 
     // ── フッター ──
     ctx.fillStyle='rgba(124,111,255,0.28)';ctx.font='400 18px Arial,sans-serif';
-    ctx.fillText('matsu-by-matsu.github.io/compass',76,H-54);
+    ctx.fillText('compass.synthx.jp',76,H-54);
     ctx.fillStyle='rgba(183,154,99,0.32)';ctx.textAlign='right';
     ctx.fillText('行動コンパス診断',W-76,H-54);ctx.textAlign='left';
 
@@ -1472,10 +1472,48 @@ function finishDownload(canvas, name) {
     window._previewCallback(dataUrl);
     return;
   }
-  const link = document.createElement('a');
-  link.download = 'compass_' + name + '.png';
-  link.href = dataUrl;
-  link.click();
+
+  const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+  if (isIOS) {
+    // iOSは長押し保存できるモーダルで表示
+    showImageSaveModal(dataUrl, name);
+  } else {
+    const link = document.createElement('a');
+    link.download = 'compass_' + name + '.png';
+    link.href = dataUrl;
+    link.click();
+  }
+}
+
+function showImageSaveModal(dataUrl, name) {
+  // 既存のモーダルがあれば削除
+  const old = document.getElementById('imgSaveModal');
+  if (old) old.remove();
+
+  const overlay = document.createElement('div');
+  overlay.id = 'imgSaveModal';
+  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.92);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;';
+
+  overlay.innerHTML = `
+    <div style="max-width:380px;width:100%;text-align:center;">
+      <p style="color:#9c90ff;font-size:15px;font-weight:700;margin-bottom:6px;">📸 画像を保存する</p>
+      <p style="color:#808098;font-size:12px;margin-bottom:4px;">① 下の画像を<strong style="color:#c0b0ff">長押し</strong></p>
+      <p style="color:#808098;font-size:12px;margin-bottom:14px;">②「写真に追加」または「イメージを保存」を選択</p>
+      <img id="iosSaveImg" src="${dataUrl}"
+        style="width:100%;border-radius:12px;border:1px solid rgba(124,111,255,0.35);display:block;-webkit-touch-callout:default;"
+        alt="診断結果画像">
+      <p style="color:#505068;font-size:11px;margin-top:10px;">保存できたら閉じるを押してください</p>
+      <button onclick="document.getElementById('imgSaveModal').remove()"
+        style="margin-top:10px;background:rgba(124,111,255,0.2);border:1px solid rgba(124,111,255,0.4);color:#9c90ff;border-radius:20px;padding:10px 28px;font-size:13px;cursor:pointer;">
+        閉じる
+      </button>
+    </div>
+  `;
+
+  document.body.appendChild(overlay);
+  overlay.addEventListener('click', function(e) {
+    if (e.target === overlay) overlay.remove();
+  });
 }
 
 function downloadShareImageToCanvas(callback) {
