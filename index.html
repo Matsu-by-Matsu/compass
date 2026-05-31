@@ -153,6 +153,27 @@ hr.section-divider { border: none; border-top: 1px solid rgba(255,255,255,0.06);
 /* NAME TAG */
 .result-name-tag { font-size: 13px; color: #7c6fff; font-weight: 700; margin-bottom: 6px; }
 
+
+/* REPORT MODAL */
+.report-modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.82); z-index: 200; display: none; align-items: center; justify-content: center; padding: 24px; }
+.report-modal-overlay.show { display: flex; }
+.report-modal { background: #13131f; border: 1px solid rgba(124,111,255,0.35); border-radius: 20px; padding: 32px; max-width: 400px; width: 100%; position: relative; }
+.report-modal h3 { font-size: 18px; font-weight: 800; color: #f0f0f8; margin-bottom: 8px; }
+.report-modal .report-lead { font-size: 13px; color: #8080a8; line-height: 1.8; margin-bottom: 22px; }
+.report-modal .report-highlight { color: #a090ff; font-weight: 700; }
+.report-input { background: #0d0d18; border: 1px solid rgba(124,111,255,0.3); color: #e8e6e3; padding: 11px 14px; border-radius: 10px; font-size: 13px; width: 100%; margin-bottom: 12px; outline: none; }
+.report-input:focus { border-color: #7c6fff; }
+.report-submit { width: 100%; padding: 14px; background: linear-gradient(135deg, #7c6fff, #5b4de0); color: white; border: none; border-radius: 10px; font-size: 14px; font-weight: 700; cursor: pointer; letter-spacing: 0.05em; margin-top: 4px; }
+.report-submit:hover { opacity: 0.9; }
+.report-close { position: absolute; top: 16px; right: 18px; background: none; border: none; color: #606080; font-size: 20px; cursor: pointer; line-height: 1; }
+.report-close:hover { color: #e0e0f0; }
+.report-sent { text-align: center; padding: 20px 0; }
+.report-sent .sent-icon { font-size: 48px; margin-bottom: 16px; }
+.report-sent h3 { color: #7c6fff; margin-bottom: 10px; }
+.report-sent p { font-size: 13px; color: #8080a8; line-height: 1.8; }
+.btn-report { background: linear-gradient(135deg, rgba(124,111,255,0.2), rgba(91,77,224,0.2)); border: 1px solid rgba(124,111,255,0.5); color: #a090ff; border-radius: 10px; padding: 14px 24px; font-size: 13px; font-weight: 700; cursor: pointer; letter-spacing: 0.05em; transition: all 0.2s; margin-top: 16px; width: 100%; }
+.btn-report:hover { background: linear-gradient(135deg, rgba(124,111,255,0.35), rgba(91,77,224,0.35)); }
+
 /* RUNNER-UP */
 .runner-card { display: flex; align-items: center; gap: 14px; background: rgba(255,255,255,0.025); border: 1px solid rgba(255,255,255,0.07); border-radius: 12px; padding: 14px 16px; margin-bottom: 10px; cursor: pointer; transition: border-color 0.2s, background 0.2s; }
 .runner-card:hover { background: rgba(124,111,255,0.07); border-color: rgba(124,111,255,0.25); }
@@ -190,9 +211,18 @@ hr.section-divider { border: none; border-top: 1px solid rgba(255,255,255,0.06);
   <div class="logo">Personality Compass</div>
   <div class="title">行動コンパス<br><span>診断システム</span></div>
 
-  <div class="form-group" style="margin-bottom:20px;">
+  <div class="form-group" style="margin-bottom:14px;">
     <label style="font-size:11px;color:#8080a8;margin-bottom:5px;display:block;">あなたの名前（ニックネームOK）</label>
     <input type="text" id="userName" placeholder="例：たかし、Masa、Neko..." style="background:#1a1a2e;border:1px solid rgba(124,111,255,0.3);color:#e8e6e3;padding:9px 12px;border-radius:8px;font-size:13px;width:100%;outline:none;" onfocus="this.style.borderColor='#7c6fff'" onblur="this.style.borderColor='rgba(124,111,255,0.3)'">
+  </div>
+  <div class="form-group" style="margin-bottom:20px;">
+    <label style="font-size:11px;color:#8080a8;margin-bottom:5px;display:block;">性別</label>
+    <select id="gender" style="background:#1a1a2e;border:1px solid rgba(124,111,255,0.3);color:#e8e6e3;padding:9px 32px 9px 12px;border-radius:8px;font-size:13px;width:100%;appearance:none;background-image:url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%237c6fff' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E\");background-repeat:no-repeat;background-position:right 12px center;">
+      <option value="">回答しない</option>
+      <option value="male">男性</option>
+      <option value="female">女性</option>
+      <option value="other">その他</option>
+    </select>
   </div>
 
   <!-- KABBALAH -->
@@ -426,6 +456,10 @@ hr.section-divider { border: none; border-top: 1px solid rgba(255,255,255,0.06);
       <div class="section-title">現状への処方箋</div>
       <div class="prose" id="resultAdvice"></div>
     </div>
+
+    <button class="btn-report" onclick="openReportModal()">
+      📄 詳細レポートを受け取る
+    </button>
   </div>
 
   <div class="prompt-box" id="promptBox">
@@ -447,6 +481,29 @@ hr.section-divider { border: none; border-top: 1px solid rgba(255,255,255,0.06);
     <div class="popup-core" id="popupCore"></div>
     <div class="popup-strengths" id="popupStrengths"></div>
     <div class="popup-compat-label" id="popupCompatLabel"></div>
+  </div>
+</div>
+
+<!-- REPORT MODAL -->
+<div class="report-modal-overlay" id="reportModalOverlay">
+  <div class="report-modal">
+    <button class="report-close" onclick="closeReportModal()">×</button>
+    <div id="reportFormArea">
+      <h3>✨ あなただけの詳細レポート</h3>
+      <div class="report-lead">
+        診断結果をもとに、<span class="report-highlight">恋愛・仕事・お金・ストレス傾向</span>を含む<br>
+        パーソナライズされた詳細レポートをお送りします。<br><br>
+        <span class="report-highlight">無料</span>でお受け取りいただけます。
+      </div>
+      <input class="report-input" type="text" id="reportRealName" placeholder="お名前（本名）">
+      <input class="report-input" type="email" id="reportEmail" placeholder="メールアドレス">
+      <button class="report-submit" onclick="submitReport()">レポートを受け取る →</button>
+    </div>
+    <div id="reportSentArea" class="report-sent" style="display:none">
+      <div class="sent-icon">🎉</div>
+      <h3>送信完了しました！</h3>
+      <p>入力いただいたメールアドレスに<br>詳細レポートをお送りします。<br><br>少々お待ちください。</p>
+    </div>
   </div>
 </div>
 
@@ -993,6 +1050,75 @@ function mbtiTraits(mbti) {
   return { E:mbti.includes('E')?1:0, I:mbti.includes('I')?1:0, N:mbti.includes('N')?1:0, S:mbti.includes('S')?1:0, T:mbti.includes('T')?1:0, F:mbti.includes('F')?1:0, J:mbti.includes('J')?1:0, P:mbti.includes('P')?1:0 };
 }
 
+// ===== GOOGLE SHEETS INTEGRATION =====
+const APPS_URL = 'https://script.google.com/macros/s/AKfycbxcvZsbfIjwZZmRWEAzRx2FAxLIDjYy5DdkkXB2r5Mnj4yDY9KCjgEsmQqdZJzIz47t/exec';
+const SESSION_ID = 'sess_' + Date.now() + '_' + Math.random().toString(36).substr(2,9);
+let _lastResult = null;
+
+function sendToDiagnoseSheet(resultArchetype) {
+  const mbti = document.getElementById('mbti').value;
+  const ennea = document.getElementById('ennea').value;
+  const desire = document.getElementById('desire').value;
+  const angerTrigger = document.getElementById('angerTrigger').value;
+  const userName = document.getElementById('userName').value.trim();
+  const gender = document.getElementById('gender').value;
+  const birthdate = document.getElementById('birthdate').value;
+  const kabNum = birthdate ? calcLifePath(birthdate) : '';
+
+  const payload = {
+    type: 'diagnose',
+    sessionId: SESSION_ID,
+    name: userName,
+    gender: gender,
+    mbti: mbti,
+    ennea: ennea,
+    desire: desire,
+    angerTrigger: angerTrigger,
+    kabNum: kabNum ? String(kabNum) : '',
+    result: resultArchetype
+  };
+
+  fetch(APPS_URL, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  }).catch(()=>{});
+}
+
+function openReportModal() {
+  document.getElementById('reportFormArea').style.display = 'block';
+  document.getElementById('reportSentArea').style.display = 'none';
+  document.getElementById('reportModalOverlay').classList.add('show');
+}
+
+function closeReportModal() {
+  document.getElementById('reportModalOverlay').classList.remove('show');
+}
+
+function submitReport() {
+  const realName = document.getElementById('reportRealName').value.trim();
+  const email = document.getElementById('reportEmail').value.trim();
+  if (!email) { alert('メールアドレスを入力してください'); return; }
+
+  const payload = {
+    type: 'report',
+    sessionId: SESSION_ID,
+    realName: realName,
+    email: email
+  };
+
+  fetch(APPS_URL, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  }).catch(()=>{});
+
+  document.getElementById('reportFormArea').style.display = 'none';
+  document.getElementById('reportSentArea').style.display = 'block';
+}
+
 // ===== INIT =====
 function init() {
   const mbtiSel = document.getElementById('mbti');
@@ -1061,6 +1187,7 @@ function diagnose() {
   const pct = maxPossible > 0 ? Math.round((scores[0].score / maxPossible) * 100) : 0;
   const matchLabel = pct >= 70 ? '強い一致' : pct >= 50 ? '一致' : '傾向あり';
 
+  sendToDiagnoseSheet(best.name + '（' + best.id + '番）');
   renderResult(best, second, third, mbti, ennea, matchLabel, kabNum, angerTrigger);
 }
 
@@ -1295,7 +1422,7 @@ function sliderMove(e) {
   document.getElementById(sid + '_thumb').style.left  = pct;
 }
 
-document.addEventListener('keydown', e => { if (e.key==='Escape') closePopupDirect(); });
+document.addEventListener('keydown', e => { if (e.key==='Escape') { closePopupDirect(); closeReportModal(); } });
 init();
 </script>
 </body>
