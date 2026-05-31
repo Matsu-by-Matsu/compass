@@ -154,6 +154,21 @@ hr.section-divider { border: none; border-top: 1px solid rgba(255,255,255,0.06);
 .result-name-tag { font-size: 13px; color: #7c6fff; font-weight: 700; margin-bottom: 6px; }
 
 
+
+/* SHARE */
+.share-bar { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px; }
+.btn-share-x { display: flex; align-items: center; gap: 8px; background: #000; border: 1px solid #333; color: #fff; border-radius: 10px; padding: 12px 20px; font-size: 13px; font-weight: 700; cursor: pointer; transition: background 0.2s; text-decoration: none; }
+.btn-share-x:hover { background: #111; }
+.btn-share-dl { display: flex; align-items: center; gap: 8px; background: linear-gradient(135deg, rgba(124,111,255,0.2), rgba(91,77,224,0.2)); border: 1px solid rgba(124,111,255,0.5); color: #a090ff; border-radius: 10px; padding: 12px 20px; font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+.btn-share-dl:hover { background: linear-gradient(135deg, rgba(124,111,255,0.35), rgba(91,77,224,0.35)); }
+.share-url-box { margin-top: 12px; background: #0d0d18; border: 1px solid rgba(124,111,255,0.2); border-radius: 10px; padding: 12px 16px; display: flex; align-items: center; gap: 10px; }
+.share-url-text { font-family: monospace; font-size: 11px; color: #7070a0; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.share-url-copy { background: rgba(124,111,255,0.2); color: #9c90ff; border: 1px solid rgba(124,111,255,0.3); border-radius: 6px; padding: 5px 12px; font-size: 11px; cursor: pointer; white-space: nowrap; }
+.share-url-copy:hover { background: rgba(124,111,255,0.35); }
+
+/* SHARE IMAGE CANVAS */
+#shareCanvas { display: none; }
+
 /* REPORT MODAL */
 .report-modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.82); z-index: 200; display: none; align-items: center; justify-content: center; padding: 24px; }
 .report-modal-overlay.show { display: flex; }
@@ -455,6 +470,23 @@ hr.section-divider { border: none; border-top: 1px solid rgba(255,255,255,0.06);
     <div class="section-block">
       <div class="section-title">現状への処方箋</div>
       <div class="prose" id="resultAdvice"></div>
+    </div>
+
+    <div class="section-block">
+      <div class="section-title">シェア</div>
+      <div class="share-bar">
+        <a id="btnShareX" class="btn-share-x" href="#" target="_blank" rel="noopener">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.737-8.84L1.254 2.25H8.08l4.26 5.637 5.904-5.637zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          Xでシェア
+        </a>
+        <button class="btn-share-dl" onclick="downloadShareImage()">
+          📸 画像をダウンロード（インスタ用）
+        </button>
+      </div>
+      <div class="share-url-box">
+        <span class="share-url-text" id="shareUrlText"></span>
+        <button class="share-url-copy" onclick="copyShareUrl()">URLをコピー</button>
+      </div>
     </div>
 
     <button class="btn-report" onclick="openReportModal()">
@@ -1050,6 +1082,259 @@ function mbtiTraits(mbti) {
   return { E:mbti.includes('E')?1:0, I:mbti.includes('I')?1:0, N:mbti.includes('N')?1:0, S:mbti.includes('S')?1:0, T:mbti.includes('T')?1:0, F:mbti.includes('F')?1:0, J:mbti.includes('J')?1:0, P:mbti.includes('P')?1:0 };
 }
 
+
+// ===== SHARE =====
+const BASE_URL = 'https://matsu-by-matsu.github.io/compass/';
+let _shareUrl = '';
+let _shareArchetype = null;
+let _shareMatchLabel = '';
+let _shareUserName = '';
+let _shareKabNum = null;
+let _shareMbti = '';
+let _shareEnnea = '';
+
+function buildShareUrl(a, mbti, ennea, kabNum, userName) {
+  const params = new URLSearchParams();
+  params.set('r', a.id);
+  if (mbti && mbti !== 'unknown') params.set('mbti', mbti);
+  if (ennea && ennea !== 'unknown') params.set('ennea', ennea);
+  if (kabNum) params.set('kab', String(kabNum));
+  if (userName) params.set('name', userName);
+  return BASE_URL + '?' + params.toString();
+}
+
+function setShareData(a, mbti, ennea, matchLabel, kabNum, userName) {
+  _shareArchetype = a;
+  _shareMbti = mbti;
+  _shareEnnea = ennea;
+  _shareMatchLabel = matchLabel;
+  _shareKabNum = kabNum;
+  _shareUserName = userName;
+  _shareUrl = buildShareUrl(a, mbti, ennea, kabNum, userName);
+
+  // URL表示
+  document.getElementById('shareUrlText').textContent = _shareUrl;
+
+  // Xシェアリンク
+  const enneaLabel = ennea && ennea !== 'unknown'
+    ? (enneaData.find(e=>e.val===ennea)?.label.split('—')[1]?.trim().split('（')[0]?.trim() || '')
+    : '';
+  const namePrefix = userName ? userName + 'の' : '';
+  const text = `${namePrefix}行動コンパス診断結果：「${a.name}」\n${a.tagline}\n${mbti !== 'unknown' ? '#'+mbti+' ' : ''}${enneaLabel ? '#'+enneaLabel+' ' : ''}#行動コンパス #パーソナリティ診断\n`;
+  const xUrl = 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(text) + '&url=' + encodeURIComponent(_shareUrl);
+  document.getElementById('btnShareX').href = xUrl;
+}
+
+function copyShareUrl() {
+  navigator.clipboard.writeText(_shareUrl).then(() => {
+    const btn = document.querySelector('.share-url-copy');
+    btn.textContent = 'コピーしました！';
+    setTimeout(() => btn.textContent = 'URLをコピー', 2000);
+  });
+}
+
+function downloadShareImage() {
+  if (!_shareArchetype) return;
+  const a = _shareArchetype;
+  const canvas = document.getElementById('shareCanvas');
+  const ctx = canvas.getContext('2d');
+  const W = 1080, H = 1080;
+  canvas.width = W; canvas.height = H;
+
+  // 背景
+  const bg = ctx.createLinearGradient(0, 0, W, H);
+  bg.addColorStop(0, '#0a0a14');
+  bg.addColorStop(1, '#0d0820');
+  ctx.fillStyle = bg;
+  ctx.fillRect(0, 0, W, H);
+
+  // 星を描く
+  for (let i = 0; i < 180; i++) {
+    const x = Math.random() * W;
+    const y = Math.random() * H;
+    const r = Math.random() * 1.5;
+    ctx.beginPath();
+    ctx.fillStyle = `rgba(255,255,255,${Math.random() * 0.6 + 0.2})`;
+    ctx.arc(x, y, r, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  // 紫グロー
+  const glow = ctx.createRadialGradient(W*0.7, H*0.25, 0, W*0.7, H*0.25, 400);
+  glow.addColorStop(0, 'rgba(124,111,255,0.18)');
+  glow.addColorStop(1, 'transparent');
+  ctx.fillStyle = glow;
+  ctx.fillRect(0, 0, W, H);
+
+  // 枠線
+  ctx.strokeStyle = 'rgba(124,111,255,0.3)';
+  ctx.lineWidth = 2;
+  roundRect(ctx, 40, 40, W-80, H-80, 40);
+  ctx.stroke();
+
+  // LOGO
+  ctx.fillStyle = '#b79a63';
+  ctx.font = '600 28px Inter, sans-serif';
+  ctx.letterSpacing = '0.3em';
+  ctx.fillText('SYNTH X  COMPASS', 100, 130);
+
+  // アーキタイプ番号
+  ctx.fillStyle = 'rgba(124,111,255,0.8)';
+  ctx.font = '500 22px Inter, sans-serif';
+  ctx.fillText('ARCHETYPE  ' + a.id, 100, 210);
+
+  // タイプ名
+  ctx.fillStyle = '#f0f0f8';
+  ctx.font = 'bold 88px sans-serif';
+  const nameLines = splitText(a.name, 8);
+  nameLines.forEach((line, i) => {
+    ctx.fillText(line, 100, 320 + i * 100);
+  });
+
+  // タグライン
+  ctx.fillStyle = '#8080a8';
+  ctx.font = '400 32px sans-serif';
+  const tagLines = splitText(a.tagline, 18);
+  tagLines.forEach((line, i) => {
+    ctx.fillText(line, 100, 520 + i * 46);
+  });
+
+  // 区切り線
+  ctx.strokeStyle = 'rgba(124,111,255,0.4)';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(100, 640); ctx.lineTo(980, 640);
+  ctx.stroke();
+
+  // タグ情報
+  const tags = [];
+  if (_shareMbti && _shareMbti !== 'unknown') tags.push('MBTI: ' + _shareMbti);
+  if (_shareEnnea && _shareEnnea !== 'unknown') {
+    const el = enneaData.find(e=>e.val===_shareEnnea);
+    if (el) tags.push('エニア: ' + el.label.split('—')[1]?.trim().split('（')[0]?.trim());
+  }
+  if (_shareKabNum) tags.push('ライフパス ' + _shareKabNum);
+  tags.push(_shareMatchLabel);
+
+  ctx.font = '400 26px Inter, sans-serif';
+  let tx = 100;
+  tags.forEach(tag => {
+    const tw = ctx.measureText(tag).width + 40;
+    // タグ背景
+    ctx.fillStyle = 'rgba(124,111,255,0.15)';
+    roundRect(ctx, tx, 670, tw, 50, 25);
+    ctx.fill();
+    ctx.strokeStyle = 'rgba(124,111,255,0.3)';
+    ctx.lineWidth = 1;
+    roundRect(ctx, tx, 670, tw, 50, 25);
+    ctx.stroke();
+    // タグテキスト
+    ctx.fillStyle = '#9c90ff';
+    ctx.fillText(tag, tx + 20, 703);
+    tx += tw + 14;
+    if (tx > 800) return;
+  });
+
+  // 名前
+  if (_shareUserName) {
+    ctx.fillStyle = '#7c6fff';
+    ctx.font = 'bold 36px sans-serif';
+    ctx.fillText(_shareUserName + ' の診断結果', 100, 790);
+  }
+
+  // アーキタイプ画像（あれば）
+  const imgKey = a.id + '_' + a.name;
+  if (IMAGES[imgKey]) {
+    const img = new Image();
+    img.onload = function() {
+      ctx.save();
+      ctx.beginPath();
+      roundRect(ctx, 740, 280, 260, 260, 24);
+      ctx.clip();
+      ctx.drawImage(img, 740, 280, 260, 260);
+      ctx.restore();
+      finishDownload(canvas, a.name);
+    };
+    img.src = IMAGES[imgKey];
+  } else {
+    finishDownload(canvas, a.name);
+  }
+
+  // URL
+  ctx.fillStyle = '#4040a0';
+  ctx.font = '400 24px Inter, sans-serif';
+  ctx.fillText('matsu-by-matsu.github.io/compass/', 100, H - 80);
+}
+
+function finishDownload(canvas, name) {
+  const link = document.createElement('a');
+  link.download = 'compass_' + name + '.png';
+  link.href = canvas.toDataURL('image/png');
+  link.click();
+}
+
+function roundRect(ctx, x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.lineTo(x + w - r, y);
+  ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+  ctx.lineTo(x + w, y + h - r);
+  ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+  ctx.lineTo(x + r, y + h);
+  ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+  ctx.lineTo(x, y + r);
+  ctx.quadraticCurveTo(x, y, x + r, y);
+  ctx.closePath();
+}
+
+function splitText(text, maxLen) {
+  const lines = [];
+  let cur = '';
+  for (const ch of text) {
+    cur += ch;
+    if (cur.length >= maxLen) { lines.push(cur); cur = ''; }
+  }
+  if (cur) lines.push(cur);
+  return lines;
+}
+
+// ===== URLパラメータから結果を自動表示 =====
+function autoLoadFromURL() {
+  const params = new URLSearchParams(location.search);
+  const rid = params.get('r');
+  if (!rid) return;
+
+  const a = archetypes.find(x => x.id === rid.padStart(2,'0'));
+  if (!a) return;
+
+  const mbti = params.get('mbti') || 'unknown';
+  const ennea = params.get('ennea') || 'unknown';
+  const kabNum = params.get('kab') ? parseInt(params.get('kab')) : null;
+  const userName = params.get('name') || '';
+
+  // フォームにセット
+  if (document.getElementById('mbti')) {
+    const mbtiEl = document.getElementById('mbti');
+    for (let o of mbtiEl.options) { if (o.value === mbti) { mbtiEl.value = mbti; break; } }
+  }
+  if (document.getElementById('ennea')) {
+    const enneaEl = document.getElementById('ennea');
+    for (let o of enneaEl.options) { if (o.value === ennea) { enneaEl.value = ennea; break; } }
+  }
+  if (userName && document.getElementById('userName')) {
+    document.getElementById('userName').value = userName;
+  }
+
+  // matchLabelは固定で「シェア結果」
+  renderResult(a, null, null, mbti, ennea, '診断済み', kabNum, '');
+
+  // シェアデータも更新
+  setShareData(a, mbti, ennea, '診断済み', kabNum, userName);
+
+  // サイドバーを畳む（スマホ対応）
+  document.getElementById('welcomeArea').style.display = 'none';
+}
+
 // ===== GOOGLE SHEETS INTEGRATION =====
 const APPS_URL = 'https://script.google.com/macros/s/AKfycbxcvZsbfIjwZZmRWEAzRx2FAxLIDjYy5DdkkXB2r5Mnj4yDY9KCjgEsmQqdZJzIz47t/exec';
 const SESSION_ID = 'sess_' + Date.now() + '_' + Math.random().toString(36).substr(2,9);
@@ -1297,6 +1582,10 @@ function renderResult(a, second, third, mbti, ennea, matchLabel, kabNum, angerTr
   }
   document.getElementById('resultCard').style.display = 'block';
 
+  // シェアデータ設定
+  const _un = document.getElementById('userName') ? document.getElementById('userName').value.trim() : '';
+  setShareData(a, mbti, ennea, matchLabel, kabNum, _un);
+
   // GPT prompt
   const stress = document.getElementById('stress').value;
   const social = document.getElementById('social').value;
@@ -1425,5 +1714,6 @@ function sliderMove(e) {
 document.addEventListener('keydown', e => { if (e.key==='Escape') { closePopupDirect(); closeReportModal(); } });
 init();
 </script>
+<canvas id="shareCanvas" width="1080" height="1080"></canvas>
 </body>
 </html>
