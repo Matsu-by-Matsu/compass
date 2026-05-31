@@ -169,10 +169,32 @@ hr.section-divider { border: none; border-top: 1px solid rgba(255,255,255,0.06);
 /* SHARE IMAGE CANVAS */
 #shareCanvas { display: none; }
 
+
+/* ENNEAGRAM GUIDE MODAL */
+.ennea-modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.88); z-index: 300; display: none; align-items: flex-start; justify-content: center; padding: 20px; overflow-y: auto; }
+.ennea-modal-overlay.show { display: flex; }
+.ennea-modal { background: #0e0e1c; border: 1px solid rgba(124,111,255,0.3); border-radius: 20px; padding: 28px; max-width: 620px; width: 100%; margin: auto; position: relative; }
+.ennea-modal-close { position: absolute; top: 16px; right: 18px; background: none; border: none; color: #606080; font-size: 22px; cursor: pointer; line-height: 1; }
+.ennea-modal-close:hover { color: #e0e0f0; }
+.ennea-modal h3 { font-size: 17px; font-weight: 800; color: #f0f0f8; margin-bottom: 6px; }
+.ennea-modal .ennea-guide-lead { font-size: 12px; color: #60608a; line-height: 1.7; margin-bottom: 20px; }
+.ennea-group { margin-bottom: 18px; border: 1px solid rgba(255,255,255,0.07); border-radius: 14px; overflow: hidden; }
+.ennea-group-q { background: rgba(124,111,255,0.1); padding: 12px 16px; font-size: 13px; color: #c0c0e0; line-height: 1.7; font-weight: 600; border-bottom: 1px solid rgba(255,255,255,0.06); }
+.ennea-options { display: flex; flex-direction: column; }
+.ennea-option { display: flex; align-items: flex-start; gap: 12px; padding: 12px 16px; border-bottom: 1px solid rgba(255,255,255,0.04); cursor: pointer; transition: background 0.15s; }
+.ennea-option:last-child { border-bottom: none; }
+.ennea-option:hover { background: rgba(124,111,255,0.08); }
+.ennea-option-arrow { color: rgba(124,111,255,0.5); font-size: 11px; margin-top: 3px; flex-shrink: 0; }
+.ennea-option-text { font-size: 12px; color: #9090b0; line-height: 1.7; flex: 1; }
+.ennea-option-types { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.ennea-type-badge { font-size: 10px; padding: 3px 10px; border-radius: 12px; font-weight: 700; cursor: pointer; transition: all 0.15s; }
+.ennea-type-badge:hover { transform: scale(1.05); }
+.ennea-footer-note { font-size: 11px; color: #484868; text-align: center; margin-top: 14px; line-height: 1.6; }
+
 /* REPORT MODAL */
-.report-modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.82); z-index: 200; display: none; align-items: center; justify-content: center; padding: 24px; }
+.report-modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.82); z-index: 200; display: none; align-items: flex-start; justify-content: center; padding: 24px; overflow-y: auto; }
 .report-modal-overlay.show { display: flex; }
-.report-modal { background: #13131f; border: 1px solid rgba(124,111,255,0.35); border-radius: 20px; padding: 32px; max-width: 400px; width: 100%; position: relative; }
+.report-modal { background: #13131f; border: 1px solid rgba(124,111,255,0.35); border-radius: 20px; padding: 32px; max-width: 520px; width: 100%; position: relative; margin: auto; }
 .report-modal h3 { font-size: 18px; font-weight: 800; color: #f0f0f8; margin-bottom: 8px; }
 .report-modal .report-lead { font-size: 13px; color: #8080a8; line-height: 1.8; margin-bottom: 22px; }
 .report-modal .report-highlight { color: #a090ff; font-weight: 700; }
@@ -183,6 +205,11 @@ hr.section-divider { border: none; border-top: 1px solid rgba(255,255,255,0.06);
 .report-close { position: absolute; top: 16px; right: 18px; background: none; border: none; color: #606080; font-size: 20px; cursor: pointer; line-height: 1; }
 .report-close:hover { color: #e0e0f0; }
 .report-sent { text-align: center; padding: 20px 0; }
+.preview-blur-wrap { position: relative; display: inline-block; width: 100%; margin-bottom: 14px; }
+.preview-blur-wrap img { width: 100%; border-radius: 10px; border: 1px solid rgba(124,111,255,0.3); filter: blur(6px) brightness(0.7); pointer-events: none; }
+.preview-blur-overlay { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #fff; }
+.preview-blur-overlay .lock-icon { font-size: 36px; margin-bottom: 8px; }
+.preview-blur-overlay .lock-text { font-size: 13px; color: #a090ff; font-weight: 700; text-align: center; line-height: 1.6; }
 .report-sent .sent-icon { font-size: 48px; margin-bottom: 16px; }
 .report-sent h3 { color: #7c6fff; margin-bottom: 10px; }
 .report-sent p { font-size: 13px; color: #8080a8; line-height: 1.8; }
@@ -271,6 +298,9 @@ hr.section-divider { border: none; border-top: 1px solid rgba(255,255,255,0.06);
   <div class="form-group">
     <label>基本タイプ</label>
     <select id="ennea"></select>
+  </div>
+  <div style="margin-top:-4px;margin-bottom:10px;">
+    <button onclick="openEnneaModal()" style="background:none;border:none;color:rgba(124,111,255,0.7);font-size:11px;cursor:pointer;padding:0;letter-spacing:0.05em;text-decoration:underline;">🌀 わからない方はこちら → 簡易チェック</button>
   </div>
 
   <hr class="divider">
@@ -479,9 +509,7 @@ hr.section-divider { border: none; border-top: 1px solid rgba(255,255,255,0.06);
           <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.737-8.84L1.254 2.25H8.08l4.26 5.637 5.904-5.637zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
           Xでシェア
         </a>
-        <button class="btn-share-dl" onclick="downloadShareImage()">
-          📸 画像をダウンロード（インスタ用）
-        </button>
+
       </div>
       <div class="share-url-box">
         <span class="share-url-text" id="shareUrlText"></span>
@@ -490,7 +518,7 @@ hr.section-divider { border: none; border-top: 1px solid rgba(255,255,255,0.06);
     </div>
 
     <button class="btn-report" onclick="openReportModal()">
-      📄 詳細レポートを受け取る
+      📲 診断レポート画像を無料で受け取る
     </button>
   </div>
 
@@ -518,23 +546,33 @@ hr.section-divider { border: none; border-top: 1px solid rgba(255,255,255,0.06);
 
 <!-- REPORT MODAL -->
 <div class="report-modal-overlay" id="reportModalOverlay">
-  <div class="report-modal">
+  <div class="report-modal" style="max-width:520px;">
     <button class="report-close" onclick="closeReportModal()">×</button>
     <div id="reportFormArea">
-      <h3>✨ あなただけの詳細レポート</h3>
+      <h3>✨ あなた専用の診断レポート</h3>
       <div class="report-lead">
-        診断結果をもとに、<span class="report-highlight">恋愛・仕事・お金・ストレス傾向</span>を含む<br>
-        パーソナライズされた詳細レポートをお送りします。<br><br>
-        <span class="report-highlight">無料</span>でお受け取りいただけます。
+        恋愛・仕事・お金・ストレス・人間関係の傾向を<br>
+        <span class="report-highlight">パーソナライズしたレポート画像</span>を無料でお届けします。<br>
+        登録後にダウンロードできます。
+      </div>
+      <div id="reportImgPreview" style="margin-bottom:14px;display:none;">
+        <div class="preview-blur-wrap">
+          <img id="reportPreviewImg" src="" alt="診断結果プレビュー">
+          <div class="preview-blur-overlay">
+            <div class="lock-icon">🔒</div>
+            <div class="lock-text">名前・メールアドレスを入力すると<br>完全版をダウンロードできます</div>
+          </div>
+        </div>
       </div>
       <input class="report-input" type="text" id="reportRealName" placeholder="お名前（本名）">
       <input class="report-input" type="email" id="reportEmail" placeholder="メールアドレス">
-      <button class="report-submit" onclick="submitReport()">レポートを受け取る →</button>
+      <button class="report-submit" onclick="submitReport()">📲 レポート画像を受け取る</button>
     </div>
     <div id="reportSentArea" class="report-sent" style="display:none">
       <div class="sent-icon">🎉</div>
-      <h3>送信完了しました！</h3>
-      <p>入力いただいたメールアドレスに<br>詳細レポートをお送りします。<br><br>少々お待ちください。</p>
+      <h3>ありがとうございます！</h3>
+      <p>登録が完了しました。<br>下のボタンから診断結果画像をDLして<br>XやInstagramでシェアしてください📸</p>
+      <button class="report-submit" onclick="downloadShareImage()" style="margin-top:16px;">📸 診断結果画像をダウンロード</button>
     </div>
   </div>
 </div>
@@ -1134,216 +1172,281 @@ function copyShareUrl() {
 }
 
 function downloadShareImage() {
-  if (!_shareArchetype) return;
+  if (!_shareArchetype) { alert('先に診断してください'); return; }
   const a = _shareArchetype;
+
+  const curMbti  = (_shareMbti && _shareMbti !== 'unknown') ? _shareMbti : '';
+  const curEnnea = (_shareEnnea && _shareEnnea !== 'unknown') ? _shareEnnea : '';
+  const curKab   = _shareKabNum || null;
+  const curName  = _shareUserName || (document.getElementById('userName') ? document.getElementById('userName').value.trim() : '');
+
+  let enneaLabel = '';
+  if (curEnnea) {
+    const el = enneaData.find(e=>e.val===curEnnea);
+    enneaLabel = el ? el.label.split('—')[1]?.trim().split('（')[0]?.trim() : '';
+  } else if (a.ennea && a.ennea[0]) {
+    const el = enneaData.find(e=>e.val===a.ennea[0]);
+    enneaLabel = el ? el.label.split('—')[1]?.trim().split('（')[0]?.trim() : '';
+  }
+
+  // プロフィールデータ
+  const prof = profiles[a.id];
+
+  // 2位・3位
+  const scores = archetypes.map(x => {
+    let sc = 0;
+    const ut = curMbti ? {E:curMbti.includes('E')?1:0,I:curMbti.includes('I')?1:0,N:curMbti.includes('N')?1:0,S:curMbti.includes('S')?1:0,T:curMbti.includes('T')?1:0,F:curMbti.includes('F')?1:0,J:curMbti.includes('J')?1:0,P:curMbti.includes('P')?1:0} : null;
+    if (ut) ['E','I','N','S','T','F','J','P'].forEach(ax=>{if(ut[ax]&&x.traits[ax])sc+=x.traits[ax]*3;});
+    if (curEnnea){if(x.ennea[0]===curEnnea)sc+=8;else if(x.ennea.includes(curEnnea))sc+=4;}
+    return {x, sc};
+  }).sort((a,b)=>b.sc-a.sc);
+  const second = scores[1]?.x;
+  const third  = scores[2]?.x;
+
+  const W = 1080, H = 1920;
   const canvas = document.getElementById('shareCanvas');
-  const ctx = canvas.getContext('2d');
-  const W = 1080, H = 1080;
   canvas.width = W; canvas.height = H;
 
-  function draw(charImg) {
-    // ===== 背景 =====
-    const bg = ctx.createLinearGradient(0, 0, W, H);
-    bg.addColorStop(0, '#080810');
-    bg.addColorStop(0.5, '#0c0a1a');
-    bg.addColorStop(1, '#080810');
-    ctx.fillStyle = bg;
-    ctx.fillRect(0, 0, W, H);
+  // 全画像を先読み
+  const imgKeys = [
+    {key: a.id+'_'+a.name, role:'main'},
+    second ? {key: second.id+'_'+second.name, role:'second'} : null,
+    third  ? {key: third.id+'_'+third.name,   role:'third'}  : null,
+  ].filter(Boolean);
 
-    // 星
-    const rng = mulberry32(42);
-    for (let i = 0; i < 220; i++) {
-      const x = rng() * W, y = rng() * H, r = rng() * 1.3 + 0.2;
-      ctx.beginPath();
-      ctx.fillStyle = `rgba(255,255,255,${rng() * 0.55 + 0.15})`;
-      ctx.arc(x, y, r, 0, Math.PI*2); ctx.fill();
-    }
+  const loaded = {};
+  let pending = imgKeys.length;
 
-    // 紫グロー（右上）
-    const g1 = ctx.createRadialGradient(W*0.78, H*0.18, 0, W*0.78, H*0.18, 380);
-    g1.addColorStop(0, 'rgba(100,80,255,0.22)'); g1.addColorStop(1, 'transparent');
-    ctx.fillStyle = g1; ctx.fillRect(0,0,W,H);
+  function onAllLoaded() {
+    drawAll(loaded['main']||null, loaded['second']||null, loaded['third']||null);
+  }
 
-    // ゴールドグロー（左下）
-    const g2 = ctx.createRadialGradient(W*0.18, H*0.82, 0, W*0.18, H*0.82, 280);
-    g2.addColorStop(0, 'rgba(183,154,99,0.10)'); g2.addColorStop(1, 'transparent');
-    ctx.fillStyle = g2; ctx.fillRect(0,0,W,H);
-
-    // ===== 枠 =====
-    ctx.save();
-    ctx.strokeStyle = 'rgba(124,111,255,0.25)';
-    ctx.lineWidth = 1.5;
-    roundRect(ctx, 48, 48, W-96, H-96, 44);
-    ctx.stroke();
-    ctx.restore();
-
-    // ===== キャラ画像（右上） =====
-    const imgSize = 300;
-    const imgX = W - imgSize - 80;
-    const imgY = 80;
-    if (charImg) {
-      ctx.save();
-      ctx.beginPath();
-      roundRect(ctx, imgX, imgY, imgSize, imgSize, 28);
-      ctx.clip();
-      ctx.drawImage(charImg, imgX, imgY, imgSize, imgSize);
-      ctx.restore();
-      // 画像の周りに薄い枠
-      ctx.save();
-      ctx.strokeStyle = 'rgba(124,111,255,0.3)';
-      ctx.lineWidth = 1;
-      roundRect(ctx, imgX, imgY, imgSize, imgSize, 28);
-      ctx.stroke();
-      ctx.restore();
-    }
-
-    // ===== ARCHETYPE番号 =====
-    ctx.fillStyle = 'rgba(124,111,255,0.7)';
-    ctx.font = '400 22px Inter,Arial,sans-serif';
-    ctx.letterSpacing = '4px';
-    ctx.fillText('ARCHETYPE  ' + a.id, 90, 160);
-    ctx.letterSpacing = '0px';
-
-    // ===== タイプ名（大きく・左） =====
-    ctx.fillStyle = '#f0f0f8';
-    const nameFont = '700 ' + (a.name.length <= 7 ? '110' : a.name.length <= 9 ? '90' : '74') + 'px Arial,sans-serif';
-    ctx.font = nameFont;
-    // 右側の画像と重ならないよう最大幅を設定
-    const maxNameW = imgX - 90 - 20;
-    // 1行に収まるか確認
-    const nameW = ctx.measureText(a.name).width;
-    if (nameW <= maxNameW) {
-      ctx.fillText(a.name, 90, 300);
+  if (pending === 0) { onAllLoaded(); return; }
+  imgKeys.forEach(({key, role}) => {
+    if (IMAGES[key]) {
+      const img = new Image();
+      img.onload = () => { loaded[role]=img; if(--pending===0) onAllLoaded(); };
+      img.onerror = () => { loaded[role]=null; if(--pending===0) onAllLoaded(); };
+      img.src = IMAGES[key];
     } else {
-      // 2行に分割
-      const mid = Math.ceil(a.name.length / 2);
-      ctx.fillText(a.name.slice(0, mid), 90, 270);
-      ctx.fillText(a.name.slice(mid), 90, 380);
+      loaded[role] = null;
+      if (--pending === 0) onAllLoaded();
     }
+  });
 
-    // ===== タグライン =====
-    ctx.fillStyle = '#7070a0';
-    ctx.font = '400 30px Arial,sans-serif';
-    const tagline = a.tagline;
-    // 句点で分割
-    const tlParts = tagline.split('。').filter(s=>s);
-    tlParts.forEach((part, i) => {
-      ctx.fillText(part + (i < tlParts.length-1 ? '。' : ''), 90, 440 + i * 44);
-    });
+  function drawAll(mainImg, secondImg, thirdImg) {
+    const ctx = canvas.getContext('2d');
+    const rng = mulberry32(77);
 
-    // ===== 区切りライン =====
-    ctx.save();
-    const lineGrad = ctx.createLinearGradient(90, 0, 990, 0);
-    lineGrad.addColorStop(0, 'rgba(124,111,255,0.6)');
-    lineGrad.addColorStop(1, 'rgba(124,111,255,0.05)');
-    ctx.strokeStyle = lineGrad;
-    ctx.lineWidth = 1;
-    ctx.beginPath(); ctx.moveTo(90, 560); ctx.lineTo(990, 560); ctx.stroke();
-    ctx.restore();
-
-    // ===== 名前 =====
-    // DOMからも値を取り直して確実に最新値を使う
-    const curMbti = _shareMbti || (document.getElementById('mbti') ? document.getElementById('mbti').value : '');
-    const curEnnea = _shareEnnea || (document.getElementById('ennea') ? document.getElementById('ennea').value : '');
-    const curKab = _shareKabNum || null;
-    const curName = _shareUserName || (document.getElementById('userName') ? document.getElementById('userName').value.trim() : '');
-
-    if (curName) {
-      ctx.fillStyle = '#a090ff';
-      ctx.font = '700 38px Arial,sans-serif';
-      ctx.fillText(curName + ' の診断結果', 90, 590);
+    // ── 背景 ──
+    const bg = ctx.createLinearGradient(0,0,W,H);
+    bg.addColorStop(0,'#070710'); bg.addColorStop(0.5,'#0c0a1c'); bg.addColorStop(1,'#080812');
+    ctx.fillStyle=bg; ctx.fillRect(0,0,W,H);
+    for(let i=0;i<320;i++){
+      ctx.beginPath();
+      ctx.fillStyle=`rgba(255,255,255,${rng()*0.45+0.08})`;
+      ctx.arc(rng()*W,rng()*H,rng()*1.3+0.2,0,Math.PI*2);ctx.fill();
     }
+    // グロー上部
+    const gl1=ctx.createRadialGradient(W*0.78,H*0.06,0,W*0.78,H*0.06,380);
+    gl1.addColorStop(0,'rgba(100,80,255,0.2)');gl1.addColorStop(1,'transparent');
+    ctx.fillStyle=gl1;ctx.fillRect(0,0,W,H);
+    // グロー下部
+    const gl2=ctx.createRadialGradient(W*0.2,H*0.7,0,W*0.2,H*0.7,300);
+    gl2.addColorStop(0,'rgba(183,154,99,0.07)');gl2.addColorStop(1,'transparent');
+    ctx.fillStyle=gl2;ctx.fillRect(0,0,W,H);
 
-    // ===== タグバッジ =====
-    ctx.font = '400 26px Arial,sans-serif';
-    const tags = [];
-    if (curMbti && curMbti !== 'unknown') {
-      const ml = mbtiData.find(m => m.val === curMbti);
-      const mlName = ml ? ml.label.split('—')[1]?.trim().split('（')[0]?.trim() : '';
-      tags.push({ text: curMbti + (mlName ? ' ' + mlName : ''), color: '#9c90ff', bg: 'rgba(124,111,255,0.15)', border: 'rgba(124,111,255,0.35)' });
+    ctx.strokeStyle='rgba(124,111,255,0.18)';ctx.lineWidth=1.5;
+    rrect(ctx,36,36,W-72,H-72,48);ctx.stroke();
+
+    // ─── ヘルパー ───
+    function divLine(y,alpha){
+      alpha=alpha||0.4;
+      const lg=ctx.createLinearGradient(76,0,W-76,0);
+      lg.addColorStop(0,`rgba(124,111,255,${alpha})`);lg.addColorStop(1,`rgba(124,111,255,0.02)`);
+      ctx.strokeStyle=lg;ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(76,y);ctx.lineTo(W-76,y);ctx.stroke();
     }
-    if (curEnnea && curEnnea !== 'unknown') {
-      const el = enneaData.find(e => e.val === curEnnea);
-      const elName = el ? el.label.split('—')[1]?.trim().split('（')[0]?.trim() : '';
-      if (elName) tags.push({ text: elName, color: '#e8c060', bg: 'rgba(255,180,50,0.12)', border: 'rgba(255,180,50,0.3)' });
+    function sLabel(text,y,color){
+      ctx.fillStyle=color||'#7c6fff';ctx.font='700 18px Arial,sans-serif';ctx.fillText(text,76,y);
     }
-    if (curKab) tags.push({ text: '✨ ライフパス ' + curKab, color: '#ffd700', bg: 'rgba(255,215,0,0.1)', border: 'rgba(255,215,0,0.3)' });
-
-    let tx = 90, ty = curName ? 648 : 590;
-    tags.forEach(tag => {
-      const tw = ctx.measureText(tag.text).width + 36;
-      if (tx + tw > 970) { tx = 90; ty += 60; }
-      ctx.fillStyle = tag.bg;
-      roundRect(ctx, tx, ty, tw, 48, 24); ctx.fill();
-      ctx.strokeStyle = tag.border; ctx.lineWidth = 1;
-      roundRect(ctx, tx, ty, tw, 48, 24); ctx.stroke();
-      ctx.fillStyle = tag.color;
-      ctx.fillText(tag.text, tx + 18, ty + 33);
-      tx += tw + 14;
-    });
-
-    // ===== 強み（タグより下） =====
-    const strengthY = Math.max(ty + 70, 720);
-    ctx.font = '400 24px Arial,sans-serif';
-    const strengths = a.strengths || [];
-    let sx = 90;
-    strengths.slice(0, 4).forEach(s => {
-      const sw = ctx.measureText(s).width + 28;
-      if (sx + sw > 970) return;
-      ctx.fillStyle = 'rgba(50,200,120,0.08)';
-      roundRect(ctx, sx, strengthY, sw, 42, 21); ctx.fill();
-      ctx.strokeStyle = 'rgba(50,200,120,0.2)'; ctx.lineWidth = 1;
-      roundRect(ctx, sx, strengthY, sw, 42, 21); ctx.stroke();
-      ctx.fillStyle = '#70c890';
-      ctx.fillText(s, sx + 14, strengthY + 28);
-      sx += sw + 10;
-    });
-
-    // ===== コア一言 =====
-    const coreY = strengthY + 68;
-    if (a.core && coreY < H - 140) {
-      const firstSentence = a.core.split('。')[0] + '。';
-      ctx.fillStyle = '#505070';
-      ctx.font = '400 22px Arial,sans-serif';
-      const maxW = 860;
-      let line = '', lineY = coreY;
-      for (const ch of firstSentence) {
-        const test = line + ch;
-        if (ctx.measureText(test).width > maxW) {
-          if (lineY <= coreY + 64) { ctx.fillText(line, 90, lineY); }
-          line = ch; lineY += 32;
-        } else { line = test; }
+    function wrapText(text, x, y, maxW, lineH, maxLines) {
+      ctx.font='400 22px Arial,sans-serif';
+      let line='', lines=[];
+      for(const ch of text){
+        const test=line+ch;
+        if(ctx.measureText(test).width>maxW){
+          if(lines.length>=maxLines-1){lines.push(line+'…');line='';break;}
+          lines.push(line);line=ch;
+        } else line=test;
       }
-      if (line && lineY <= coreY + 64) ctx.fillText(line, 90, lineY);
+      if(line && lines.length<maxLines)lines.push(line);
+      lines.forEach((l,i)=>{ctx.fillText(l,x,y+i*lineH);});
+      return lines.length*lineH;
     }
 
-    // ===== URL =====
-    ctx.fillStyle = 'rgba(124,111,255,0.35)';
-    ctx.font = '400 22px Arial,sans-serif';
-    ctx.fillText('matsu-by-matsu.github.io/compass', 90, H - 70);
+    let curY = 62;
 
-    // ===== 小さなCompassラベル（右下） =====
-    ctx.fillStyle = 'rgba(183,154,99,0.4)';
-    ctx.font = '400 18px Arial,sans-serif';
-    ctx.textAlign = 'right';
-    ctx.fillText('行動コンパス診断', W - 90, H - 70);
-    ctx.textAlign = 'left';
+    // ── キャラ画像（右上） ──
+    const IS=230, IX=W-IS-76, IY=curY;
+    if(mainImg){
+      ctx.save();ctx.beginPath();rrect(ctx,IX,IY,IS,IS,22);ctx.clip();
+      ctx.drawImage(mainImg,IX,IY,IS,IS);ctx.restore();
+      ctx.strokeStyle='rgba(124,111,255,0.28)';ctx.lineWidth=1;
+      rrect(ctx,IX,IY,IS,IS,22);ctx.stroke();
+    }
+
+    // ARCHETYPE番号
+    ctx.fillStyle='rgba(124,111,255,0.65)';ctx.font='400 19px Arial,sans-serif';
+    ctx.fillText('ARCHETYPE  '+a.id, 76, curY+42);
+
+    // タイプ名
+    const nMaxW = IX - 76 - 16;
+    let fsize=88;
+    ctx.font=`700 ${fsize}px Arial,sans-serif`;
+    while(ctx.measureText(a.name).width > nMaxW && fsize > 44){ fsize-=2; ctx.font=`700 ${fsize}px Arial,sans-serif`; }
+    let n1=a.name, n2='';
+    if(ctx.measureText(a.name).width > nMaxW){
+      let best=Math.ceil(a.name.length/2);
+      n1=a.name.slice(0,best); n2=a.name.slice(best);
+      fsize=78; ctx.font=`700 ${fsize}px Arial,sans-serif`;
+      while((ctx.measureText(n1).width>nMaxW||ctx.measureText(n2).width>nMaxW)&&fsize>40){fsize-=2;ctx.font=`700 ${fsize}px Arial,sans-serif`;}
+    }
+    ctx.fillStyle='#f0f0f8';
+    ctx.fillText(n1,76,curY+130);
+    if(n2)ctx.fillText(n2,76,curY+130+fsize+6);
+
+    const tlTop=curY+(n2?130+fsize*2+20:130+fsize+20);
+    ctx.fillStyle='#545468';ctx.font='400 25px Arial,sans-serif';
+    a.tagline.split('。').filter(s=>s).forEach((p,i)=>ctx.fillText(p+'。',76,tlTop+i*38));
+    curY=tlTop+38*a.tagline.split('。').filter(s=>s).length+24;
+
+    // 名前・タグ
+    if(curName){ctx.fillStyle='#8878d8';ctx.font='700 28px Arial,sans-serif';ctx.fillText(curName+' の診断結果',76,curY);curY+=44;}
+    ctx.font='400 22px Arial,sans-serif';
+    const tgs=[];
+    if(curMbti){const ml=mbtiData.find(m=>m.val===curMbti);const n=ml?ml.label.split('—')[1]?.trim().split('（')[0]?.trim():'';tgs.push({t:curMbti+(n?' '+n:''),c:'#9c90ff',bg:'rgba(124,111,255,0.14)',bd:'rgba(124,111,255,0.32)'});}
+    if(enneaLabel)tgs.push({t:enneaLabel,c:'#d4a840',bg:'rgba(255,175,40,0.11)',bd:'rgba(255,175,40,0.28)'});
+    if(curKab)tgs.push({t:'✨ ライフパス '+curKab,c:'#e8cc40',bg:'rgba(255,215,0,0.09)',bd:'rgba(255,215,0,0.28)'});
+    if(tgs.length){
+      let tx=76;
+      tgs.forEach(t=>{const tw=ctx.measureText(t.t).width+28;if(tx+tw>W-76)return;ctx.fillStyle=t.bg;rrect(ctx,tx,curY,tw,40,20);ctx.fill();ctx.strokeStyle=t.bd;ctx.lineWidth=1;rrect(ctx,tx,curY,tw,40,20);ctx.stroke();ctx.fillStyle=t.c;ctx.fillText(t.t,tx+14,curY+26);tx+=tw+10;});
+      curY+=54;
+    }
+
+    // ── STRENGTHS & SHADOWS ──
+    divLine(curY); curY+=26;
+    sLabel('▲ 強み  /  ▼ リスク', curY); curY+=24;
+    ctx.font='400 22px Arial,sans-serif';
+    const strengths=a.strengths||[], shadows=a.shadows||[];
+    const maxRows=Math.max(strengths.length,shadows.length);
+    const colW=(W-76*2-18)/2;
+    for(let i=0;i<maxRows;i++){
+      const rowY=curY+i*46;
+      if(strengths[i]){ctx.fillStyle='rgba(50,200,120,0.09)';rrect(ctx,76,rowY,colW,36,10);ctx.fill();ctx.strokeStyle='rgba(50,200,120,0.22)';ctx.lineWidth=1;rrect(ctx,76,rowY,colW,36,10);ctx.stroke();ctx.fillStyle='#70c890';ctx.fillText(strengths[i],90,rowY+24);}
+      if(shadows[i]){ctx.fillStyle='rgba(255,80,80,0.07)';rrect(ctx,76+colW+18,rowY,colW,36,10);ctx.fill();ctx.strokeStyle='rgba(255,80,80,0.18)';ctx.lineWidth=1;rrect(ctx,76+colW+18,rowY,colW,36,10);ctx.stroke();ctx.fillStyle='#e08080';ctx.fillText(shadows[i],90+colW+18,rowY+24);}
+    }
+    curY+=maxRows*46+18;
+
+    // ── 行動軸スペクトラム ──
+    divLine(curY); curY+=26;
+    sLabel('行動軸スペクトラム', curY); curY+=24;
+    ctx.font='400 19px Arial,sans-serif';
+    (a.axes||[]).forEach(ax=>{
+      const bX=76+110,bW=W-76*2-220,bH=8;
+      ctx.fillStyle='#585870';ctx.textAlign='right';ctx.fillText(ax.l,76+105,curY+bH);ctx.textAlign='left';
+      ctx.fillStyle='rgba(255,255,255,0.07)';rrect(ctx,bX,curY,bW,bH,4);ctx.fill();
+      const gr=ctx.createLinearGradient(bX,0,bX+bW,0);gr.addColorStop(0,'#7c6fff');gr.addColorStop(1,'#a070ff');
+      ctx.fillStyle=gr;rrect(ctx,bX,curY,bW*(ax.v/100),bH,4);ctx.fill();
+      ctx.fillStyle='#585870';ctx.fillText(ax.r,bX+bW+10,curY+bH);
+      curY+=34;
+    });
+    curY+=10;
+
+    // ── 相性 ──
+    divLine(curY); curY+=26;
+    sLabel('相性・関係性', curY); curY+=24;
+    ctx.font='400 20px Arial,sans-serif';
+    const cColW=(W-76*2-14)/2;
+    (a.compat||[]).forEach((c,i)=>{
+      const cx=76+(i%2)*(cColW+14),cy=curY+Math.floor(i/2)*58;
+      ctx.fillStyle='rgba(255,255,255,0.03)';rrect(ctx,cx,cy,cColW,48,10);ctx.fill();
+      ctx.strokeStyle='rgba(255,255,255,0.08)';ctx.lineWidth=1;rrect(ctx,cx,cy,cColW,48,10);ctx.stroke();
+      ctx.fillStyle='#505070';ctx.font='400 13px Arial,sans-serif';ctx.fillText(c.label,cx+12,cy+17);
+      ctx.fillStyle='#d0d0f0';ctx.font='700 19px Arial,sans-serif';ctx.fillText(c.name,cx+12,cy+38);
+    });
+    curY+=Math.ceil((a.compat||[]).length/2)*58+10;
+
+    // ── 近いタイプ ──
+    divLine(curY); curY+=26;
+    sLabel('あなたに近いタイプ', curY); curY+=24;
+    [[second,secondImg,'2位'],[third,thirdImg,'3位']].forEach(([r,rImg,rank])=>{
+      if(!r)return;
+      ctx.fillStyle='rgba(255,255,255,0.025)';rrect(ctx,76,curY,W-152,56,10);ctx.fill();
+      ctx.strokeStyle='rgba(255,255,255,0.07)';ctx.lineWidth=1;rrect(ctx,76,curY,W-152,56,10);ctx.stroke();
+      if(rImg){ctx.save();ctx.beginPath();rrect(ctx,84,curY+5,46,46,8);ctx.clip();ctx.drawImage(rImg,84,curY+5,46,46);ctx.restore();}
+      else{ctx.fillStyle='rgba(124,111,255,0.12)';rrect(ctx,84,curY+5,46,46,8);ctx.fill();}
+      ctx.fillStyle='#7c6fff';ctx.font='700 14px Arial,sans-serif';ctx.fillText(rank,142,curY+22);
+      ctx.fillStyle='#d0d0f0';ctx.font='700 21px Arial,sans-serif';ctx.fillText(r.name,142,curY+45);
+      const tl=r.tagline.length>26?r.tagline.slice(0,26)+'…':r.tagline;
+      ctx.fillStyle='#484860';ctx.font='400 16px Arial,sans-serif';ctx.textAlign='right';ctx.fillText(tl,W-88,curY+40);ctx.textAlign='left';
+      curY+=64;
+    });
+    curY+=6;
+
+    // ════ 詳細分析セクション ════
+    if(prof){
+      // セクション区切り（太め）
+      ctx.strokeStyle='rgba(124,111,255,0.5)';ctx.lineWidth=2;
+      ctx.beginPath();ctx.moveTo(76,curY);ctx.lineTo(W-76,curY);ctx.stroke();
+      curY+=12;
+      ctx.fillStyle='rgba(124,111,255,0.12)';ctx.fillRect(76,curY,W-152,36);
+      ctx.fillStyle='#9c90ff';ctx.font='700 18px Arial,sans-serif';ctx.textAlign='center';
+      ctx.fillText('── 詳細パーソナル分析 ──',W/2,curY+24);ctx.textAlign='left';
+      curY+=46;
+
+      const sections=[
+        {icon:'💑',label:'恋愛傾向',key:'love',color:'#f08080'},
+        {icon:'💼',label:'仕事傾向',key:'work',color:'#80b0f0'},
+        {icon:'🎲',label:'ギャンブル・リスク',key:'gamble',color:'#f0c060'},
+        {icon:'💸',label:'お金の使い方',key:'money',color:'#80d0a0'},
+        {icon:'😤',label:'ストレス反応',key:'stress',color:'#d080f0'},
+        {icon:'🍺',label:'酒・遊びの傾向',key:'drink',color:'#f0a060'},
+        {icon:'👥',label:'友人関係',key:'friends',color:'#80c0d0'},
+      ];
+
+      sections.forEach(sec=>{
+        if(!prof[sec.key]||curY>H-200)return;
+        // セクションラベル
+        ctx.fillStyle=sec.color;ctx.font='700 20px Arial,sans-serif';
+        ctx.fillText(sec.icon+' '+sec.label,76,curY);curY+=32;
+        // テキスト（最大2行、行間32px）
+        ctx.fillStyle='#7878a0';ctx.font='400 22px Arial,sans-serif';
+        const textH=wrapText(prof[sec.key],76,curY,W-152,32,2);
+        curY+=textH+20;
+        // 薄い区切り
+        divLine(curY,0.1);
+        curY+=18;
+      });
+    }
+
+    // ── フッター ──
+    ctx.fillStyle='rgba(124,111,255,0.28)';ctx.font='400 18px Arial,sans-serif';
+    ctx.fillText('matsu-by-matsu.github.io/compass',76,H-54);
+    ctx.fillStyle='rgba(183,154,99,0.32)';ctx.textAlign='right';
+    ctx.fillText('行動コンパス診断',W-76,H-54);ctx.textAlign='left';
 
     finishDownload(canvas, a.name);
   }
-
-  // キャラ画像ロード
-  const imgKey = a.id + '_' + a.name;
-  if (IMAGES[imgKey]) {
-    const img = new Image();
-    img.onload = () => draw(img);
-    img.onerror = () => draw(null);
-    img.src = IMAGES[imgKey];
-  } else {
-    draw(null);
-  }
 }
-
+function rrect(ctx, x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x+r,y); ctx.lineTo(x+w-r,y);
+  ctx.quadraticCurveTo(x+w,y,x+w,y+r);
+  ctx.lineTo(x+w,y+h-r); ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);
+  ctx.lineTo(x+r,y+h); ctx.quadraticCurveTo(x,y+h,x,y+h-r);
+  ctx.lineTo(x,y+r); ctx.quadraticCurveTo(x,y,x+r,y);
+  ctx.closePath();
+}
 // 再現性のある疑似乱数（星の位置を毎回同じにする）
 function mulberry32(seed) {
   return function() {
@@ -1355,10 +1458,20 @@ function mulberry32(seed) {
 }
 
 function finishDownload(canvas, name) {
+  const dataUrl = canvas.toDataURL('image/png');
+  if (window._previewMode && window._previewCallback) {
+    window._previewCallback(dataUrl);
+    return;
+  }
   const link = document.createElement('a');
   link.download = 'compass_' + name + '.png';
-  link.href = canvas.toDataURL('image/png');
+  link.href = dataUrl;
   link.click();
+}
+
+function downloadShareImageToCanvas(callback) {
+  window._previewCallback = callback;
+  downloadShareImage();
 }
 
 function roundRect(ctx, x, y, w, h, r) {
@@ -1467,6 +1580,26 @@ function openReportModal() {
   document.getElementById('reportFormArea').style.display = 'block';
   document.getElementById('reportSentArea').style.display = 'none';
   document.getElementById('reportModalOverlay').classList.add('show');
+  // プレビュー画像を生成
+  generatePreviewImage();
+}
+
+function generatePreviewImage() {
+  if (!_shareArchetype) return;
+  // 画像生成後にプレビューに表示
+  const origFinish = window._origFinishDownload;
+  const canvas = document.getElementById('shareCanvas');
+  // downloadShareImageを呼んでcanvasに描画させる
+  // finishDownloadを一時的にプレビュー用に差し替え
+  window._previewMode = true;
+  downloadShareImageToCanvas(function(dataUrl) {
+    window._previewMode = false;
+    const prev = document.getElementById('reportPreviewImg');
+    if (prev && dataUrl) {
+      prev.src = dataUrl;
+      document.getElementById('reportImgPreview').style.display = 'block';
+    }
+  });
 }
 
 function closeReportModal() {
@@ -1753,6 +1886,91 @@ function switchTab(idx) {
   });
 }
 
+
+// ===== ENNEAGRAM GUIDE =====
+const enneaTree = {
+  A: [
+    {
+      text: '冷静に状況を観察し、筋道をたてて考えようとする分析家。洞察力と革新性に富み、貪欲に知識を溜め込む。',
+      val: '5', name: '5 研究者', color: '#80b0ff', bg: 'rgba(100,160,255,0.15)', bd: 'rgba(100,160,255,0.3)'
+    },
+    {
+      text: '自分の内面の感情・気持ちの動きに関心が向いている、感動屋。豊かな表現力があり、手の届かないものにあこがれる。',
+      val: '4', name: '4 芸術家', color: '#c090ff', bg: 'rgba(180,120,255,0.15)', bd: 'rgba(180,120,255,0.3)'
+    },
+    {
+      text: '慌てることは少なく、ゆったりとしたスペースをまもるのんびり屋。現状を肯定し、人をなごませる雰囲気をもち、粘り強い。',
+      val: '9', name: '9 庭師', color: '#80d0a0', bg: 'rgba(80,200,130,0.15)', bd: 'rgba(80,200,130,0.3)'
+    }
+  ],
+  B: [
+    {
+      text: '競う気持ちが旺盛で良い評価を得るために効率を旨に活動する主役。見映えがよく、人の才能を素早く見抜き、動機づける。',
+      val: '3', name: '3 実業家', color: '#ffa060', bg: 'rgba(255,140,80,0.15)', bd: 'rgba(255,140,80,0.3)'
+    },
+    {
+      text: '他人の思惑をあまり気にせずに思ったことは臆せずズバリという直言居士。度量が大きく、存在感があり、親分肌で統率力がある。',
+      val: '8', name: '8 教祖', color: '#f08060', bg: 'rgba(255,100,60,0.15)', bd: 'rgba(255,100,60,0.3)'
+    },
+    {
+      text: '楽しいこと興味あることに次々と飛びつき熱中するノリのよい楽天家。社交的で人と気軽につきあい、豊かなアイデアをもつ。',
+      val: '7', name: '7 芸人', color: '#f0d060', bg: 'rgba(255,210,60,0.15)', bd: 'rgba(255,210,60,0.3)'
+    }
+  ],
+  C: [
+    {
+      text: '自分なりの基準に合致しているかどうかチェックを欠かさない勤勉家。規則正しく公平で、完全を目指して生真面目に努力する。',
+      val: '1', name: '1 裁判官', color: '#80c8f0', bg: 'rgba(80,180,255,0.15)', bd: 'rgba(80,180,255,0.3)'
+    },
+    {
+      text: 'お役に立つことはないかと人の気持ちを汲もうとする情の深い人。気前がよく親切で、人に好かれることを最も重要と考える。',
+      val: '2', name: '2 看護師', color: '#f080a0', bg: 'rgba(255,100,140,0.15)', bd: 'rgba(255,100,140,0.3)'
+    },
+    {
+      text: '不安を取り除こうと将来に備え、周りを気にする気配り屋。仲間意識が強く、規範に従い、献身的に責任を果たす。',
+      val: '6', name: '6 営業マン', color: '#80e0c0', bg: 'rgba(80,220,180,0.15)', bd: 'rgba(80,220,180,0.3)'
+    }
+  ]
+};
+
+function openEnneaModal() {
+  backToStep1();
+  document.getElementById('enneaModalOverlay').classList.add('show');
+}
+function closeEnneaModal(e) {
+  if (e.target === document.getElementById('enneaModalOverlay')) closeEnneaModalDirect();
+}
+function closeEnneaModalDirect() {
+  document.getElementById('enneaModalOverlay').classList.remove('show');
+}
+function backToStep1() {
+  document.getElementById('enneaStep1').style.display = 'block';
+  document.getElementById('enneaStep2').style.display = 'none';
+}
+function showEnneaStep2(group) {
+  document.getElementById('enneaStep1').style.display = 'none';
+  const step2 = document.getElementById('enneaStep2');
+  step2.style.display = 'block';
+  const opts = enneaTree[group];
+  document.getElementById('enneaStep2Options').innerHTML = opts.map(o => `
+    <div class="ennea-group" style="cursor:pointer;margin-bottom:10px;" onclick="selectEnnea('${o.val}')">
+      <div class="ennea-group-q" style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;">
+        <span style="flex:1;line-height:1.7;">${o.text}</span>
+        <span class="ennea-type-badge" style="flex-shrink:0;background:${o.bg};color:${o.color};border:1px solid ${o.bd};padding:6px 14px;font-size:13px;font-weight:700;border-radius:20px;">${o.name}</span>
+      </div>
+    </div>
+  `).join('');
+}
+function selectEnnea(val) {
+  const sel = document.getElementById('ennea');
+  if (sel) {
+    sel.value = val;
+    closeEnneaModalDirect();
+    sel.style.borderColor = '#ffd700';
+    setTimeout(() => { sel.style.borderColor = 'rgba(124,111,255,0.3)'; }, 1500);
+  }
+}
+
 function copyPrompt() {
   navigator.clipboard.writeText(document.getElementById('promptText').textContent).then(() => {
     const btn = document.querySelector('.copy-btn');
@@ -1803,10 +2021,51 @@ function sliderMove(e) {
   document.getElementById(sid + '_thumb').style.left  = pct;
 }
 
-document.addEventListener('keydown', e => { if (e.key==='Escape') { closePopupDirect(); closeReportModal(); } });
+document.addEventListener('keydown', e => { if (e.key==='Escape') { closePopupDirect(); closeReportModal(); closeEnneaModalDirect(); } });
 init();
 autoLoadFromURL();
 </script>
 <canvas id="shareCanvas" width="1080" height="1080"></canvas>
+
+<!-- ENNEAGRAM GUIDE MODAL -->
+<div class="ennea-modal-overlay" id="enneaModalOverlay" onclick="closeEnneaModal(event)">
+  <div class="ennea-modal">
+    <button class="ennea-modal-close" onclick="closeEnneaModalDirect()">×</button>
+    <h3>🌀 エニアグラム 簡易チェック</h3>
+    <p class="ennea-guide-lead">
+      <strong style="color:#9c90ff">STEP 1</strong> で大枠を選び、<strong style="color:#9c90ff">STEP 2</strong> で詳細を選ぶとあなたのタイプが決まります。<br>タイプ名をタップすると自動入力されます。
+    </p>
+    <div id="enneaStep1">
+      <div style="font-size:11px;color:#7c6fff;letter-spacing:0.12em;font-weight:700;margin-bottom:12px;">STEP 1 ／ 最も自分に近い関わり方は？</div>
+      <div class="ennea-group" onclick="showEnneaStep2('A')" style="cursor:pointer;">
+        <div class="ennea-group-q" style="display:flex;align-items:center;justify-content:space-between;gap:12px;">
+          <span>🔵 人との関わり方は大体において引き気味である。様子を見して、自ら積極的に近づくことは少なく、どちらかというと引っ込み思案の方だ。</span>
+          <span style="color:#7c6fff;font-size:20px;flex-shrink:0;">›</span>
+        </div>
+      </div>
+      <div class="ennea-group" onclick="showEnneaStep2('B')" style="cursor:pointer;margin-top:10px;">
+        <div class="ennea-group-q" style="display:flex;align-items:center;justify-content:space-between;gap:12px;">
+          <span>🟠 何事も自分を出して、前向きに取り組む方である。チーム活動では自ら仕切り役をすることがよくある。</span>
+          <span style="color:#7c6fff;font-size:20px;flex-shrink:0;">›</span>
+        </div>
+      </div>
+      <div class="ennea-group" onclick="showEnneaStep2('C')" style="cursor:pointer;margin-top:10px;">
+        <div class="ennea-group-q" style="display:flex;align-items:center;justify-content:space-between;gap:12px;">
+          <span>🟢 周囲との調和を気遣いながら他の人と関わろうとする。チームワークを重視し、いつの間にか頼まれて、まとめ役することがある。</span>
+          <span style="color:#7c6fff;font-size:20px;flex-shrink:0;">›</span>
+        </div>
+      </div>
+    </div>
+    <div id="enneaStep2" style="display:none;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
+        <button onclick="backToStep1()" style="background:rgba(124,111,255,0.15);border:1px solid rgba(124,111,255,0.3);color:#9c90ff;border-radius:20px;padding:5px 14px;font-size:11px;cursor:pointer;">← 戻る</button>
+        <span style="font-size:11px;color:#7c6fff;letter-spacing:0.12em;font-weight:700;">STEP 2 ／ 一番近いのはどれ？</span>
+      </div>
+      <div id="enneaStep2Options"></div>
+      <p class="ennea-footer-note" style="margin-top:12px;">直感で「最も自分の核心に近い」ものを選んでください。</p>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
