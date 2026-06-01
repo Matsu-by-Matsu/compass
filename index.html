@@ -1172,11 +1172,32 @@ function setShareData(a, mbti, ennea, matchLabel, kabNum, userName) {
 }
 
 function copyShareUrl() {
-  navigator.clipboard.writeText(_shareUrl).then(() => {
-    const btn = document.querySelector('.share-url-copy');
-    btn.textContent = 'コピーしました！';
-    setTimeout(() => btn.textContent = 'URLをコピー', 2000);
-  });
+  const btn = document.querySelector('.share-url-copy');
+  // iOS Safari対応のフォールバック
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(_shareUrl).then(() => {
+      btn.textContent = 'コピーしました！';
+      setTimeout(() => btn.textContent = 'URLをコピー', 2000);
+    }).catch(() => fallbackCopy(_shareUrl, btn));
+  } else {
+    fallbackCopy(_shareUrl, btn);
+  }
+}
+
+function fallbackCopy(text, btn) {
+  const ta = document.createElement('textarea');
+  ta.value = text;
+  ta.style.cssText = 'position:fixed;top:0;left:0;opacity:0;';
+  document.body.appendChild(ta);
+  ta.focus();
+  ta.select();
+  try {
+    document.execCommand('copy');
+    if (btn) { btn.textContent = 'コピーしました！'; setTimeout(() => btn.textContent = 'URLをコピー', 2000); }
+  } catch(e) {
+    if (btn) btn.textContent = '手動でコピーしてください';
+  }
+  document.body.removeChild(ta);
 }
 
 function downloadShareImage() {
@@ -1609,6 +1630,7 @@ function sendToDiagnoseSheet(resultArchetype) {
     ennea: ennea,
     desire: desire,
     angerTrigger: angerTrigger,
+    birthdate: birthdate || '',
     kabNum: kabNum ? String(kabNum) : '',
     result: resultArchetype,
     shareUrl: shareUrl,
