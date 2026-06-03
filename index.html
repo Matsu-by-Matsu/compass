@@ -1885,6 +1885,7 @@ function renderResult(a, second, third, mbti, ennea, matchLabel, kabNum, angerTr
   const social = document.getElementById('social').value;
   const openness = document.getElementById('openness').value;
   const anger = document.getElementById('anger').value;
+  const angerTriggerVal = document.getElementById('angerTrigger').value;
   const desire = document.getElementById('desire').value;
   const birthdate = document.getElementById('birthdate').value;
   const stressLabel = stress<=3?'かなり消耗中':stress<=6?'普通':'余裕あり';
@@ -1903,7 +1904,7 @@ function renderResult(a, second, third, mbti, ennea, matchLabel, kabNum, angerTr
 - MBTI: ${mbti === 'unknown' ? '不明' : mbti + '（' + mbtiLabel + '）'}
 - エニアグラム: ${ennea === 'unknown' ? '不明' : 'タイプ' + ennea + '（' + enneaLabel + '）'}
 ${kabLine}- 怒りの出方: ${anger}
-- 怒りを感じやすい場面: ${angerTrigger}
+- 怒りを感じやすい場面: ${angerTriggerVal || angerTrigger}
 - 最も動かされるもの: ${desire}
 - 心の余裕: ${stress}/10（${stressLabel}）
 - 人と関わりたい度: ${social}/10（${socialLabel}）
@@ -1912,7 +1913,7 @@ ${kabLine}- 怒りの出方: ${anger}
 【分析してほしいこと】
 1. このアーキタイプが最も力を発揮できる環境・状況
 2. 無意識のうちにやってしまう思考パターンのワナ
-3. 「${angerTrigger}」への怒りが示す深層心理と、その怒りを建設的に使う方法
+3. 「${angerTriggerVal || angerTrigger}」への怒りが示す深層心理と、その怒りを建設的に使う方法
 4. 現在の状態スコアから読み取れる心理状態と注意点
 5. 次の1ヶ月でやるべき具体的な行動3つ
 6. このタイプが陥りやすい「見えない天井」とその突破法
